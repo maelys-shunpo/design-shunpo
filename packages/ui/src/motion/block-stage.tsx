@@ -1,24 +1,25 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import { gsap } from "gsap";
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { lazy, useRef } from "react";
 
 import { IsoBlocks } from "../components/iso-blocks.tsx";
-import { cn } from "../lib/cn.ts";
-import { whenIdle } from "../lib/idle.ts";
 import type { Block } from "../lib/isometric.ts";
-import { duration, ease, stagger } from "./tokens.ts";
+import { AfterIdle } from "./after-idle.tsx";
+import { Stage } from "./stage.tsx";
 
-gsap.registerPlugin(useGSAP);
+/* One import for the stage to prepare and the lazy scene to render. */
+function loadBlockScene() {
+  return import("../scene/block-scene.tsx");
+}
 
-const ALLOW_MOTION = "(prefers-reduced-motion: no-preference)";
-const DEPTH_QUERY = `(min-width: 48rem) and ${ALLOW_MOTION}`;
-const DROP = -3;
+const LazyBlockScene = lazy(async () => {
+  const { BlockScene } = await loadBlockScene();
+  return { default: BlockScene };
+});
 
-const BlockScene = lazy(async () => {
-  const { BlockScene: scene } = await import("../scene/block-scene.tsx");
-  return { default: scene };
+const LazyDropIn = lazy(async () => {
+  const { DropIn } = await import("./drop-in.tsx");
+  return { default: DropIn };
 });
 
 interface BlockStageProps {
@@ -29,62 +30,20 @@ interface BlockStageProps {
 }
 
 export function BlockStage({ blocks, label, grain, className }: BlockStageProps) {
-  const stage = useRef<HTMLDivElement>(null);
-  const [wantsDepth, setWantsDepth] = useState(false);
-  const [ready, setReady] = useState(false);
-  const onReady = useCallback(() => {
-    setReady(true);
-  }, []);
-
-  useGSAP(
-    () => {
-      gsap.matchMedia().add(ALLOW_MOTION, () => {
-        gsap.from("[data-scene-item]", {
-          y: DROP,
-          opacity: 0,
-          duration: duration.slow,
-          ease: ease.emphasized,
-          stagger: stagger.tight,
-        });
-      });
-    },
-    { scope: stage },
-  );
-
-  useEffect(
-    () =>
-      whenIdle(() => {
-        setWantsDepth(window.matchMedia(DEPTH_QUERY).matches);
-      }),
-    [],
-  );
+  const drawing = useRef<HTMLDivElement>(null);
 
   return (
-    <div
-      ref={stage}
-      data-slot="block-stage"
-      data-depth={ready ? "ready" : "poster"}
-      className={cn("relative", className)}
-    >
-      <IsoBlocks
-        blocks={blocks}
-        label={label}
-        grain={grain}
-        className={cn("transition-opacity duration-500", ready && "opacity-0")}
+    <div ref={drawing} data-slot="block-stage" className={className}>
+      <Stage
+        poster={<IsoBlocks blocks={blocks} label={label} grain={grain} />}
+        prepareScene={loadBlockScene}
+        renderScene={(scene) => (
+          <LazyBlockScene {...scene} blocks={blocks} grain={grain} className="absolute -inset-12" />
+        )}
       />
-      {wantsDepth ? (
-        <Suspense fallback={null}>
-          <BlockScene
-            blocks={blocks}
-            grain={grain}
-            onReady={onReady}
-            className={cn(
-              "absolute -inset-12 transition-opacity duration-500",
-              ready ? "opacity-100" : "opacity-0",
-            )}
-          />
-        </Suspense>
-      ) : null}
+      <AfterIdle>
+        <LazyDropIn scope={drawing} />
+      </AfterIdle>
     </div>
   );
 }

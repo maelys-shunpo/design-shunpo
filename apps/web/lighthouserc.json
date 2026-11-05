@@ -7,6 +7,7 @@
       "numberOfRuns": 3
     },
     "assert": {
+      "aggregationMethod": "median-run",
       "assertions": {
         "categories:performance": [
           "error",
@@ -36,7 +37,7 @@
     },
     "upload": {
       "target": "filesystem",
-      "outputDir": ".lighthouseci"
+      "outputDir": ".lighthouseci/mobile"
     }
   }
 }

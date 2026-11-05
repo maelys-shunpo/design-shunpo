@@ -5,10 +5,10 @@ import { page } from "vitest/browser";
 
 import type { Block } from "../src/lib/isometric.ts";
 import { BlockStage } from "../src/motion/block-stage.tsx";
+import { LIVE_TIMEOUT } from "../stories/support/live-timeout.ts";
+import { afterIdle, stageAt } from "./support/box-stage.tsx";
 import { allowMotion, preferReducedMotion } from "./support/reduced-motion.ts";
-
-const PHONE = { width: 390, height: 844 };
-const DESKTOP = { width: 1280, height: 800 };
+import { DESKTOP, PHONE } from "./support/viewports.ts";
 
 const blocks: Block[] = [
   { id: "plank", x: 0, y: 0, z: 0, width: 4, depth: 1, height: 1, material: "maple" },
@@ -22,8 +22,9 @@ function grainTexture(): string {
   return canvas.toDataURL();
 }
 
-function stageOf(container: HTMLElement): HTMLElement | null {
-  return container.querySelector<HTMLElement>("[data-slot='block-stage']");
+/* A context keeps the attributes it was created with: a light scene asked for no antialiasing. */
+function requestedAntialias(canvas: HTMLCanvasElement | null): boolean | undefined {
+  return canvas?.getContext("webgl2")?.getContextAttributes()?.antialias;
 }
 
 afterEach(async () => {
@@ -42,17 +43,21 @@ describe("BlockStage", () => {
       setTimeout(resolve, 200);
     });
     expect(screen.container.querySelector("canvas")).toBeNull();
-    expect(stageOf(screen.container)?.dataset["depth"]).toBe("poster");
+    expect(stageAt(screen.container).dataset["stage"]).toBe("poster");
   });
 
-  it("keeps the drawing on phones", async () => {
+  it("waits for a first interaction on phones, then lifts the drawing into a light scene", async () => {
     await page.viewport(PHONE.width, PHONE.height);
     const screen = await render(<BlockStage blocks={blocks} label="Phone pieces" />);
+    const stage = stageAt(screen.container);
 
-    await new Promise((resolve) => {
-      setTimeout(resolve, 200);
-    });
-    expect(screen.container.querySelector("canvas")).toBeNull();
+    await afterIdle();
+    expect(stage.dataset["stage"]).toBe("poster");
+    expect(stage.querySelector("canvas")).toBeNull();
+
+    window.dispatchEvent(new Event("pointerdown"));
+    await expect.poll(() => stage.dataset["stage"], LIVE_TIMEOUT).toBe("live");
+    expect(requestedAntialias(stage.querySelector("canvas"))).toBe(false);
   });
 
   it("lifts the drawing into a lit scene on large screens and repaints it", async () => {
@@ -60,13 +65,14 @@ describe("BlockStage", () => {
       <BlockStage blocks={blocks} label="Desk pieces" grain={grainTexture()} />,
     );
 
-    await expect
-      .poll(() => stageOf(screen.container)?.dataset["depth"], { timeout: 15_000 })
-      .toBe("ready");
+    await expect.poll(() => stageAt(screen.container).dataset["stage"], LIVE_TIMEOUT).toBe("live");
     expect(screen.container.querySelector("canvas")).not.toBeNull();
 
     document.documentElement.dataset["paint"] = "green";
     window.dispatchEvent(new PointerEvent("pointermove", { clientX: 10, clientY: 10 }));
+    await afterIdle();
+
+    expect(stageAt(screen.container).dataset["stage"]).toBe("live");
     await expect.element(screen.getByRole("img", { name: "Desk pieces" })).toBeInTheDocument();
   });
 });

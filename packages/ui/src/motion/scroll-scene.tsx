@@ -1,27 +1,34 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
 import { cva } from "class-variance-authority";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { type ReactNode, useRef } from "react";
+import { lazy, type ReactNode, useRef } from "react";
 
-import { ease, sceneLength, scrub } from "./tokens.ts";
+import { AfterIdle } from "./after-idle.tsx";
+import type { SceneBreakpoint, SceneScrub } from "./scroll-scene-timeline.tsx";
+import { sceneLength } from "./tokens.ts";
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
+const LazyScrollSceneTimeline = lazy(async () => {
+  const { ScrollSceneTimeline } = await import("./scroll-scene-timeline.tsx");
+  return { default: ScrollSceneTimeline };
+});
 
-const ALLOW_MOTION = "(prefers-reduced-motion: no-preference)";
-
-const breakpointQuery = {
-  all: ALLOW_MOTION,
-  md: `(min-width: 48rem) and ${ALLOW_MOTION}`,
-} as const;
-
+/* With motion, the stage sticks to the top of the window: CSS holds it in place, so nothing shifts the layout.
+   The stage and its holds are measured in small-viewport units: a phone's toolbar that collapses or returns mid-scroll resizes neither the stage, its content nor the track, so the scrub, measured once, stays in step with the hold. */
 const stageVariants = cva("grid grid-cols-1 place-items-center overflow-clip", {
   variants: {
     minWidth: {
-      all: "motion-safe:h-dvh motion-reduce:py-24",
-      md: "py-24 md:motion-safe:h-dvh md:motion-safe:py-0",
+      all: "motion-safe:sticky motion-safe:top-0 motion-safe:h-svh motion-reduce:py-24",
+      md: "py-24 md:motion-safe:sticky md:motion-safe:top-0 md:motion-safe:h-svh md:motion-safe:py-0",
+    },
+  },
+});
+
+/* One window of scroll after the stage, during which the stage stays held and the story scrubs. */
+const holdVariants = cva("h-svh", {
+  variants: {
+    minWidth: {
+      all: "motion-reduce:hidden",
+      md: "hidden md:motion-safe:block",
     },
   },
 });
@@ -32,7 +39,9 @@ interface ScrollSceneProps {
   still?: ReactNode;
   choreography: (timeline: gsap.core.Timeline) => void;
   length?: keyof typeof sceneLength;
-  minWidth?: keyof typeof breakpointQuery;
+  minWidth?: SceneBreakpoint;
+  /* direct for a world that smooths itself (a spring): a scrub on top would leave it behind its copy. */
+  scrub?: SceneScrub;
 }
 
 export function ScrollScene({
@@ -41,39 +50,33 @@ export function ScrollScene({
   choreography,
   length = "medium",
   minWidth = "all",
+  scrub = "smoothed",
 }: ScrollSceneProps) {
-  const stage = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.matchMedia().add(breakpointQuery[minWidth], () => {
-        choreography(
-          gsap.timeline({
-            defaults: { ease: ease.standard },
-            scrollTrigger: {
-              trigger: stage.current,
-              start: "top top",
-              end: `+=${sceneLength[length] * 100}%`,
-              pin: true,
-              scrub,
-            },
-          }),
-        );
-      });
-    },
-    { scope: stage },
-  );
+  const track = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={stage} data-slot="scroll-scene" className={stageVariants({ minWidth })}>
-      {still === undefined ? (
-        children
-      ) : (
-        <>
-          <div className="w-full motion-reduce:hidden">{children}</div>
-          <div className="hidden w-full motion-reduce:block">{still}</div>
-        </>
-      )}
+    <div ref={track} data-slot="scroll-scene">
+      <div className={stageVariants({ minWidth })}>
+        {still === undefined ? (
+          children
+        ) : (
+          <>
+            <div className="w-full motion-reduce:hidden">{children}</div>
+            <div className="hidden w-full motion-reduce:block">{still}</div>
+          </>
+        )}
+      </div>
+      {Array.from({ length: sceneLength[length] }, (_, screen) => (
+        <div key={screen} className={holdVariants({ minWidth })} />
+      ))}
+      <AfterIdle>
+        <LazyScrollSceneTimeline
+          track={track}
+          choreography={choreography}
+          minWidth={minWidth}
+          scrub={scrub}
+        />
+      </AfterIdle>
     </div>
   );
 }
