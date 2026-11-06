@@ -7,33 +7,33 @@ import { siGmail, siOdoo } from "simple-icons";
 export function AuditBoard() {
   return (
     <MockWindow
-      title="Carte des processus"
+      title="Carte du flux"
       context="Immersion · comptabilité fournisseurs"
-      status={<StatusPill tone="new">Premier flux choisi</StatusPill>}
+      status={<StatusPill tone="new">Flux choisi</StatusPill>}
     >
       <ol>
         <WorkflowNode
           kind="Entrée"
-          title="Factures reçues par e-mail"
+          title="Factures par mail"
           linked
           status={<StatusPill>Manuel</StatusPill>}
         />
         <WorkflowNode
           kind="Saisie"
-          title="Recopie dans Odoo, ligne par ligne"
+          title="Recopie dans Odoo"
           agent
           linked
           status={<StatusPill tone="waiting">Temps perdu</StatusPill>}
         />
         <WorkflowNode
           kind="Validation"
-          title="Accord du responsable par téléphone"
+          title="Accord par téléphone"
           linked
-          status={<StatusPill tone="waiting">Une seule personne</StatusPill>}
+          status={<StatusPill tone="waiting">1 personne</StatusPill>}
         />
         <WorkflowNode
           kind="Suivi"
-          title="Tableur partagé, mis à jour le soir"
+          title="Mise à jour du tableur"
           status={<StatusPill>Manuel</StatusPill>}
         />
       </ol>
@@ -50,32 +50,22 @@ export function BuildBoard() {
       status={<StatusPill tone="working">En recette</StatusPill>}
     >
       <ol>
-        <WorkflowNode
-          icon={siGmail}
-          kind="Déclencheur"
-          title="Nouvelle facture dans la boîte compta"
-          linked
-        />
+        <WorkflowNode icon={siGmail} kind="Déclencheur" title="Facture reçue par mail" linked />
         <WorkflowNode
           kind="Agent IA"
-          title="Lire, extraire, contrôler"
+          title="Lire et contrôler"
           agent
           linked
           status={<StatusPill tone="done">Prêt</StatusPill>}
         />
+        <WorkflowNode icon={siOdoo} kind="Brouillon Odoo" title="Préparé par l’agent" linked />
         <WorkflowNode
-          kind="Humain"
-          title="Valider au-delà de 2 000 €"
+          kind="Validation"
+          title="Claire valide"
           linked
-          status={<StatusPill tone="waiting">Règle</StatusPill>}
+          status={<StatusPill tone="waiting">Au-delà de 2 000 €</StatusPill>}
         />
-        <WorkflowNode
-          kind="Exception"
-          title="Fournisseur inconnu : transmis à Claire"
-          linked
-          status={<StatusPill tone="done">Testé</StatusPill>}
-        />
-        <WorkflowNode icon={siOdoo} kind="Action" title="Créer la facture dans Odoo" />
+        <WorkflowNode icon={siOdoo} kind="Enregistrement" title="Comptabiliser dans Odoo" />
       </ol>
     </MockWindow>
   );
@@ -92,27 +82,27 @@ export function AdoptBoard() {
       <ol>
         <WorkflowNode
           kind="Réglage"
-          title="Seuil de validation revu avec l’équipe"
+          title="Seuil de validation revu"
           linked
           status={<StatusPill tone="done">Appliqué</StatusPill>}
         />
         <WorkflowNode
           kind="Connexions"
-          title="Messagerie et Odoo surveillés"
+          title="Gmail et Odoo suivis"
           linked
           status={<StatusPill tone="done">Stables</StatusPill>}
         />
         <WorkflowNode
           kind="Revue"
-          title="Cas transmis à Claire, revus chaque mois"
+          title="Exceptions de Claire"
           linked
-          status={<StatusPill tone="working">Planifiée</StatusPill>}
+          status={<StatusPill tone="working">Chaque mois</StatusPill>}
         />
         <WorkflowNode
           kind="Nouvelle brique"
-          title="Relances des fournisseurs en retard"
+          title="Relance fournisseurs"
           agent
-          status={<StatusPill tone="new">En construction</StatusPill>}
+          status={<StatusPill tone="new">En cours</StatusPill>}
         />
       </ol>
     </MockWindow>

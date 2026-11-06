@@ -43,7 +43,7 @@ export function WorkflowNode({
         </span>
         <span className="flex min-w-0 flex-1 flex-col">
           <span className="font-mono text-xs text-muted-foreground uppercase">{kind}</span>
-          <span className="truncate text-sm font-medium">{title}</span>
+          <span className="text-sm font-medium text-pretty">{title}</span>
         </span>
         {status}
       </div>

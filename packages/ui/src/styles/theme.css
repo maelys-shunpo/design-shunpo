@@ -121,6 +121,30 @@
   --ease-shift: cubic-bezier(0.8, 0, 0.1, 1);
   --ease-press: cubic-bezier(0.2, 0.8, 0.2, 1);
 
+  --animate-agents-phase-slide: agents-phase-slide 300ms var(--ease-emphasized) both;
+  --animate-agents-phase-link: agents-phase-link 240ms var(--ease-emphasized) both;
+  --agents-phase-stagger: 50ms;
+
+  @keyframes agents-phase-slide {
+    from {
+      opacity: 0.55;
+      translate: var(--agents-phase-entry) 0;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes agents-phase-link {
+    from {
+      scale: 1 0;
+    }
+    to {
+      scale: 1 1;
+    }
+  }
+
   --animate-spin: spin 0.9s linear infinite;
 
   @keyframes spin {
@@ -499,4 +523,66 @@
   --border: light-dark(rgb(14 14 12 / 0.1), rgb(246 245 241 / 0.12));
   --rule: light-dark(rgb(14 14 12 / 0.4), rgb(246 245 241 / 0.4));
   --ring: light-dark(#2f3bff, #9aa1ff);
+}
+
+/* Base UI provides the active tab position. The line moves while the rail itself stays fixed. */
+@utility agents-phase-indicator {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--active-tab-width);
+  height: var(--spacing-px);
+  background: var(--color-agents-signal);
+  translate: var(--active-tab-left) 0;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: translate var(--default-transition-duration) var(--ease-emphasized);
+  }
+}
+
+@layer base {
+  [data-direction="agents"] #methode {
+    scroll-margin-block-start: var(--spacing-12);
+  }
+
+  /* Match the preflight layer so hidden panels can reserve space while remaining inert. */
+  .agents-phase-panel[hidden],
+  .agents-phase-panel[data-ending-style] {
+    display: grid !important;
+    visibility: hidden;
+  }
+}
+
+@utility agents-phase-panel {
+  @media (prefers-reduced-motion: no-preference) {
+    &[data-phase-travel] {
+      --agents-phase-entry: var(--spacing-3);
+
+      & [data-slot="agents-phase-board"] {
+        animation: var(--animate-agents-phase-slide);
+      }
+
+      & [data-slot="workflow-node"] > [aria-hidden] {
+        transform-origin: top;
+        animation: var(--animate-agents-phase-link);
+      }
+
+      & [data-slot="workflow-node"]:nth-child(2) > [aria-hidden] {
+        animation-delay: var(--agents-phase-stagger);
+      }
+
+      & [data-slot="workflow-node"]:nth-child(3) > [aria-hidden] {
+        animation-delay: calc(2 * var(--agents-phase-stagger));
+      }
+
+      & [data-slot="workflow-node"]:nth-child(4) > [aria-hidden] {
+        animation-delay: calc(3 * var(--agents-phase-stagger));
+      }
+    }
+
+    &[data-phase-travel="backward"] {
+      --agents-phase-entry: calc(-1 * var(--spacing-3));
+    }
+  }
 }
