@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
-import { CodeBlock } from "../src/components/code-block.tsx";
-import { CodeLine } from "../src/components/code-line.tsx";
+import { Card } from "../src/components/card.tsx";
 import { PairedLayers } from "../src/layout/paired-layers.tsx";
 import { Stack } from "../src/layout/stack.tsx";
 import { Heading } from "../src/typography/heading.tsx";
@@ -19,9 +18,9 @@ const items = ["Tokens", "Lint", "Browser audit"].map((title) => ({
     </Stack>
   ),
   panel: (
-    <CodeBlock title={title}>
-      <CodeLine>{`${title} panel`}</CodeLine>
-    </CodeBlock>
+    <Card>
+      <Text>{`${title} panel`}</Text>
+    </Card>
   ),
 }));
 

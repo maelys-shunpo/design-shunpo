@@ -3,7 +3,12 @@
     "collect": {
       "startServerCommand": "pnpm start --port 3200",
       "startServerReadyPattern": "Ready",
-      "url": ["http://localhost:3200/"],
+      "url": [
+        "http://localhost:3200/",
+        "http://localhost:3200/instant",
+        "http://localhost:3200/mecanique",
+        "http://localhost:3200/fil"
+      ],
       "numberOfRuns": 3,
       "settings": {
         "preset": "desktop"

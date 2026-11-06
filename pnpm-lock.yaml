@@ -182,18 +182,27 @@ catalogs:
     '@figma/code-connect':
       specifier: ^2.1.0
       version: 2.1.0
+    '@fontsource-variable/archivo':
+      specifier: 5.3.0
+      version: 5.3.0
     '@fontsource-variable/bricolage-grotesque':
       specifier: 5.3.0
       version: 5.3.0
     '@fontsource-variable/geist':
       specifier: ^5.3.0
       version: 5.3.0
-    '@fontsource-variable/jost':
+    '@fontsource-variable/geist-mono':
       specifier: 5.3.0
       version: 5.3.0
-    '@fontsource/zilla-slab':
+    '@fontsource-variable/hanken-grotesk':
       specifier: 5.3.0
       version: 5.3.0
+    '@fontsource/shippori-mincho-b1':
+      specifier: 5.3.0
+      version: 5.3.0
+    '@fontsource/zen-kaku-gothic-new':
+      specifier: 5.3.1
+      version: 5.3.1
     '@gsap/react':
       specifier: ^2.1.2
       version: 2.1.2
@@ -503,18 +512,27 @@ importers:
       '@figma/code-connect':
         specifier: 'catalog:'
         version: 2.1.0(supports-color@7.2.0)
+      '@fontsource-variable/archivo':
+        specifier: 'catalog:'
+        version: 5.3.0
       '@fontsource-variable/bricolage-grotesque':
         specifier: 'catalog:'
         version: 5.3.0
       '@fontsource-variable/geist':
         specifier: 'catalog:'
         version: 5.3.0
-      '@fontsource-variable/jost':
+      '@fontsource-variable/geist-mono':
         specifier: 'catalog:'
         version: 5.3.0
-      '@fontsource/zilla-slab':
+      '@fontsource-variable/hanken-grotesk':
         specifier: 'catalog:'
         version: 5.3.0
+      '@fontsource/shippori-mincho-b1':
+        specifier: 'catalog:'
+        version: 5.3.0
+      '@fontsource/zen-kaku-gothic-new':
+        specifier: 'catalog:'
+        version: 5.3.1
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -1048,17 +1066,26 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
+  '@fontsource-variable/archivo@5.3.0':
+    resolution: {integrity: sha512-HogK8FJelrD1o7TlZlkIVtHgc20bO5PZRWE7mUeUTdMN055alznQV6/00J00IBeu8FQAH4s3zW9UJNvKExXf+g==}
+
   '@fontsource-variable/bricolage-grotesque@5.3.0':
     resolution: {integrity: sha512-TLi9Q4hJjS2UvoTMRSS2nHu6c4R56lAw60NR9QYtVRCHn0XtsFpiEhNffZ8Glsoxu6wEEwLKBP8lb94J52PNBA==}
+
+  '@fontsource-variable/geist-mono@5.3.0':
+    resolution: {integrity: sha512-vBbuwDEo9AkrqADMXOrlAR3DFcJi4/JxeuU43FoiQERnNwsfXNnvxvReZG02cQKmyk4DZkZdBZX3oTDvy2zBAw==}
 
   '@fontsource-variable/geist@5.3.0':
     resolution: {integrity: sha512-j0m+vLQuG5XAYoHtGCVu0spvlGreR3EzpECUVzkFmI1mTVnAO38l/NEPDCFgZ177JxzYJCLSmTQibIiYPilGrA==}
 
-  '@fontsource-variable/jost@5.3.0':
-    resolution: {integrity: sha512-9FS8iBMJnfyPqQOi9dfMjSwYBIWd0kBD3/jl8VvtbIMY2pK+CSp3oAaTLS1V60rDoM7AfyPvuT+IUfJfGeCTKg==}
+  '@fontsource-variable/hanken-grotesk@5.3.0':
+    resolution: {integrity: sha512-DOd0FqL+3cH2dfNy0JtSq9tUfxBz5mLmHMjTU0DOr3E9Zo6wxuatCl53DIPNrSPgCsnuKyM739BTIG5glCLirw==}
 
-  '@fontsource/zilla-slab@5.3.0':
-    resolution: {integrity: sha512-xbdDx5OESJDQqp3GIp4pjBgI+qpcg4AxnHLN15ekfJbG+ZYaOXg3uBjDpYlkuPQpey91afxHBNaqZgzluJ2FWA==}
+  '@fontsource/shippori-mincho-b1@5.3.0':
+    resolution: {integrity: sha512-H4NvSJntaViHN8LjwmPTzZgJ8pyWcNetaJMHT4kfg6n1VR60QO2cYl/KDEIP4z2SR83//nlZb5gfQyZUpeNVNA==}
+
+  '@fontsource/zen-kaku-gothic-new@5.3.1':
+    resolution: {integrity: sha512-L69mE6bkzeVK3UdTenxOmCIWvTwMxohJRNm1dAj+W+UiCULQ91b7M77ENVw+pjGmFL6zKPFYFeH3g8x2ugAJNw==}
 
   '@formatjs/ecma402-abstract@2.3.6':
     resolution: {integrity: sha512-HJnTFeRM2kVFVr5gr5kH1XP6K0JcJtE7Lzvtr3FS/so5f1kpsqqqxy5JF+FRaO6H2qmcMfAUIox7AJteieRtVw==}
@@ -5937,13 +5964,19 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
+  '@fontsource-variable/archivo@5.3.0': {}
+
   '@fontsource-variable/bricolage-grotesque@5.3.0': {}
+
+  '@fontsource-variable/geist-mono@5.3.0': {}
 
   '@fontsource-variable/geist@5.3.0': {}
 
-  '@fontsource-variable/jost@5.3.0': {}
+  '@fontsource-variable/hanken-grotesk@5.3.0': {}
 
-  '@fontsource/zilla-slab@5.3.0': {}
+  '@fontsource/shippori-mincho-b1@5.3.0': {}
+
+  '@fontsource/zen-kaku-gothic-new@5.3.1': {}
 
   '@formatjs/ecma402-abstract@2.3.6':
     dependencies:

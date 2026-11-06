@@ -1,6 +1,4 @@
-import type { Material } from "./isometric.ts";
-
-type Rgb = [number, number, number];
+export type Rgb = [red: number, green: number, blue: number];
 
 function toRgb(color: string): Rgb {
   const context = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
@@ -13,9 +11,11 @@ function toRgb(color: string): Rgb {
   return [red, green, blue];
 }
 
-export function resolveMaterial(host: Element, material: Material): Rgb {
+/* The colour a custom property resolves to on this host, in 0–255 sRGB: scenes read theme tokens with it,
+   so a direction or a scheme island recolours the canvas like the page. */
+export function resolveColor(host: Element, property: `--${string}`): Rgb {
   const probe = document.createElement("span");
-  probe.style.color = `var(--${material})`;
+  probe.style.color = `var(${property})`;
   host.append(probe);
   const color = getComputedStyle(probe).color;
   probe.remove();

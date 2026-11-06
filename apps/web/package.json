@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "lighthouse": "lhci autorun && lhci autorun --config=lighthouserc.desktop.json"
+    "lighthouse": "lhci autorun && lhci autorun --config=lighthouserc.desktop.json",
+    "capture-stage": "node scripts/capture-stage.ts"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",

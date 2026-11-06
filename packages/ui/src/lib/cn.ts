@@ -4,12 +4,12 @@ import { extendTailwindMerge } from "tailwind-merge";
 const twMerge = extendTailwindMerge({
   extend: {
     theme: {
+      text: ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl", "7xl", "8xl"],
       container: ["prose", "narrow", "default", "wide"],
-      ease: ["standard", "emphasized"],
+      ease: ["standard", "emphasized", "shift"],
       font: ["sans", "mono", "display"],
-      "font-weight": ["regular", "medium", "semibold"],
-      shadow: ["plank"],
-      tracking: ["normal", "wide"],
+      "font-weight": ["light", "regular", "medium", "semibold", "heading"],
+      tracking: ["normal", "wide", "wider"],
     },
   },
 });

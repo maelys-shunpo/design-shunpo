@@ -15,12 +15,13 @@ const sectionVariants = cva("text-foreground", {
     tone: {
       default: "",
       muted: "bg-muted",
-      sheet: "bg-background surface-sheet",
+      sheet: "bg-surface",
     },
     scheme: {
       inherit: "",
-      light: "bg-background table-grid scheme-light",
-      dark: "bg-background table-grid scheme-dark",
+      light: "bg-background scheme-light",
+      dark: "bg-background scheme-dark",
+      field: "bg-background scheme-field",
     },
   },
   defaultVariants: { spacing: "md", tone: "default", scheme: "inherit" },
@@ -29,12 +30,12 @@ const sectionVariants = cva("text-foreground", {
 type SectionElement = "section" | "header" | "footer" | "aside";
 type SectionVariants = VariantProps<typeof sectionVariants>;
 
-/* The colour scheme a section shows, whatever the page's: islands set it, the paper sheet is always light. */
-function shownScheme({ scheme, tone }: SectionVariants): "light" | "dark" | undefined {
-  if (scheme === "light" || scheme === "dark") {
+/* The colour scheme a section shows, whatever the page's: islands set it (field is a Blue Tenku island). */
+function shownScheme({ scheme }: SectionVariants): "light" | "dark" | "field" | undefined {
+  if (scheme === "light" || scheme === "dark" || scheme === "field") {
     return scheme;
   }
-  return tone === "sheet" ? "light" : undefined;
+  return undefined;
 }
 
 interface SectionProps extends HTMLAttributes<HTMLElement>, VariantProps<typeof sectionVariants> {

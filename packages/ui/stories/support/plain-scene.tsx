@@ -1,14 +1,16 @@
 import { lazy } from "react";
 
-import type { Block } from "../../src/lib/isometric.ts";
 import type { SceneProps } from "../../src/motion/stage.tsx";
 import { StageCanvas } from "../../src/scene/stage-canvas.tsx";
 import { useFirstFrame } from "../../src/scene/use-first-frame.ts";
 
-/* The same box drawn flat, for a poster. */
-export const plainBox: Block[] = [
-  { id: "box", x: 0, y: 0, z: 0, width: 2, depth: 2, height: 2, material: "paper" },
-];
+/* A flat plate standing for the box, for a poster: it carries the stage's accessible name. */
+const PLATE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23dcd5c7'/%3E%3C/svg%3E";
+
+export function plainPoster(name: string) {
+  return <img alt={name} src={PLATE} className="block w-full" />;
+}
 
 /* Turned a little so the box reads as a volume. */
 const TURN: [number, number, number] = [0.5, 0.6, 0];

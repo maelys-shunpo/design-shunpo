@@ -3,9 +3,11 @@ import type { HTMLAttributes } from "react";
 
 import { cn } from "../lib/cn.ts";
 
-const headingVariants = cva("font-display font-semibold", {
+const headingVariants = cva("font-display font-heading", {
   variants: {
     size: {
+      mega: "text-8xl",
+      hero: "text-7xl",
       "display-xl": "text-6xl",
       display: "text-5xl",
       "title-lg": "text-4xl",

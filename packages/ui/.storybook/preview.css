@@ -1,12 +1,20 @@
 @import "@fontsource-variable/geist";
-@import "@fontsource-variable/jost";
+@import "@fontsource-variable/geist-mono";
+@import "@fontsource-variable/archivo/wdth.css";
 @import "@fontsource-variable/bricolage-grotesque";
-@import "@fontsource/zilla-slab/600.css";
+@import "@fontsource-variable/hanken-grotesk";
+@import "@fontsource/shippori-mincho-b1/500.css";
+@import "@fontsource/shippori-mincho-b1/800.css";
+@import "@fontsource/zen-kaku-gothic-new/400.css";
+@import "@fontsource/zen-kaku-gothic-new/500.css";
 @import "../src/styles/globals.css";
 
 :root {
-  --font-family-sans: "Geist Variable";
-  --font-family-display: "Jost Variable";
-  --font-family-grotesque: "Bricolage Grotesque Variable";
-  --font-family-slab: "Zilla Slab";
+  --font-family-geist: "Geist Variable";
+  --font-family-geist-mono: "Geist Mono Variable";
+  --font-family-archivo: "Archivo Variable";
+  --font-family-bricolage: "Bricolage Grotesque Variable";
+  --font-family-hanken: "Hanken Grotesk Variable";
+  --font-family-mincho: "Shippori Mincho B1";
+  --font-family-zen: "Zen Kaku Gothic New";
 }

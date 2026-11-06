@@ -6,7 +6,7 @@ import { cn } from "../lib/cn.ts";
 const cardVariants = cva("flex flex-col rounded-xl text-foreground", {
   variants: {
     variant: {
-      surface: "border border-border bg-surface shadow-xs",
+      surface: "border border-border bg-surface",
       muted: "bg-muted",
       outline: "border border-border",
     },
