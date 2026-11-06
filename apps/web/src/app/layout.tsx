@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
-import {
-  Archivo,
-  Bricolage_Grotesque,
-  Geist,
-  Geist_Mono,
-  Hanken_Grotesk,
-  Shippori_Mincho_B1,
-  Zen_Kaku_Gothic_New,
-} from "next/font/google";
+import { Archivo, Bricolage_Grotesque, Geist, Geist_Mono, Hanken_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 
 import { Providers } from "./providers";
 
@@ -22,16 +15,23 @@ const bricolage = Bricolage_Grotesque({
   axes: ["opsz", "wdth"],
   preload: false,
 });
-const mincho = Shippori_Mincho_B1({
+/* The Japanese faces, self-hosted in their Latin subset (from Fontsource, OFL): Google serves them as a hundred
+   CJK slices. The few kanji the pages show fall back to the system mincho and gothic. */
+const mincho = localFont({
   variable: "--font-family-mincho",
-  subsets: ["latin"],
-  weight: ["500", "800"],
+  src: [
+    { path: "./fonts/shippori-mincho-b1-latin-500-normal.woff2", weight: "500" },
+    { path: "./fonts/shippori-mincho-b1-latin-800-normal.woff2", weight: "800" },
+  ],
   preload: false,
 });
-const zen = Zen_Kaku_Gothic_New({
+const zen = localFont({
   variable: "--font-family-zen",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  src: [
+    { path: "./fonts/zen-kaku-gothic-new-latin-400-normal.woff2", weight: "400" },
+    { path: "./fonts/zen-kaku-gothic-new-latin-500-normal.woff2", weight: "500" },
+    { path: "./fonts/zen-kaku-gothic-new-latin-700-normal.woff2", weight: "700" },
+  ],
   preload: false,
 });
 const archivo = Archivo({
