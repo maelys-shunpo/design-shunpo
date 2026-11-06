@@ -47,7 +47,7 @@ const sideTab =
   "group/tab relative flex cursor-pointer flex-col gap-2 border-t border-border py-5 text-start text-muted-foreground transition-colors duration-300 data-active:text-foreground";
 
 const phaseTab =
-  "inline-flex cursor-pointer items-center py-3 text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring data-active:text-foreground motion-reduce:transition-none sm:text-md";
+  "group/phase inline-flex cursor-pointer items-center gap-3 py-3 text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring data-active:text-foreground motion-reduce:transition-none sm:text-md";
 
 type PhaseTravel = "forward" | "backward";
 
@@ -85,6 +85,28 @@ function phasePanels(items: AgentTab[], active: number, travel: PhaseTravel | un
   ));
 }
 
+/* The phase tabs: each one numbered, and with the rail, a tab of its own on the row. */
+function phaseTabs(items: AgentTab[], rail: boolean) {
+  return items.map((item, index) => (
+    <Tabs.Tab
+      key={item.id}
+      value={index}
+      className={cn(
+        phaseTab,
+        /* With the rail, each phase reads as its own tab: a hairline on its edge, its number, and a light
+         ground while it is the one shown. */
+        rail &&
+          "md:border-s md:border-border md:px-6 md:py-5 md:data-active:bg-surface md:data-active:text-foreground",
+      )}
+    >
+      <span className="font-mono text-xs text-muted-foreground group-data-active/phase:text-accent-ink">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      {item.title}
+    </Tabs.Tab>
+  ));
+}
+
 function phaseSequence({
   items,
   label,
@@ -110,11 +132,7 @@ function phaseSequence({
           rail && "md:grid md:grid-cols-3 md:gap-0",
         )}
       >
-        {items.map((item, index) => (
-          <Tabs.Tab key={item.id} value={index} className={phaseTab}>
-            {item.title}
-          </Tabs.Tab>
-        ))}
+        {phaseTabs(items, rail)}
         <Tabs.Indicator
           aria-hidden
           className={cn("agents-phase-indicator", rail && "md:motion-safe:hidden")}
