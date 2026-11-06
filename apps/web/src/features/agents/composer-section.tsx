@@ -1,6 +1,5 @@
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
-import { SectionTab } from "@repo/ui/agents/section-tab";
 import { TaskComposer } from "@repo/ui/agents/task-composer";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
@@ -17,7 +16,6 @@ export function ComposerSection() {
       <PageGrid rows="lg">
         <GridArea columns={{ md: 8, lg: 8 }}>
           <Stack gap="lg" align="center">
-            <SectionTab align="center" />
             <Eyebrow align="center">Essayer</Eyebrow>
             <Headline level={2} size="heading" align="center">
               Quelle tâche voulez-vous ne plus faire ?
