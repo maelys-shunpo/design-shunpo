@@ -93,10 +93,9 @@ function phaseTabs(items: AgentTab[], rail: boolean) {
       value={index}
       className={cn(
         phaseTab,
-        /* With the rail, each phase reads as its own tab: a hairline on its edge and a light
-         ground while it is the one shown. */
-        rail &&
-          "md:border-s md:border-border md:px-6 md:py-5 md:data-active:bg-surface md:data-active:text-foreground",
+        /* With the rail, each phase reads as its own tab: a hairline on its edge, the one shown
+         set in ink. */
+        rail && "md:border-s md:border-border md:px-6 md:py-5 md:data-active:text-foreground",
       )}
     >
       {item.title}
