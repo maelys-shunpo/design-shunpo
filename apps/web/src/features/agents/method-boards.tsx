@@ -3,13 +3,13 @@ import { StatusPill } from "@repo/ui/agents/status-pill";
 import { WorkflowNode } from "@repo/ui/agents/workflow-node";
 import { siGmail, siOdoo } from "simple-icons";
 
-/* Before: the process as the team runs it today, each step done by hand. */
+/* Immersion: the invoice process as the team runs it today, and the first flow chosen to automate. */
 export function AuditBoard() {
   return (
     <MockWindow
       title="Carte des processus"
-      context="Immersion · comptabilité"
-      status={<StatusPill tone="waiting">4 étapes manuelles</StatusPill>}
+      context="Immersion · comptabilité fournisseurs"
+      status={<StatusPill tone="new">Premier flux choisi</StatusPill>}
     >
       <ol>
         <WorkflowNode
@@ -20,27 +20,28 @@ export function AuditBoard() {
         />
         <WorkflowNode
           kind="Saisie"
-          title="Recopie dans le logiciel comptable"
+          title="Recopie dans Odoo, ligne par ligne"
+          agent
           linked
-          status={<StatusPill tone="waiting">Erreurs</StatusPill>}
+          status={<StatusPill tone="waiting">Temps perdu</StatusPill>}
+        />
+        <WorkflowNode
+          kind="Validation"
+          title="Accord du responsable par téléphone"
+          linked
+          status={<StatusPill tone="waiting">Une seule personne</StatusPill>}
         />
         <WorkflowNode
           kind="Suivi"
           title="Tableur partagé, mis à jour le soir"
-          linked
           status={<StatusPill>Manuel</StatusPill>}
-        />
-        <WorkflowNode
-          kind="Validation"
-          title="Relances par téléphone"
-          status={<StatusPill tone="waiting">Une seule personne</StatusPill>}
         />
       </ol>
     </MockWindow>
   );
 }
 
-/* During: the same process rebuilt, the agent in the middle, a person where it matters. */
+/* Construction: the same flow rebuilt brick by brick and tested, the exception and Claire's validation included. */
 export function BuildBoard() {
   return (
     <MockWindow
@@ -68,45 +69,50 @@ export function BuildBoard() {
           linked
           status={<StatusPill tone="waiting">Règle</StatusPill>}
         />
-        <WorkflowNode icon={siOdoo} kind="Action" title="Créer la facture dans Odoo" linked />
-        <WorkflowNode kind="Notification" title="Prévenir le canal #compta" />
+        <WorkflowNode
+          kind="Exception"
+          title="Fournisseur inconnu : transmis à Claire"
+          linked
+          status={<StatusPill tone="done">Testé</StatusPill>}
+        />
+        <WorkflowNode icon={siOdoo} kind="Action" title="Créer la facture dans Odoo" />
       </ol>
     </MockWindow>
   );
 }
 
-/* After: the team trained, the documentation handed over, the agent in production. */
+/* Évolution: the flow in service, adjusted with the team and extended by a new brick. */
 export function AdoptBoard() {
   return (
     <MockWindow
-      title="Suivi du flux"
-      context="Évolution · après la mise en service"
+      title="Flux factures"
+      context="Évolution · en service"
       status={<StatusPill tone="done">En production</StatusPill>}
     >
       <ol>
         <WorkflowNode
-          kind="Formation"
-          title="Claire, Malik et Sonia formés"
+          kind="Réglage"
+          title="Seuil de validation revu avec l’équipe"
           linked
-          status={<StatusPill tone="done">Fait</StatusPill>}
+          status={<StatusPill tone="done">Appliqué</StatusPill>}
         />
         <WorkflowNode
-          kind="Documentation"
-          title="Guide d’utilisation et règles métier"
+          kind="Connexions"
+          title="Messagerie et Odoo surveillés"
           linked
-          status={<StatusPill tone="done">Remis</StatusPill>}
+          status={<StatusPill tone="done">Stables</StatusPill>}
         />
         <WorkflowNode
-          kind="Suivi"
-          title="Revue mensuelle des cas transférés"
+          kind="Revue"
+          title="Cas transmis à Claire, revus chaque mois"
           linked
           status={<StatusPill tone="working">Planifiée</StatusPill>}
         />
         <WorkflowNode
-          kind="Autonomie"
-          title="Vos équipes ajustent les règles"
+          kind="Nouvelle brique"
+          title="Relances des fournisseurs en retard"
           agent
-          status={<StatusPill tone="done">Ouvert</StatusPill>}
+          status={<StatusPill tone="new">En construction</StatusPill>}
         />
       </ol>
     </MockWindow>

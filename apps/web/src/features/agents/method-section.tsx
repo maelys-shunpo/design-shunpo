@@ -1,3 +1,4 @@
+import { AgentTabs } from "@repo/ui/agents/agent-tabs";
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
 import { GridArea } from "@repo/ui/layout/grid-area";
@@ -6,9 +7,10 @@ import { Section } from "@repo/ui/layout/section";
 import { Stack } from "@repo/ui/layout/stack";
 import { Text } from "@repo/ui/typography/text";
 
-import { MethodScene } from "./method-scene";
+import { MethodActions } from "./method-actions";
+import { agentsMethod } from "./method-steps";
 
-/* Editorial opener, then the held scene on every content column with its own inner layout. */
+/* One stage, the same invoice flow carried through the three phases; the phases in columns underneath. */
 export function MethodSection() {
   return (
     <Section id="methode" spacing="regular">
@@ -16,10 +18,7 @@ export function MethodSection() {
         <GridArea columns={{ md: { start: 1, span: 2 }, lg: { start: 1, span: 3 } }}>
           <Eyebrow tone="cobalt">Méthode</Eyebrow>
         </GridArea>
-        <GridArea
-          columns={{ md: { start: 3, span: 6 }, lg: { start: 4, span: 9 } }}
-          overflow="visible"
-        >
+        <GridArea columns={{ md: { start: 3, span: 6 }, lg: { start: 4, span: 9 } }}>
           <Stack gap="lg">
             <Headline level={2} size="title">
               Chaque projet commence par une Immersion
@@ -32,7 +31,15 @@ export function MethodSection() {
           </Stack>
         </GridArea>
         <GridArea>
-          <MethodScene />
+          <AgentTabs
+            label="Les trois phases d’un projet"
+            items={agentsMethod}
+            layout="below"
+            every={8000}
+          />
+        </GridArea>
+        <GridArea>
+          <MethodActions />
         </GridArea>
       </PageGrid>
     </Section>
