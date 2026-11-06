@@ -13,7 +13,7 @@ const cardVariants = cva(
       tone: {
         ink: "bg-agents-ink text-agents-paper",
         paper: "border border-agents-line bg-surface text-agents-ink",
-        signal: "bg-agents-signal text-agents-ink",
+        signal: "bg-agents-signal text-agents-paper",
         cobalt: "bg-agents-info text-agents-paper",
         sand: "bg-agents-wait-tint text-agents-ink",
       },

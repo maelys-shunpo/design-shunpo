@@ -138,25 +138,28 @@
   --color-tenku: var(--brand-tenku);
   --color-fushimi: var(--brand-fushimi);
   --color-frost: var(--brand-frost);
-  --color-agents-paper: #f6f5f1;
-  --color-agents-ink: #0e0e0c;
-  --color-agents-signal: #ff4f1a;
-  /* Statuses inside the « Agents » mockups: done, waiting on a human, in progress. */
-  --color-agents-ok: #12703c;
-  --color-agents-ok-tint: #e3f2e8;
-  --color-agents-wait: #8a4b00;
-  --color-agents-wait-tint: #fbeeda;
-  --color-agents-info: #2f3bff;
-  --color-agents-info-tint: #e8e9ff;
-  --color-agents-signal-tint: #ffe9e1;
-  --color-agents-line: #e7e5df;
-  /* The grey of a headline's context words, for large type only: 3.4:1 on the paper, 3.1:1 on the muted ground. */
-  --color-agents-dim: #83827c;
-  /* A window resting on a photographed surface: a contact shadow and a long soft one. */
+  /* « Agents » in the SHUNPO palette: Kome paper, Fuji Night ink, Fushimi Glow for the one signal, Blue Tenku for
+     information, Kurenai Blush for what waits on a person, Shiro and Hikari Frost for grounds and lines,
+     Ink Shadow for secondary text. Tints are the same colours thinned on Kome. */
+  --color-agents-paper: #f3f0e9;
+  --color-agents-ink: #1e2629;
+  --color-agents-signal: #b94532;
+  /* Statuses inside the mockups: done (Tenku, deepened for small text), waiting on a person (Kurenai), in progress. */
+  --color-agents-ok: #1f637d;
+  --color-agents-ok-tint: #e3ebee;
+  --color-agents-wait: #8e4547;
+  --color-agents-wait-tint: #f3e4e2;
+  --color-agents-info: #2b718c;
+  --color-agents-info-tint: #e7eff2;
+  --color-agents-signal-tint: #f5e4df;
+  --color-agents-line: #e5dfd3;
+  /* The grey of a headline's context words, for large type only: Fuji Night thinned to half on Kome, 3.1:1. */
+  --color-agents-dim: #848886;
+  /* A window resting on a photographed surface: a contact shadow and a long soft one, in Fuji Night. */
   --shadow-agents-float:
-    0 1px 2px rgb(14 14 12 / 0.06), 0 12px 32px -8px rgb(14 14 12 / 0.16),
-    0 48px 96px -32px rgb(14 14 12 / 0.28);
-  --shadow-agents-card: 0 1px 2px rgb(14 14 12 / 0.06), 0 8px 24px -12px rgb(14 14 12 / 0.18);
+    0 1px 2px rgb(30 38 41 / 0.06), 0 12px 32px -8px rgb(30 38 41 / 0.16),
+    0 48px 96px -32px rgb(30 38 41 / 0.28);
+  --shadow-agents-card: 0 1px 2px rgb(30 38 41 / 0.06), 0 8px 24px -12px rgb(30 38 41 / 0.18);
   --color-origami-ivory: #f2efe9;
 
   /* Each direction's display face, for the same previews. */
@@ -330,7 +333,8 @@
   --ring: light-dark(#b94532, #f3f0e9);
 }
 
-/* ── Direction « Agents »: a product site for AI agents. Warm paper white, ink, live interfaces, one signal orange. ── */
+/* ── Direction « Agents »: a product site for AI agents, in the SHUNPO palette. Kome paper, Fuji Night ink,
+   live interfaces in white, one Fushimi signal, Blue Tenku for information. ── */
 :root:has([data-direction="agents"]) {
   color-scheme: light;
   --corner-scale: 2;
@@ -363,21 +367,21 @@
 :root:has([data-direction="agents"]),
 :root:has([data-direction="agents"]) .scheme-light,
 :root:has([data-direction="agents"]) .scheme-dark {
-  --background: light-dark(#f6f5f1, #0e0e0c);
-  --foreground: light-dark(#0e0e0c, #f6f5f1);
-  --muted: light-dark(#edebe5, #1a1a17);
-  --muted-foreground: light-dark(#66655f, #a3a29b);
-  --surface: light-dark(#ffffff, #1a1a17);
-  --primary: light-dark(#0e0e0c, #f6f5f1);
-  --primary-foreground: light-dark(#ffffff, #0e0e0c);
-  --secondary: light-dark(#2f3bff, #9aa1ff);
-  --secondary-foreground: light-dark(#ffffff, #0e0e0c);
-  --accent: #ff4f1a;
-  --accent-foreground: #0e0e0c;
-  --accent-ink: light-dark(#c2360a, #ff8a63);
-  --border: light-dark(rgb(14 14 12 / 0.1), rgb(246 245 241 / 0.12));
-  --rule: light-dark(rgb(14 14 12 / 0.4), rgb(246 245 241 / 0.4));
-  --ring: light-dark(#2f3bff, #9aa1ff);
+  --background: light-dark(#f3f0e9, #1e2629);
+  --foreground: light-dark(#1e2629, #f3f0e9);
+  --muted: light-dark(#e5dfd3, #263034);
+  --muted-foreground: light-dark(#474747, #bdc8cc);
+  --surface: light-dark(#ffffff, #263034);
+  --primary: light-dark(#1e2629, #f3f0e9);
+  --primary-foreground: light-dark(#f3f0e9, #1e2629);
+  --secondary: light-dark(#2b718c, #bdc8cc);
+  --secondary-foreground: light-dark(#f3f0e9, #1e2629);
+  --accent: #b94532;
+  --accent-foreground: #f3f0e9;
+  --accent-ink: light-dark(#b94532, #e5dfd3);
+  --border: light-dark(rgb(30 38 41 / 0.12), rgb(243 240 233 / 0.14));
+  --rule: light-dark(rgb(30 38 41 / 0.4), rgb(243 240 233 / 0.4));
+  --ring: light-dark(#2b718c, #bdc8cc);
 }
 
 /* ── Direction « Origami »: paper folded in a bright studio. The palette of « Agents »: warm paper, ink, grey,

@@ -133,6 +133,23 @@ Poster and two still plates captured from the scene, AVIF (96, 32 and 41 KB). 0 
 
 Direction « Agents ». A product site for an agency that builds AI agents, at the level of intercom.com. The proof is interfaces at work, laid on photographed surfaces (plaster, linen, travertine, black paper) like objects on a table. The headline speaks low (grey words) and lands on what matters (a black word, a serif word). Warm paper #F6F5F1, ink #0E0E0C, one signal orange #FF4F1A for markers (small text goes through `--accent-ink`), a cobalt for states. Geist light with tight tracking, Instrument Serif italic for one word, Geist Mono for labels behind a colour square. A lower-case « shunpo » wordmark beside a signal square.
 
+### Colour (chosen on 6 November 2026)
+
+The eight colours of the SHUNPO charter, each with one role. Values live in `theme.css` (`--color-agents-*` and the `agents` block).
+
+| Colour        | Hex     | Role                                                                                                  |
+| ------------- | ------- | ----------------------------------------------------------------------------------------------------- |
+| Kome          | #F3F0E9 | Page ground                                                                                           |
+| Shiro         | #E5DFD3 | Muted sections, hairlines, neutral chips                                                              |
+| Fuji Night    | #1E2629 | Text, title ink, primary buttons, dark sections; thinned to half on Kome for grey title words         |
+| Ink Shadow    | #474747 | Secondary text                                                                                        |
+| Hikari Frost  | #BDC8CC | Secondary text and rings on Fuji Night                                                                |
+| Fushimi Glow  | #B94532 | The one signal per screen: markers, the wordmark square, tab progress, small red text (4.6:1 on Kome) |
+| Blue Tenku    | #2B718C | Information, links, focus, « done » and « in progress » statuses (#1F637D for small text)             |
+| Kurenai Blush | #B05F60 | What waits on a person (#8E4547 for small text, a blush tint behind it)                               |
+
+Interfaces stay pure white: they are product material laid on the page, not page colour. Text on Fushimi and Tenku is Kome, never Fuji Night (2.9:1).
+
 ### Typography (chosen on 6 November 2026)
 
 Newsreader Medium for every title, Instrument Sans for text and interfaces, Geist Mono for labels and data. Chosen over Instrument Serif + Instrument Sans, Bricolage + Instrument Sans, Geist + Geist Mono and Piazzolla + Geist, after tests on the live page and in large asymmetric compositions (`.context/typo/`): a press serif that reads as a serious partner, set very large with grey and ink words; a neutral sans that keeps the interfaces crisp. No italic in any title: emphasis is ink against grey, never a slanted word.

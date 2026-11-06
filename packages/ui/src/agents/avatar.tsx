@@ -12,7 +12,7 @@ const avatarVariants = cva(
         warm: "bg-agents-wait-tint text-agents-wait",
         mint: "bg-agents-ok-tint text-agents-ok",
         /* The agent itself: the signal square, never a face. */
-        agent: "rounded-md bg-agents-signal text-agents-ink",
+        agent: "rounded-md bg-agents-signal text-agents-paper",
       },
       size: {
         sm: "size-6",
