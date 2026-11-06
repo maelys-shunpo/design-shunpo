@@ -121,17 +121,17 @@ function AgentsVisual() {
   );
 }
 
-/* A folded crane of « Origami »: facets of ivory and one citron wing, which lifts on hover. */
+/* A folded crane of « Origami »: paper facets and one signal wing, which lifts on hover. */
 function OrigamiVisual() {
   return (
     <>
-      <polygon points="20,130 100,110 70,150" className="fill-origami-ivory/70" />
-      <polygon points="100,110 180,60 140,130" className="fill-origami-ivory" />
-      <polygon points="70,150 100,110 140,130" className="fill-origami-ivory/50" />
+      <polygon points="20,130 100,110 70,150" className="fill-agents-ink/15" />
+      <polygon points="100,110 180,60 140,130" className="fill-agents-paper stroke-agents-ink/20" />
+      <polygon points="70,150 100,110 140,130" className="fill-agents-ink/25" />
       <g className="origin-center transition-transform duration-700 ease-emphasized group-hover:-rotate-12">
-        <polygon points="100,110 80,40 120,95" className="fill-origami-citron" />
+        <polygon points="100,110 80,40 120,95" className="fill-agents-signal" />
       </g>
-      <polygon points="20,130 8,100 40,125" className="fill-origami-ivory/80" />
+      <polygon points="20,130 8,100 40,125" className="fill-agents-ink/10" />
     </>
   );
 }

@@ -13,22 +13,22 @@ export function HeroChapter() {
   return (
     <Chapter
       place="hero"
+      index="01 · Le besoin"
       still={<Still plate="sheet" />}
-      index="Agence IA · automatisation · logiciels sur mesure"
       title={
         <Heading level={1} size="display-xl">
-          Pliez le travail. <Emphasis>Dépliez</Emphasis> le temps.
+          Tout logiciel commence par une <Emphasis>feuille blanche.</Emphasis>
         </Heading>
       }
     >
       <Text size="lg" tone="muted">
-        Agents IA, automatisations et logiciels sur mesure. Nous transformons ce qui vous prend des
-        heures en systèmes qui tournent seuls, à Lyon et partout en France.
+        Votre besoin, vos process, vos outils. SHUNPO conçoit, développe et déploie les agents IA,
+        les automatisations et les logiciels sur mesure qui rendent du temps à vos équipes.
       </Text>
       <Inline gap="md">
         <OrigamiLink href={contactUrl}>Réserver un diagnostic</OrigamiLink>
-        <OrigamiLink href="#expertises" variant="outline">
-          Voir les expertises
+        <OrigamiLink href="#etapes" variant="outline">
+          Voir les étapes
         </OrigamiLink>
       </Inline>
     </Chapter>

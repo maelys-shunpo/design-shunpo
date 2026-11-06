@@ -1,20 +1,26 @@
 import Image, { type StaticImageData } from "next/image";
 
-import boat from "./images/still-boat.webp";
+import base from "./images/still-base.webp";
 import crane from "./images/still-crane.webp";
 import flock from "./images/still-flock.webp";
-import masu from "./images/still-masu.webp";
-import plane from "./images/still-plane.webp";
+import launch from "./images/still-launch.webp";
+import modules from "./images/still-modules.webp";
+import pattern from "./images/still-pattern.webp";
 import sheet from "./images/still-sheet.webp";
 
-/* The folds as still plates, captured from the studio: what each chapter shows under reduced motion. */
+/* Each step of the story as a still plate, captured from the studio: what a chapter shows under reduced
+   motion. */
 const plates = {
-  sheet: { src: sheet, alt: "Une feuille de papier ivoire, son premier coin à peine relevé." },
-  plane: { src: plane, alt: "La feuille pliée en avion de papier, prête à partir." },
-  crane: { src: crane, alt: "Une grue en papier citron, les ailes levées, le cou dressé." },
-  masu: { src: masu, alt: "Une boîte masu pliée, cobalt dehors, blanche dedans." },
-  boat: { src: boat, alt: "Un bateau de papier ivoire, sa voile pliée en pointe." },
-  flock: { src: flock, alt: "Une volée d’avions en papier qui traverse le ciel du studio." },
+  sheet: { src: sheet, alt: "Une feuille de papier blanche, un coin relevé vers la lumière." },
+  pattern: { src: pattern, alt: "La feuille vue d’en haut, son patron de pliage tracé en tirets." },
+  base: { src: base, alt: "La feuille plissée en étoile : la base d’où naissent les modèles." },
+  modules: {
+    src: modules,
+    alt: "Six unités de papier emboîtées en cube, chacune portant le nom d’un module.",
+  },
+  crane: { src: crane, alt: "Une grue de papier orange, vue en contre-plongée." },
+  launch: { src: launch, alt: "Un avion de papier blanc qui prend son envol." },
+  flock: { src: flock, alt: "Une volée d’avions de papier au-dessus du studio." },
 } satisfies Record<string, { src: StaticImageData; alt: string }>;
 
 export type Plate = keyof typeof plates;

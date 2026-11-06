@@ -18,11 +18,11 @@ export function MethodSection() {
         <Stack gap="3xl">
           <Stack gap="md">
             <Heading level={2} size="display">
-              Trois plis, <Emphasis>dans l’ordre.</Emphasis>
+              La méthode, <Emphasis>pli par pli.</Emphasis>
             </Heading>
             <Text size="lg" tone="muted" measure="prose">
-              On ne marque pas un pli au hasard. Chaque étape prépare la suivante, et rien n’est
-              construit avant d’avoir été compris.
+              Ce que la feuille vient de raconter, voici comment nous le faisons avec vous. Chaque
+              étape prépare la suivante, et rien n’est construit avant d’avoir été compris.
             </Text>
           </Stack>
           <Grid as="ol" columns="3" gap="xl">

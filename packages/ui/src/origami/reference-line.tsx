@@ -35,7 +35,7 @@ export function ReferenceLine({
         </span>
         <span className="flex flex-col gap-1">
           <span className="text-md">{project}</span>
-          <span className="font-mono text-xs tracking-wider text-muted-foreground uppercase transition-colors duration-300 group-hover/reference:text-accent">
+          <span className="font-mono text-xs tracking-wider text-muted-foreground uppercase transition-colors duration-300 group-hover/reference:text-secondary">
             {stake}
           </span>
         </span>

@@ -7,15 +7,20 @@ import { createWorld, type OrigamiWorld } from "./origami-world.ts";
 
 /* The studio in the direction's papers, read on the canvas so the theme's tokens apply. */
 export function createWorldOn(canvas: HTMLCanvasElement, tier: QualityTier): OrigamiWorld {
-  return createWorld(tier, {
-    ivory: resolveColor(canvas, "--origami-ivory"),
-    citron: resolveColor(canvas, "--origami-citron"),
-    cobalt: resolveColor(canvas, "--origami-cobalt"),
-    white: resolveColor(canvas, "--origami-white"),
-  });
+  return createWorld(
+    tier,
+    {
+      paper: resolveColor(canvas, "--origami-paper"),
+      ivory: resolveColor(canvas, "--origami-ivory"),
+      signal: resolveColor(canvas, "--origami-signal"),
+      cobalt: resolveColor(canvas, "--origami-cobalt"),
+      ink: resolveColor(canvas, "--origami-ink"),
+    },
+    getComputedStyle(canvas).fontFamily,
+  );
 }
 
-/* A soft light box, prefiltered once: matte paper still takes a little of the room's light. */
+/* A soft light box, prefiltered once: matte paper takes the room's light from every side. */
 export function createStudio(renderer: WebGLRenderer): WebGLRenderTarget {
   const generator = new PMREMGenerator(renderer);
   const target = generator.fromScene(new RoomEnvironment(), 0.06);

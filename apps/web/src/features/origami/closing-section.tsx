@@ -14,7 +14,7 @@ export function ClosingSection() {
       <Container size="wide">
         <Stack gap="xl" align="start">
           <Heading level={2} size="hero">
-            Commençons par le <Emphasis>premier pli.</Emphasis>
+            Apportez votre <Emphasis>feuille blanche.</Emphasis>
           </Heading>
           <Text size="lg" tone="muted" measure="prose">
             Un diagnostic pour repérer avec vous les tâches qui coûtent le plus de temps, et ce

@@ -10,7 +10,7 @@ import {
   setFold,
 } from "../src/scene/origami-folds.ts";
 import { cranePattern, planePattern } from "../src/scene/origami-patterns-air.ts";
-import { boatPattern, masuPattern } from "../src/scene/origami-patterns-ground.ts";
+import { sheetPattern, unitPattern } from "../src/scene/origami-patterns-ground.ts";
 import { bakePiece } from "../src/scene/origami-piece.ts";
 
 const flap: FacetSpec = {
@@ -118,8 +118,8 @@ describe("crease patterns", () => {
   it.each([
     ["plane", planePattern],
     ["crane", cranePattern],
-    ["masu", masuPattern],
-    ["boat", boatPattern],
+    ["sheet", sheetPattern],
+    ["unit", unitPattern],
   ])("hangs every facet of the %s on a parent that comes before it", (_name, pattern) => {
     expect(hungInOrder(pattern)).toBe(true);
     expect(new Set(pattern.map((spec) => spec.id)).size).toBe(pattern.length);

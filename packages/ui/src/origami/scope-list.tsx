@@ -15,7 +15,7 @@ export function ScopeList({ label, items }: ScopeListProps) {
         <li key={item} className="flex items-center gap-4">
           {item}
           {index < items.length - 1 ? (
-            <span aria-hidden className="text-accent">
+            <span aria-hidden className="text-secondary">
               /
             </span>
           ) : null}

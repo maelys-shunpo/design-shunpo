@@ -4,10 +4,10 @@ interface EmphasisProps {
   children: ReactNode;
 }
 
-/* The one folded word of a title: the display italic, in citron. */
+/* The one accented word of a title: the same roman, in cobalt. No italic in a title. */
 export function Emphasis({ children }: EmphasisProps) {
   return (
-    <em data-slot="origami-emphasis" className="text-accent italic">
+    <em data-slot="origami-emphasis" className="text-secondary not-italic">
       {children}
     </em>
   );

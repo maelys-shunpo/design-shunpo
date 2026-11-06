@@ -62,6 +62,7 @@ function twoSided(material: MeshStandardMaterial, colours: PaperColours): void {
             "vec4 diffuseColor = vec4( diffuse, opacity );",
             "vec4 diffuseColor = vec4( gl_FrontFacing ? diffuse : uBack, opacity );",
           )
+          .replace("#include <map_fragment>", "if ( gl_FrontFacing ) {\n#include <map_fragment>\n}")
           .replace(
             "#include <opaque_fragment>",
             "outgoingLight += diffuseColor.rgb * vec3(1.0, 0.9, 0.74) * 0.42 * pow(max(dot(-normal, uBacklight), 0.0), 1.4);\n#include <opaque_fragment>",

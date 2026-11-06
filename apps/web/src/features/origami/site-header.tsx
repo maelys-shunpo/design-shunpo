@@ -6,6 +6,7 @@ import { Wordmark } from "@repo/ui/origami/wordmark";
 import { contactUrl } from "@/features/shunpo/content";
 
 const anchors = [
+  { href: "#etapes", label: "Étapes" },
   { href: "#expertises", label: "Expertises" },
   { href: "#methode", label: "Méthode" },
   { href: "#references", label: "Références" },

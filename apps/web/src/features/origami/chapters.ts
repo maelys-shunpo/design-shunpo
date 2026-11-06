@@ -1,31 +1,72 @@
-import { expertises } from "@/features/shunpo/content";
+import type { Plate } from "./stills";
 
-/* The copy of the journey, chapter by chapter, in the order the camera meets the paper. */
-export const sheetChapter = {
-  index: "I · La feuille",
-  title: "Une feuille, quelques plis.",
-  body: "Chaque entreprise a ses feuilles volantes : des saisies, des relances, des fichiers qui passent de main en main. Nous les regardons d’abord à plat, avant de marquer le moindre pli.",
-};
+/* The story of the journey: each gesture of folding is a real step in building software. One chapter per
+   shot of the studio, in the order the camera meets the paper. */
+export interface Step {
+  id: string;
+  index: string;
+  title: string;
+  accent: string;
+  body: string;
+  plate: Plate;
+}
 
-export const flightChapter = {
-  index: "II · L’envol",
-  title: "Ce qui se répète",
-  emphasis: "s’envole.",
-  body: "Plié juste, un process part tout seul. Vos équipes gardent leur temps pour ce qui demande leur jugement.",
-};
+export const steps: Step[] = [
+  {
+    id: "patron",
+    index: "02 · Le patron",
+    title: "Avant de plier, on trace",
+    accent: "tous les plis.",
+    body: "Nous regardons comment votre entreprise fonctionne vraiment, puis nous dessinons la solution : les écrans, les données, les connexions. Chaque pli est décidé avant d’être marqué. C’est la conception.",
+    plate: "pattern",
+  },
+  {
+    id: "base",
+    index: "03 · La base",
+    title: "Une base solide, d’où naissent",
+    accent: "tous les modèles.",
+    body: "En origami, une même base sert à plier de nombreuses formes. Dans un logiciel, c’est le socle : les données, les connexions entre vos outils, la sécurité. Il se construit une fois et sert à tout le reste.",
+    plate: "base",
+  },
+  {
+    id: "modules",
+    index: "04 · Les modules",
+    title: "Chaque brique est simple.",
+    accent: "L’assemblage fait la solidité.",
+    body: "Chaque module se plie seul, puis s’emboîte dans les autres. Aucun ne tient sans le pli de son voisin : c’est ce qui rend l’ensemble solide.",
+    plate: "modules",
+  },
+  {
+    id: "forme",
+    index: "05 · La forme",
+    title: "La forme apparaît",
+    accent: "pli après pli.",
+    body: "Itérations, tests, retours de vos équipes : l’application se précise jusqu’à devenir l’outil qu’elles utilisent chaque jour.",
+    plate: "crane",
+  },
+  {
+    id: "lancement",
+    index: "06 · Le lancement",
+    title: "Puis elle",
+    accent: "s’envole.",
+    body: "La mise en production se prépare comme un dernier pli : avec soin, sans casser ce qui tourne déjà.",
+    plate: "launch",
+  },
+  {
+    id: "suite",
+    index: "07 · Ce qui suit",
+    title: "Et elle ne vole",
+    accent: "jamais seule.",
+    body: "Nous formons vos équipes, nous documentons chaque pli et nous faisons évoluer l’outil avec vous. Vous restez maîtres de ce qui a été construit.",
+    plate: "flock",
+  },
+];
 
-/* Each expertise is carried by one piece: the crane for the agents, the box for business software, the boat
-   for the websites that take a company out to its clients. */
-const pieces = ["La grue", "La boîte", "Le bateau"] as const;
-
-export const pieceChapters = expertises.map((expertise, index) => ({
-  expertise,
-  piece: pieces[index] ?? "",
-}));
-
-export const flockChapter = {
-  index: "III · La volée",
-  title: "Des pièces qui volent",
-  emphasis: "ensemble.",
-  body: "Les trois se combinent. Un process automatisé d’abord, puis l’application métier qui le porte, puis le site qui l’ouvre à vos clients.",
-};
+export const moduleNames = [
+  "Authentification",
+  "CRM",
+  "Paiement",
+  "Agent IA",
+  "Tableau de bord",
+  "Notifications",
+] as const;

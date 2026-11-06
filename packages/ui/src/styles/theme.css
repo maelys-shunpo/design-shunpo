@@ -158,9 +158,7 @@
     0 1px 2px rgb(14 14 12 / 0.06), 0 12px 32px -8px rgb(14 14 12 / 0.16),
     0 48px 96px -32px rgb(14 14 12 / 0.28);
   --shadow-agents-card: 0 1px 2px rgb(14 14 12 / 0.06), 0 8px 24px -12px rgb(14 14 12 / 0.18);
-  --color-origami-night: #0d0e12;
   --color-origami-ivory: #f2efe9;
-  --color-origami-citron: #e4f05a;
 
   /* Each direction's display face, for the same previews. */
   --font-mincho: var(--font-family-mincho), "Hiragino Mincho ProN", "Yu Mincho", ui-serif, serif;
@@ -368,9 +366,10 @@
   --ring: light-dark(#2f3bff, #9aa1ff);
 }
 
-/* ── Direction « Origami »: folded paper in a dark studio. Ink night, ivory paper, a citron fold. ── */
+/* ── Direction « Origami »: paper folded in a bright studio. The palette of « Agents »: warm paper, ink, grey,
+   pure white, one signal orange (a fold, the action) and a cobalt. Bodoni Moda in roman for titles. ── */
 :root:has([data-direction="origami"]) {
-  color-scheme: dark;
+  color-scheme: light;
   --corner-scale: 0;
   --heading-weight: 400;
   --font-display: var(--font-family-bodoni), ui-serif, Georgia, serif;
@@ -378,28 +377,29 @@
   --text-8xl--letter-spacing: -0.03em;
   --text-7xl--letter-spacing: -0.025em;
   /* The papers the scene folds, read on its canvas (resolveColor). */
-  --origami-ivory: #efe9dd;
-  --origami-citron: #e4f05a;
-  --origami-cobalt: #2b44ff;
-  --origami-white: #fbfaf7;
+  --origami-paper: #ffffff;
+  --origami-ivory: #e4dccb;
+  --origami-signal: #ff4f1a;
+  --origami-cobalt: #2f3bff;
+  --origami-ink: #0e0e0c;
 }
 
 :root:has([data-direction="origami"]),
 :root:has([data-direction="origami"]) .scheme-light,
 :root:has([data-direction="origami"]) .scheme-dark {
-  --background: light-dark(#f2efe9, #0d0e12);
-  --foreground: light-dark(#121318, #f2efe9);
-  --muted: light-dark(#e6e2da, #16171d);
-  --muted-foreground: light-dark(#5f5d58, #a6a39c);
-  --surface: light-dark(#fbfaf7, #1b1c23);
-  --primary: light-dark(#121318, #f2efe9);
-  --primary-foreground: light-dark(#f2efe9, #0d0e12);
-  --secondary: light-dark(#2b44ff, #8e9cff);
-  --secondary-foreground: light-dark(#ffffff, #0d0e12);
-  --accent: #e4f05a;
-  --accent-foreground: #0d0e12;
-  --accent-ink: light-dark(#5c6300, #e4f05a);
-  --border: light-dark(rgb(18 19 24 / 0.12), rgb(242 239 233 / 0.12));
-  --rule: light-dark(rgb(18 19 24 / 0.45), rgb(242 239 233 / 0.4));
-  --ring: light-dark(#2b44ff, #e4f05a);
+  --background: light-dark(#f6f5f1, #0e0e0c);
+  --foreground: light-dark(#0e0e0c, #f6f5f1);
+  --muted: light-dark(#edebe5, #1a1a17);
+  --muted-foreground: light-dark(#66655f, #a3a29b);
+  --surface: light-dark(#ffffff, #1a1a17);
+  --primary: light-dark(#0e0e0c, #f6f5f1);
+  --primary-foreground: light-dark(#ffffff, #0e0e0c);
+  --secondary: light-dark(#2f3bff, #9aa1ff);
+  --secondary-foreground: light-dark(#ffffff, #0e0e0c);
+  --accent: #ff4f1a;
+  --accent-foreground: #0e0e0c;
+  --accent-ink: light-dark(#c2360a, #ff8a63);
+  --border: light-dark(rgb(14 14 12 / 0.1), rgb(246 245 241 / 0.12));
+  --rule: light-dark(rgb(14 14 12 / 0.4), rgb(246 245 241 / 0.4));
+  --ring: light-dark(#2f3bff, #9aa1ff);
 }

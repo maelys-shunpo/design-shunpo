@@ -1,8 +1,11 @@
-import { type Camera, Object3D, type Vector2, Vector3 } from "three";
+import { type Camera, Object3D, Quaternion, type Vector2, Vector3 } from "three";
 
-import { framing, poseCamera } from "./origami-camera.ts";
+import { framing, poseCamera, STATIONS } from "./origami-camera.ts";
+import { tracePattern } from "./origami-creases.ts";
+import { poseCube } from "./origami-cube.ts";
+import { setFold } from "./origami-folds.ts";
 import type { Piece } from "./origami-piece.ts";
-import { type OrigamiWorld, setFolds } from "./origami-world.ts";
+import type { OrigamiWorld } from "./origami-world.ts";
 
 export interface WorldFrame {
   progress: number;
@@ -14,16 +17,54 @@ export function phase(progress: number, start: number, end: number): number {
   return Math.min(Math.max((progress - start) / (end - start), 0), 1);
 }
 
-/* When each piece folds, as a share of the whole scroll: the sheet into a plane, then each piece as the
-   camera reaches it. */
-export const FOLDS = {
-  plane: [0.05, 0.28],
-  crane: [0.42, 0.54],
-  masu: [0.58, 0.7],
-  boat: [0.73, 0.85],
+/* The story along the scroll, as shares of it: the pattern is traced, the sheet gathers into its base, the
+   modules lock into a cube, the crane takes shape, the plane is folded and launched, the flock follows. */
+export const STEPS = {
+  pattern: [0.1, 0.21],
+  base: [0.23, 0.36],
+  modules: [0.41, 0.6],
+  crane: [0.62, 0.74],
+  plane: [0.75, 0.8],
+  flight: [0.8, 0.92],
+  flock: [0.88, 1],
 } as const;
-const FLIGHT = [0.29, 0.47] as const;
-const FLOCK_PHASE = [0.84, 1] as const;
+
+const corner = new Quaternion();
+
+/* A piece is in the studio only around its own step, so the camera never meets the next one too early, nor
+   the last one in the back of a shot. */
+const PRESENCE = {
+  sheet: [-1, 0.42],
+  cube: [0.36, 0.66],
+  crane: [0.615, 2],
+  plane: [0.745, 2],
+} as const;
+
+function present(progress: number, [from, to]: readonly [number, number]): boolean {
+  return progress > from && progress < to;
+}
+
+function stage(world: OrigamiWorld, progress: number): void {
+  const pieces = [world.sheet.piece.root, world.cube.root, world.crane.root, world.plane.root];
+  const windows = [PRESENCE.sheet, PRESENCE.cube, PRESENCE.crane, PRESENCE.plane];
+  pieces.forEach((piece, index) => {
+    const window = windows[index] ?? PRESENCE.sheet;
+    const here = present(progress, window);
+    Object.assign(piece, { visible: here && (index !== 3 || piece.visible) });
+    Object.assign(world.ground.contacts[index] ?? {}, { visible: here });
+  });
+}
+
+/* The blank sheet already shows its first gesture: one corner lifted toward the light, which it lets go of as
+   the base gathers. */
+function liftCorner(world: OrigamiWorld, amount: number): void {
+  const facet = world.sheet.piece.facets.at(-1);
+  if (facet === undefined) {
+    return;
+  }
+  corner.setFromAxisAngle(facet.axis, 0.55 * amount * Math.sign(facet.angle));
+  facet.pivot.quaternion.multiply(corner);
+}
 
 /* Paper floats: a slow bob and a slow turn, a phase apart for each piece, around its resting turn. */
 function breathe(piece: Piece, time: number, rest: { turn: number; seed: number }): void {
@@ -32,14 +73,24 @@ function breathe(piece: Piece, time: number, rest: { turn: number; seed: number 
 }
 
 /* The plane takes off: it climbs away from the camera, nose lifting, banking a little, then leaves the frame. */
-function fly(piece: Piece, flight: number): void {
+interface Pad {
+  station: readonly [number, number, number];
+  time: number;
+}
+
+function fly(piece: Piece, flight: number, { station: [x, , z], time }: Pad): void {
   Object.assign(piece.root, { visible: flight < 1 });
   if (flight === 0) {
+    piece.root.position.set(x, piece.root.position.y, z);
     return;
   }
   const { position, rotation } = piece.root;
-  position.set(flight * 0.7, position.y + 1.7 * flight ** 1.5, -7.5 * flight);
-  rotation.set(0.32 * flight, rotation.y * (1 - flight), -0.35 * flight);
+  position.set(x + flight * 0.7, position.y + 1.7 * flight ** 1.5, z - 7.5 * flight);
+  rotation.set(
+    0.32 * flight,
+    rotation.y * (1 - flight),
+    -0.35 * flight + Math.sin(time * 1.3) * 0.16 * flight,
+  );
 }
 
 const scratch = new Object3D();
@@ -54,7 +105,7 @@ function poseFlock(world: OrigamiWorld, flight: number, time: number): void {
     const row = index % 4;
     const column = Math.floor(index / 4);
     scratch.position.set(
-      -6 + glide * (20 + column * 1.6 + row * 0.7),
+      -3 + glide * (20 + column * 1.6 + row * 0.7) + Math.sin(time * 1.1 + index) * 0.6 * glide,
       1.8 + row * 0.55 + column * 0.25 + Math.sin(time * 1.6 + index) * 0.18,
       -2.5 - column * 1.1 + row * 0.4,
     );
@@ -66,30 +117,35 @@ function poseFlock(world: OrigamiWorld, flight: number, time: number): void {
   Object.assign(world.flock.instanceMatrix, { needsUpdate: true });
 }
 
-/* Poses the whole studio for a frame of the scroll. The idle life (bob, turn, flutter, a key light that circles)
-   starts from zero at the first frame and fades in, so the first frame is the poster's. */
+/* Poses the whole studio for a frame of the scroll. The idle life (bob, turn, flutter) starts from zero at
+   the first frame and fades in, so the first frame is the poster's. */
 export function poseWorld(world: OrigamiWorld, frame: WorldFrame): void {
   const { progress, time } = frame;
   const life = Math.min(Math.max((time - 0.1) / 1.5, 0), 1);
   const alive = time * life;
-  setFolds(
-    world,
-    {
-      plane: 0.1 + phase(progress, ...FOLDS.plane) * 0.9,
-      crane: phase(progress, ...FOLDS.crane),
-      masu: phase(progress, ...FOLDS.masu),
-      boat: phase(progress, ...FOLDS.boat),
-    },
-    Math.sin(alive * 1.6) * 0.04,
+  const breath = { flutter: Math.sin(alive * 1.6) * 0.04, rest: 0.05 };
+  const base = phase(progress, ...STEPS.base);
+  setFold(world.sheet.piece.facets, base, breath);
+  liftCorner(world, 1 - base);
+  tracePattern(
+    world.sheet.pattern,
+    phase(progress, ...STEPS.pattern),
+    phase(progress, 0.08, 0.12) * (1 - phase(progress, 0.24, 0.3)),
   );
-  breathe(world.plane, alive, { turn: 0.5, seed: 0 });
+  poseCube(world.cube, phase(progress, ...STEPS.modules), breath.flutter);
+  world.cube.root.rotation.set(0, 0.35 + Math.sin(alive * 0.55) * 0.18, 0);
+  setFold(world.crane.facets, phase(progress, ...STEPS.crane), breath);
+  setFold(world.plane.facets, phase(progress, ...STEPS.plane), breath);
+  breathe(world.sheet.piece, alive, { turn: 0.5, seed: 0 });
+  /* The pleats hang below the sheet as the base gathers: the sheet rises so they never touch the floor. */
+  world.sheet.piece.root.position.setY(world.sheet.piece.root.position.y + base * 0.6);
   breathe(world.crane, alive, { turn: -0.45, seed: 1.3 });
-  breathe(world.masu, alive, { turn: 0.62, seed: 2.1 });
-  breathe(world.boat, alive, { turn: 0.38, seed: 3.4 });
-  const flight = phase(progress, ...FLIGHT);
-  fly(world.plane, flight);
-  world.ground.contacts[0]?.scale.setScalar(Math.max(1 - flight * 1.6, 0.001));
-  poseFlock(world, phase(progress, ...FLOCK_PHASE), alive);
+  breathe(world.plane, alive, { turn: 0.2, seed: 2.1 });
+  const flight = phase(progress, ...STEPS.flight);
+  fly(world.plane, flight, { station: STATIONS.launch, time: alive });
+  world.ground.contacts[3]?.scale.setScalar(Math.max(1 - flight * 1.6, 0.001));
+  stage(world, progress);
+  poseFlock(world, phase(progress, ...STEPS.flock), alive);
 }
 
 export interface StudioFrame {
@@ -121,11 +177,11 @@ const towardRim = new Vector3();
 export function placeLights(world: OrigamiWorld, camera: Camera, time: number): void {
   const focus = framing.target;
   const life = Math.min(Math.max((time - 0.1) / 1.5, 0), 1);
-  const drift = time * life * 0.5;
+  const drift = time * life * 0.8;
   world.key.position.set(
-    focus.x - 3.4 + Math.cos(drift) * 0.9,
+    focus.x - 3.4 + Math.cos(drift) * 1.8,
     focus.y + 1.5,
-    focus.z + 2.6 + Math.sin(drift) * 0.9,
+    focus.z + 2.6 + Math.sin(drift) * 1.8,
   );
   world.key.target.position.copy(focus);
   world.rim.position.set(focus.x + 2.6, focus.y + 2.4, focus.z - 4.6);

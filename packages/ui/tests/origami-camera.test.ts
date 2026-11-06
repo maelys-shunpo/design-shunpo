@@ -32,7 +32,7 @@ describe("shot list", () => {
 
   it("lengthens the lens on the pieces and banks with the plane", () => {
     expect(shot(0.52).fov).toBeLessThan(shot(0).fov);
-    expect(shot(0.4).roll).toBeGreaterThan(0);
+    expect(shot(0.89).roll).toBeGreaterThan(0);
   });
 
   it("eases between two shots", () => {

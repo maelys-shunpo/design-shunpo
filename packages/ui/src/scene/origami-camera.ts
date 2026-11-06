@@ -13,30 +13,46 @@ interface Shot {
   roll: number;
 }
 
-/* Where the pieces stand in the studio: the sheet and its plane at the origin, then a line of three pieces. */
+/* Where the pieces stand in the studio: the atelier where the sheet is drawn and folded, the cube of
+   modules, the crane, and the launch pad of the plane. */
 export const STATIONS = {
-  sheet: [0, 0, 0],
-  crane: [6.5, 0, -1],
-  masu: [13, 0, 0],
-  boat: [19.5, 0, -0.6],
+  atelier: [0, 0, 0],
+  modules: [9, 0, -0.5],
+  crane: [16, 0, -1],
+  launch: [23, 0, 0],
 } as const satisfies Record<string, Triple>;
 
-/* The camera's shot list along the scroll: a close three-quarter overhead on the sheet, partly out of frame;
-   a long lens as it folds; the plane followed into the air with a bank; a lateral travel to the crane; an
-   overhead on the box; a true low angle on the boat; then a wide shot for the flock. Each piece is held while
-   it folds. */
+/* An orbit around the cube while its units arrive: a quarter turn and more, at one height and distance. */
+function orbit(at: number, angle: number): Shot {
+  const [x, , z] = STATIONS.modules;
+  return {
+    at,
+    position: [x + Math.sin(angle) * 6.4, 2.6, z + Math.cos(angle) * 6.4],
+    target: [x, 0.62, z],
+    fov: 26,
+    roll: 0,
+  };
+}
+
+/* The camera's shot list, one move per step of the story: a close three-quarter on the blank sheet; an
+   overhead while the crease pattern is traced; a close, low shot on the pleats of the base; an orbit around
+   the cube of modules; a low angle on the crane; a travel with the plane as it takes off; a wide shot for the
+   flock. Each step is held while its paper folds. */
 export const SHOTS: readonly Shot[] = [
-  { at: 0, position: [1.55, 2.8, 2.55], target: [-0.95, 0, 0.15], fov: 34, roll: 0 },
-  { at: 0.1, position: [2.2, 3.3, 3.3], target: [-0.75, 0, 0], fov: 30, roll: 0 },
-  { at: 0.27, position: [5.5, 2.2, 5.8], target: [0, 0.25, -0.2], fov: 22, roll: 0 },
-  { at: 0.4, position: [1.6, 1.5, 4.2], target: [0.6, 1.4, -4.6], fov: 30, roll: 0.14 },
-  { at: 0.48, position: [11.8, 1.95, 6.3], target: [6.5, 0.45, -1], fov: 21, roll: 0 },
-  { at: 0.56, position: [11.05, 2.3, 6.8], target: [6.5, 0.5, -1], fov: 21, roll: 0 },
-  { at: 0.63, position: [13.8, 7.5, 3.4], target: [13, 0.1, 0], fov: 22, roll: 0 },
-  { at: 0.72, position: [14.3, 6.7, 4.15], target: [13, 0.1, 0], fov: 22, roll: 0 },
-  { at: 0.79, position: [15.95, -1.55, 6.15], target: [19.6, 0.8, -0.6], fov: 23, roll: -0.05 },
-  { at: 0.87, position: [16.5, -1.35, 6.7], target: [19.6, 0.8, -0.6], fov: 23, roll: -0.05 },
-  { at: 1, position: [15.5, 4.2, 9], target: [16.5, 1.6, -3], fov: 34, roll: 0 },
+  { at: 0, position: [2.5, 4, 3.6], target: [-1.15, 0, 0.15], fov: 34, roll: 0 },
+  { at: 0.1, position: [-0.85, 7.4, 0.7], target: [-1.05, 0, 0], fov: 30, roll: 0 },
+  { at: 0.2, position: [-0.8, 7.1, 0.9], target: [-1.05, 0, 0], fov: 30, roll: 0 },
+  { at: 0.28, position: [3.5, 3, 4.5], target: [-0.95, 0.5, 0], fov: 24, roll: 0 },
+  { at: 0.36, position: [3.9, 3.3, 5], target: [-0.95, 0.55, 0], fov: 24, roll: 0 },
+  orbit(0.43, -0.45),
+  orbit(0.49, 0.25),
+  orbit(0.54, 0.95),
+  orbit(0.59, 1.6),
+  { at: 0.65, position: [13, -1.15, 5.6], target: [16, 1, -1], fov: 23, roll: -0.04 },
+  { at: 0.74, position: [13.3, -0.95, 6], target: [16, 1, -1], fov: 23, roll: -0.04 },
+  { at: 0.79, position: [25.6, 1.5, 4.6], target: [22.2, 0.35, 0], fov: 25, roll: 0 },
+  { at: 0.89, position: [24.4, 1.8, -0.9], target: [22.6, 1.3, -6.4], fov: 30, roll: 0.14 },
+  { at: 1, position: [20, 3.4, 6.5], target: [20.7, 2.1, -3.5], fov: 34, roll: 0 },
 ];
 
 function ease(amount: number): number {
@@ -97,8 +113,8 @@ export function poseCamera(camera: Camera, frame: CameraFrame): void {
   shotAt(frame.progress, framing);
   const { position, target } = framing;
   camera.position.set(
-    position.x + frame.pointer.x * 0.35 + Math.sin(frame.time * 0.31) * 0.08,
-    position.y + frame.pointer.y * 0.22 + Math.cos(frame.time * 0.27) * 0.06,
+    position.x + frame.pointer.x * 0.35 + Math.sin(frame.time * 0.45) * 0.28,
+    position.y + frame.pointer.y * 0.22 + Math.cos(frame.time * 0.38) * 0.16,
     position.z,
   );
   camera.lookAt(target);

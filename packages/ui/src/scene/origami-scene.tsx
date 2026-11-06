@@ -27,7 +27,7 @@ function StudioFrame({
   const pointer = useSmoothedPointer();
   useFirstFrame(onReady);
   useFrame((state, delta) => {
-    Object.assign(state.scene, { environmentIntensity: 0.12 });
+    Object.assign(state.scene, { environmentIntensity: 0.25 });
     const { width, height } = state.size;
     poseStudio(world, state.camera, {
       delta,
@@ -54,9 +54,10 @@ function Studio({ tier, onReady, progress }: OrigamiSceneProps) {
   return <StudioFrame world={world} studio={studio} onReady={onReady} progress={progress} />;
 }
 
-/* ACES filmic, opened a little: the ivory reads bright, the citron and the cobalt stay saturated. */
+/* ACES filmic at its neutral exposure: white paper stays white on the bright studio, orange and cobalt stay
+   saturated. */
 function exposeStudio({ gl }: { gl: WebGLRenderer }): void {
-  Object.assign(gl, { toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.12 });
+  Object.assign(gl, { toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1 });
 }
 
 export function OrigamiScene(props: OrigamiSceneProps) {

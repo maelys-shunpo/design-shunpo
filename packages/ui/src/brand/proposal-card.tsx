@@ -18,7 +18,7 @@ const cardVariants = cva(
         mecanique: "bg-fuji-deep text-shiro",
         fil: "bg-tenku text-kome",
         agents: "bg-agents-paper text-agents-ink",
-        origami: "bg-origami-night text-origami-ivory",
+        origami: "bg-origami-ivory text-agents-ink",
       },
     },
   },
@@ -31,7 +31,7 @@ const titleVariants = cva("", {
       mecanique: "font-archivo text-4xl font-semibold font-stretch-expanded",
       fil: "font-bricolage text-5xl font-semibold",
       agents: "font-sans text-5xl font-regular tracking-normal",
-      origami: "font-bodoni text-5xl font-regular italic",
+      origami: "font-bodoni text-5xl font-regular",
     },
   },
 });

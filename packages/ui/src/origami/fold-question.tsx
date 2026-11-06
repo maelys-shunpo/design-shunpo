@@ -13,7 +13,7 @@ export function FoldQuestion({ question, children }: FoldQuestionProps) {
         {question}
         <span
           aria-hidden
-          className="font-mono text-xl text-accent transition-transform duration-300 ease-emphasized group-open/question:rotate-45"
+          className="font-mono text-xl text-secondary transition-transform duration-300 ease-emphasized group-open/question:rotate-45"
         >
           +
         </span>

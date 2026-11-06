@@ -27,7 +27,7 @@ export const proposals: Proposal[] = [
     index: "B",
     name: "Origami",
     tagline:
-      "Une feuille se plie en 3D et la caméra voyage d’une pièce à l’autre : simplifier, c’est plier juste.",
+      "Créer un logiciel, c’est plier une feuille blanche : le patron, la base, les modules qui s’emboîtent, puis le lancement. En 3D, la caméra suit chaque pli.",
     technique: "Papier plié en 3D",
   },
 ];

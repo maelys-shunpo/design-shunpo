@@ -6,9 +6,9 @@ import { SiteFooter } from "@/features/origami/site-footer";
 import { SiteHeader } from "@/features/origami/site-header";
 
 export const metadata: Metadata = {
-  title: "Origami · Pliez le travail, dépliez le temps",
+  title: "Origami · Tout logiciel commence par une feuille blanche",
   description:
-    "Agents IA, automatisations et logiciels sur mesure : SHUNPO plie ce qui vous prend des heures en systèmes qui tournent seuls.",
+    "Du besoin au lancement, un logiciel se plie comme un origami : un patron, une base, des modules qui s’emboîtent. SHUNPO conçoit, développe et déploie vos agents IA, automatisations et logiciels sur mesure.",
 };
 
 export default function OrigamiPage() {

@@ -13,7 +13,7 @@ export function ReferencesSection() {
       <Container size="wide">
         <Stack gap="2xl">
           <Heading level={2} size="display">
-            Ils nous ont confié <Emphasis>leurs plis.</Emphasis>
+            Des pièces <Emphasis>déjà en service.</Emphasis>
           </Heading>
           <Stack as="div" gap="none">
             {references.map((reference) => (
