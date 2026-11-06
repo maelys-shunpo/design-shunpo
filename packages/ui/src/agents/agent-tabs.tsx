@@ -28,6 +28,9 @@ interface AgentTabsProps {
   backdrop?: ReactElement;
   /* Driven from outside (the scroll): the phase to show. A tab chosen by the visitor wins until it changes. */
   active?: number | undefined;
+  /* A bar under the whole row of phases, filled by the scroll (`[data-phase-rail]`, scaled by the page's
+     choreography). It replaces the active underline from tablets up when motion is allowed. */
+  rail?: boolean;
   className?: string;
 }
 
@@ -88,25 +91,41 @@ function phaseSequence({
   backdrop,
   active,
   travel,
+  rail,
 }: {
   items: AgentTab[];
   label: string;
   backdrop: ReactElement | undefined;
   active: number;
   travel: PhaseTravel | undefined;
+  rail: boolean;
 }) {
   return (
     <>
       <Tabs.List
         aria-label={label}
-        className="relative flex gap-6 border-b border-border sm:gap-10"
+        className={cn(
+          "relative flex gap-6 border-b border-border sm:gap-10",
+          /* With the rail, each phase owns a third of the row, so a third of the bar ends under it. */
+          rail && "md:grid md:grid-cols-3 md:gap-0",
+        )}
       >
         {items.map((item, index) => (
           <Tabs.Tab key={item.id} value={index} className={phaseTab}>
             {item.title}
           </Tabs.Tab>
         ))}
-        <Tabs.Indicator aria-hidden className="agents-phase-indicator" />
+        <Tabs.Indicator
+          aria-hidden
+          className={cn("agents-phase-indicator", rail && "md:motion-safe:hidden")}
+        />
+        {rail ? (
+          <span
+            aria-hidden
+            data-phase-rail=""
+            className="pointer-events-none absolute inset-x-0 -bottom-px hidden h-0.5 origin-left scale-x-0 bg-agents-signal md:motion-safe:block"
+          />
+        ) : null}
       </Tabs.List>
       <div className="relative isolate grid overflow-clip rounded-stage bg-muted">
         {backdrop === undefined ? null : (
@@ -168,6 +187,28 @@ function agentShowcase({
   );
 }
 
+/* The shown phase and the way it travelled there. A new phase from the scroll replaces the shown one; a tab the
+   visitor picks wins until the scroll moves on. */
+function usePhase(driven: number | undefined) {
+  const [active, setActive] = useState(driven ?? 0);
+  const [travel, setTravel] = useState<PhaseTravel>();
+  const [lastDriven, setLastDriven] = useState(driven);
+  const show = useCallback(
+    (next: number) => {
+      if (next !== active) {
+        setTravel(next > active ? "forward" : "backward");
+      }
+      setActive(next);
+    },
+    [active],
+  );
+  if (driven !== undefined && driven !== lastDriven) {
+    setLastDriven(driven);
+    show(driven);
+  }
+  return { active, travel, show };
+}
+
 /* A rotating showcase or a manually selected sequence on a shared stage. */
 export function AgentTabs({
   items,
@@ -176,22 +217,15 @@ export function AgentTabs({
   layout = "side",
   backdrop,
   active: driven,
+  rail = false,
   className,
 }: AgentTabsProps) {
   const [root, setRoot] = useState<HTMLDivElement | null>(null);
-  const [active, setActive] = useState(driven ?? 0);
-  const [travel, setTravel] = useState<PhaseTravel>();
-  /* A new phase from the scroll replaces the shown one, travelling the way the scroll went. */
-  const [lastDriven, setLastDriven] = useState(driven);
-  if (driven !== undefined && driven !== lastDriven) {
-    setLastDriven(driven);
-    setTravel(driven > active ? "forward" : "backward");
-    setActive(driven);
-  }
+  const { active, travel, show } = usePhase(driven);
   const isSequence = layout === "below";
   const advance = useCallback(() => {
-    setActive((active + 1) % items.length);
-  }, [active, items.length]);
+    show((active + 1) % items.length);
+  }, [active, items.length, show]);
   const running = useAutoAdvance({ root, count: isSequence ? 0 : items.length, every, advance });
 
   return (
@@ -200,16 +234,12 @@ export function AgentTabs({
       data-slot="agent-tabs"
       value={active}
       onValueChange={(value) => {
-        const next = Number(value);
-        if (isSequence && next !== active) {
-          setTravel(next > active ? "forward" : "backward");
-        }
-        setActive(next);
+        show(Number(value));
       }}
       className={cn(rootVariants({ layout }), className)}
     >
       {isSequence
-        ? phaseSequence({ items, label, backdrop, active, travel })
+        ? phaseSequence({ items, label, backdrop, active, travel, rail })
         : agentShowcase({ items, label, active, running, every })}
     </Tabs.Root>
   );
