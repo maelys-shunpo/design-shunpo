@@ -9,8 +9,6 @@ const partVariants = cva("", {
       /* Context: the grey that lets the important words stand. */
       dim: "text-agents-dim",
       ink: "text-foreground",
-      /* One word set in the italic serif, the human note in a machine sentence. */
-      serif: "font-serif font-regular tracking-normal text-foreground italic",
     },
     block: {
       true: "block",

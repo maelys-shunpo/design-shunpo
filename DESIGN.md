@@ -133,6 +133,21 @@ Poster and two still plates captured from the scene, AVIF (96, 32 and 41 KB). 0 
 
 Direction « Agents ». A product site for an agency that builds AI agents, at the level of intercom.com. The proof is interfaces at work, laid on photographed surfaces (plaster, linen, travertine, black paper) like objects on a table. The headline speaks low (grey words) and lands on what matters (a black word, a serif word). Warm paper #F6F5F1, ink #0E0E0C, one signal orange #FF4F1A for markers (small text goes through `--accent-ink`), a cobalt for states. Geist light with tight tracking, Instrument Serif italic for one word, Geist Mono for labels behind a colour square. A lower-case « shunpo » wordmark beside a signal square.
 
+### Typography (chosen on 6 November 2026)
+
+Newsreader Medium for every title, Instrument Sans for text and interfaces, Geist Mono for labels and data. Chosen over Instrument Serif + Instrument Sans, Bricolage + Instrument Sans, Geist + Geist Mono and Piazzolla + Geist, after tests on the live page and in large asymmetric compositions (`.context/typo/`): a press serif that reads as a serious partner, set very large with grey and ink words; a neutral sans that keeps the interfaces crisp. No italic in any title: emphasis is ink against grey, never a slanted word.
+
+| Step   | Use                                                              | Size (390 px → 1,600 px) | Line height | Tracking |
+| ------ | ---------------------------------------------------------------- | ------------------------ | ----------- | -------- |
+| 8xl    | Poster, manifesto line                                           | 68 → 216 px              | 0.90        | −0.040em |
+| 7xl    | Hero                                                             | 56 → 176 px              | 0.92        | −0.035em |
+| 6xl    | Section opener                                                   | 48 → 136 px              | 0.95        | −0.030em |
+| 5xl    | Section title                                                    | 40 → 88 px               | 1.00        | −0.025em |
+| 4xl    | Sub-section, card title                                          | 32 → 56 px               | 1.05        | −0.020em |
+| 3xl    | Step title, lead heading                                         | 26 → 36 px               | 1.15        | −0.015em |
+| Text   | Instrument Sans 400, 16 to 20 px, 1.55                           |                          |             |          |
+| Labels | Geist Mono 400, 12 px, capitals, +0.08em, behind a colour square |                          |             |          |
+
 - Do: dense, credible mockups (names, times, statuses, confidence, cited sources); a person at the sensitive moment; one orange per screen.
 - Don't: orbs, decorative gradients, generic icon cards, invented result figures (the mockups' amounts are illustrative and fictitious).
 - References: intercom.com (interfaces on photographs, tabs with progress, wall of tools), horizonx.so (curved 3D wall, floating pill nav), refero.design (editorial serif).

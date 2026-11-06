@@ -18,7 +18,7 @@ export function HeroCopy() {
         </HeadlinePart>
         <HeadlinePart block>qui font le travail,</HeadlinePart>
         <HeadlinePart tone="dim">pas la </HeadlinePart>
-        <HeadlinePart tone="serif">démo.</HeadlinePart>
+        <HeadlinePart tone="ink">démo.</HeadlinePart>
       </Headline>
       <Text size="lg" align="center" measure="prose" tone="muted">
         SHUNPO conçoit, connecte et maintient des agents IA sur mesure. Ils lisent vos e-mails,

@@ -44,7 +44,7 @@ export function CaseCard({
   const children = (
     <>
       <span className="font-mono text-xs tracking-wide uppercase">{project}</span>
-      <span className="font-serif text-5xl leading-none italic">{client}</span>
+      <span className="font-display text-4xl leading-none font-heading text-balance">{client}</span>
       <span className="flex flex-col gap-3">
         <span className="text-sm">{stake}</span>
         <span className="inline-flex items-center gap-2 text-sm font-medium underline decoration-current/30 underline-offset-4 group-hover/case:decoration-current">

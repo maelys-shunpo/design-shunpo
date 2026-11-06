@@ -56,7 +56,7 @@ export const Headlines: Story = {
         </HeadlinePart>
         <HeadlinePart block>qui font le travail,</HeadlinePart>
         <HeadlinePart tone="dim">pas la </HeadlinePart>
-        <HeadlinePart tone="serif">démo.</HeadlinePart>
+        <HeadlinePart tone="ink">démo.</HeadlinePart>
       </Headline>
       <Headline level={2} size="subtitle" align="center">
         Un titre centré

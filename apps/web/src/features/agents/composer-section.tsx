@@ -18,7 +18,7 @@ export function ComposerSection() {
             <Eyebrow>Essayer</Eyebrow>
             <Headline level={2} size="title" align="center">
               <HeadlinePart tone="dim">Quelle tâche voulez-vous </HeadlinePart>
-              <HeadlinePart tone="serif">ne plus jamais </HeadlinePart>
+              <HeadlinePart tone="ink">ne plus jamais </HeadlinePart>
               <HeadlinePart>faire ?</HeadlinePart>
             </Headline>
             <Text size="lg" tone="muted" align="center" measure="prose">

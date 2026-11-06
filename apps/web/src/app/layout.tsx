@@ -6,7 +6,8 @@ import {
   Geist,
   Geist_Mono,
   Hanken_Grotesk,
-  Instrument_Serif,
+  Instrument_Sans,
+  Newsreader,
 } from "next/font/google";
 import localFont from "next/font/local";
 
@@ -54,11 +55,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   preload: false,
 });
-const instrument = Instrument_Serif({
-  variable: "--font-family-instrument",
+const newsreader = Newsreader({
+  variable: "--font-family-newsreader",
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+  axes: ["opsz"],
+  preload: false,
+});
+const instrumentSans = Instrument_Sans({
+  variable: "--font-family-instrument-sans",
+  subsets: ["latin"],
+  axes: ["wdth"],
   preload: false,
 });
 const bodoni = Bodoni_Moda({
@@ -76,7 +82,8 @@ const fontVariables = [
   archivo,
   geist,
   geistMono,
-  instrument,
+  newsreader,
+  instrumentSans,
   bodoni,
 ]
   .map((font) => font.variable)
