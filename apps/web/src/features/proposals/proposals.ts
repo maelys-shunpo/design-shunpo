@@ -10,7 +10,30 @@ export interface Proposal {
   technique: string;
 }
 
+/* The second series, built from scratch outside the SHUNPO charter. */
 export const proposals: Proposal[] = [
+  {
+    direction: "agents",
+    href: "/agents",
+    index: "A",
+    name: "Agents",
+    tagline:
+      "Un site produit pour une agence d’agents IA. Des interfaces qui travaillent en direct, vos outils connectés, un agent à qui décrire une tâche.",
+    technique: "Interfaces live",
+  },
+  {
+    direction: "origami",
+    href: "/origami",
+    index: "B",
+    name: "Origami",
+    tagline:
+      "Une feuille se plie en 3D et la caméra voyage d’une pièce à l’autre : simplifier, c’est plier juste.",
+    technique: "Papier plié en 3D",
+  },
+];
+
+/* The first series, kept for comparison. */
+export const firstSeries: Proposal[] = [
   {
     direction: "instant",
     href: "/instant",

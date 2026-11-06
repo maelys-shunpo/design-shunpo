@@ -19,13 +19,14 @@ const verticalVariants = cva("font-display leading-none select-none writing-vert
 });
 
 /* Set upright in a vertical line, a fallback mincho draws its kanji wider than the 1em line box, past its right
-   edge: room on both sides keeps the ink inside the box, so the page never scrolls sideways. */
-const roomVariants = cva("inline-flex", {
+   edge: room on both sides keeps the ink inside the box, so the page never scrolls sideways.
+   The large rail only stands beside a heading from tablets up: on a phone it would push the heading off screen. */
+const roomVariants = cva("", {
   variants: {
     size: {
-      sm: "px-2",
-      md: "px-6",
-      lg: "px-12",
+      sm: "inline-flex px-2",
+      md: "inline-flex px-2 md:px-6",
+      lg: "hidden md:inline-flex md:px-6 lg:px-12",
     },
   },
   defaultVariants: { size: "md" },

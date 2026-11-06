@@ -2,12 +2,17 @@ import { ProposalCard } from "@repo/ui/brand/proposal-card";
 import { Grid } from "@repo/ui/layout/grid";
 import Link from "next/link";
 
-import { proposals } from "./proposals";
+import type { Proposal } from "./proposals";
 
-export function ProposalsGrid() {
+interface ProposalsGridProps {
+  items: Proposal[];
+  columns: "2" | "3";
+}
+
+export function ProposalsGrid({ items, columns }: ProposalsGridProps) {
   return (
-    <Grid as="ul" columns="3" from="lg" gap="none">
-      {proposals.map((proposal) => (
+    <Grid as="ul" columns={columns} from="lg" gap="none">
+      {items.map((proposal) => (
         <li key={proposal.direction}>
           <ProposalCard
             direction={proposal.direction}

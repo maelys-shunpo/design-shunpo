@@ -185,6 +185,9 @@ catalogs:
     '@fontsource-variable/archivo':
       specifier: 5.3.0
       version: 5.3.0
+    '@fontsource-variable/bodoni-moda':
+      specifier: 5.3.0
+      version: 5.3.0
     '@fontsource-variable/bricolage-grotesque':
       specifier: 5.3.0
       version: 5.3.0
@@ -195,6 +198,9 @@ catalogs:
       specifier: 5.3.0
       version: 5.3.0
     '@fontsource-variable/hanken-grotesk':
+      specifier: 5.3.0
+      version: 5.3.0
+    '@fontsource/instrument-serif':
       specifier: 5.3.0
       version: 5.3.0
     '@fontsource/shippori-mincho-b1':
@@ -308,6 +314,9 @@ catalogs:
     react-dom:
       specifier: ^19.3.1
       version: 19.3.1
+    simple-icons:
+      specifier: 16.36.0
+      version: 16.36.0
     storybook:
       specifier: ^10.6.4
       version: 10.6.4
@@ -400,6 +409,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.3.1(react@19.3.1)
+      simple-icons:
+        specifier: 'catalog:'
+        version: 16.36.0
     devDependencies:
       '@axe-core/playwright':
         specifier: 'catalog:'
@@ -490,6 +502,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.3.1(react@19.3.1)
+      simple-icons:
+        specifier: 'catalog:'
+        version: 16.36.0
       tailwind-merge:
         specifier: 'catalog:'
         version: 3.7.0
@@ -503,6 +518,9 @@ importers:
       '@fontsource-variable/archivo':
         specifier: 'catalog:'
         version: 5.3.0
+      '@fontsource-variable/bodoni-moda':
+        specifier: 'catalog:'
+        version: 5.3.0
       '@fontsource-variable/bricolage-grotesque':
         specifier: 'catalog:'
         version: 5.3.0
@@ -513,6 +531,9 @@ importers:
         specifier: 'catalog:'
         version: 5.3.0
       '@fontsource-variable/hanken-grotesk':
+        specifier: 'catalog:'
+        version: 5.3.0
+      '@fontsource/instrument-serif':
         specifier: 'catalog:'
         version: 5.3.0
       '@fontsource/shippori-mincho-b1':
@@ -1057,6 +1078,9 @@ packages:
   '@fontsource-variable/archivo@5.3.0':
     resolution: {integrity: sha512-HogK8FJelrD1o7TlZlkIVtHgc20bO5PZRWE7mUeUTdMN055alznQV6/00J00IBeu8FQAH4s3zW9UJNvKExXf+g==}
 
+  '@fontsource-variable/bodoni-moda@5.3.0':
+    resolution: {integrity: sha512-yTDXk4+/J8I20KjtkHBbXDQNeE5PR3BZa0gv/YRza+kyxsz+mmg0la/n/hsr6+WvSfVP7Lc8lRTjHGIYwBW43A==}
+
   '@fontsource-variable/bricolage-grotesque@5.3.0':
     resolution: {integrity: sha512-TLi9Q4hJjS2UvoTMRSS2nHu6c4R56lAw60NR9QYtVRCHn0XtsFpiEhNffZ8Glsoxu6wEEwLKBP8lb94J52PNBA==}
 
@@ -1068,6 +1092,9 @@ packages:
 
   '@fontsource-variable/hanken-grotesk@5.3.0':
     resolution: {integrity: sha512-DOd0FqL+3cH2dfNy0JtSq9tUfxBz5mLmHMjTU0DOr3E9Zo6wxuatCl53DIPNrSPgCsnuKyM739BTIG5glCLirw==}
+
+  '@fontsource/instrument-serif@5.3.0':
+    resolution: {integrity: sha512-mDiaIg0u67sYV59fie92Wz4sM8UiVlbL7fLxnFPCKkX15DMASEnQTREbaP5S5/3DCcsoAOcQ0sV9E4AeY4QqYQ==}
 
   '@fontsource/shippori-mincho-b1@5.3.0':
     resolution: {integrity: sha512-H4NvSJntaViHN8LjwmPTzZgJ8pyWcNetaJMHT4kfg6n1VR60QO2cYl/KDEIP4z2SR83//nlZb5gfQyZUpeNVNA==}
@@ -4800,6 +4827,10 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
+  simple-icons@16.36.0:
+    resolution: {integrity: sha512-+VNPPkqSOLidFeSgBKUWX4n50WPpDC09hav+BgS26anIF1oQOlGBb8LvwGR+6fYRjo+B6CiKzNBceMPkSVXANQ==}
+    engines: {node: '>=0.12.18'}
+
   sirv@3.0.2:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
     engines: {node: '>=18'}
@@ -5950,6 +5981,8 @@ snapshots:
 
   '@fontsource-variable/archivo@5.3.0': {}
 
+  '@fontsource-variable/bodoni-moda@5.3.0': {}
+
   '@fontsource-variable/bricolage-grotesque@5.3.0': {}
 
   '@fontsource-variable/geist-mono@5.3.0': {}
@@ -5957,6 +5990,8 @@ snapshots:
   '@fontsource-variable/geist@5.3.0': {}
 
   '@fontsource-variable/hanken-grotesk@5.3.0': {}
+
+  '@fontsource/instrument-serif@5.3.0': {}
 
   '@fontsource/shippori-mincho-b1@5.3.0': {}
 
@@ -9352,6 +9387,8 @@ snapshots:
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
+
+  simple-icons@16.36.0: {}
 
   sirv@3.0.2:
     dependencies:

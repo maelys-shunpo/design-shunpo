@@ -1,3 +1,131 @@
 {
-  "assets": []
+  "assets": [
+    {
+      "file": "apps/web/src/features/agents/images/hero-plaster.webp",
+      "master": "assets/source/agents/plaster-b.png",
+      "page": "agents",
+      "slot": "hero surface",
+      "source": "generated",
+      "origin": {
+        "tool": "images_generate",
+        "model": "imagen-nano-banana-2",
+        "prompt": "Photograph of a warm off-white plaster wall lit by low afternoon sun, soft blurred shadows of olive leaves and branches falling diagonally across it, gentle warm highlights, fine mineral texture, calm and airy. Full-frame texture background seen straight on, generous empty space in the centre for a product interface to sit on top. No objects, no text, no people, no logos, no frames.",
+        "creation": "gOBK6pjSXO",
+        "resolution": "2k"
+      },
+      "edits": ["resize 1920 px", "webp q72"],
+      "license": {
+        "type": "magnific-ai-commercial",
+        "plan": "premium",
+        "attributionRequired": false,
+        "indemnified": false
+      },
+      "credits": 75,
+      "approvedBy": "autonomous run under the page cap",
+      "date": "2026-11-06"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/support-plaster.webp",
+      "master": "assets/source/agents/plaster-a.png",
+      "page": "agents",
+      "slot": "support agent surface",
+      "source": "generated",
+      "origin": {
+        "tool": "images_generate",
+        "model": "imagen-nano-banana-2",
+        "prompt": "Photograph of a warm off-white plaster wall lit by low afternoon sun, soft blurred shadows of olive leaves and branches falling diagonally across it, gentle warm highlights, fine mineral texture, calm and airy. Full-frame texture background seen straight on, generous empty space in the centre for a product interface to sit on top. No objects, no text, no people, no logos, no frames.",
+        "creation": "Lweq4VBswO",
+        "resolution": "2k"
+      },
+      "edits": ["resize 1920 px", "webp q72"],
+      "license": {
+        "type": "magnific-ai-commercial",
+        "plan": "premium",
+        "attributionRequired": false,
+        "indemnified": false
+      },
+      "credits": 75,
+      "approvedBy": "autonomous run under the page cap",
+      "date": "2026-11-06"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/sales-linen.webp",
+      "master": "assets/source/agents/linen-a.png",
+      "page": "agents",
+      "slot": "sales agent surface",
+      "source": "generated",
+      "origin": {
+        "tool": "images_generate",
+        "model": "imagen-nano-banana-2",
+        "prompt": "Macro photograph of natural undyed linen fabric laid flat, soft window light from the left creating subtle folds and a gentle gradient of shade, warm sand and oat tones, tactile woven texture. Full-frame background seen from above, calm and minimal, room in the centre for an interface overlay. No objects, no text, no people, no logos.",
+        "creation": "5jcfUcAKxe",
+        "resolution": "2k"
+      },
+      "edits": ["resize 1920 px", "webp q72"],
+      "license": {
+        "type": "magnific-ai-commercial",
+        "plan": "premium",
+        "attributionRequired": false,
+        "indemnified": false
+      },
+      "credits": 75,
+      "approvedBy": "autonomous run under the page cap",
+      "date": "2026-11-06"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/office-stone.webp",
+      "master": "assets/source/agents/stone-b.png",
+      "page": "agents",
+      "slot": "reporting agent surface",
+      "source": "generated",
+      "origin": {
+        "tool": "images_generate",
+        "model": "imagen-nano-banana-2",
+        "prompt": "Photograph of pale honed travertine stone surface with soft window light and the crisp shadow of a window frame and a few palm leaves, cool morning tones with a touch of warmth, very subtle stone pores. Full-frame background seen straight on, minimal and quiet, empty centre for an interface overlay. No objects, no text, no people, no logos.",
+        "creation": "rgMQOdHxtc",
+        "resolution": "2k"
+      },
+      "edits": ["resize 1920 px", "webp q72"],
+      "license": {
+        "type": "magnific-ai-commercial",
+        "plan": "premium",
+        "attributionRequired": false,
+        "indemnified": false
+      },
+      "credits": 75,
+      "approvedBy": "autonomous run under the page cap",
+      "date": "2026-11-06"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/closing-ink.webp",
+      "master": "assets/source/agents/ink-b.png",
+      "page": "agents",
+      "slot": "closing surface",
+      "source": "generated",
+      "origin": {
+        "tool": "images_generate",
+        "model": "imagen-nano-banana-2",
+        "prompt": "Photograph of a deep ink-black textured paper surface with a single soft beam of warm late light and faint shadows of grass stems, rich charcoal tones, fine paper fibres, cinematic and quiet. Full-frame background seen straight on, empty centre for an interface overlay. No objects, no text, no people, no logos.",
+        "creation": "aF3XknmfSh",
+        "resolution": "2k"
+      },
+      "edits": ["resize 1920 px", "webp q72"],
+      "license": {
+        "type": "magnific-ai-commercial",
+        "plan": "premium",
+        "attributionRequired": false,
+        "indemnified": false
+      },
+      "credits": 75,
+      "approvedBy": "autonomous run under the page cap",
+      "date": "2026-11-06"
+    }
+  ],
+  "pages": {
+    "agents": {
+      "cap": 5000,
+      "spent": 600,
+      "note": "8 images generated (4 prompts × 2 variants, 75 credits each); 5 shipped, 3 kept as unused masters."
+    }
+  }
 }

@@ -10,11 +10,12 @@ export function ProposalsIntro() {
       <Container size="wide">
         <Stack gap="lg">
           <Heading level={1} size="hero">
-            Une promesse, trois façons de la faire ressentir.
+            Deux nouvelles directions, parties de zéro.
           </Heading>
           <Text size="lg" measure="prose" tone="muted">
-            SHUNPO vous libère du temps. Chaque page raconte la même chose avec les mêmes faits :
-            des outils dispersés, un système relié, du temps rendu. Seule la manière change.
+            Une agence qui conçoit des agents IA, des automatisations et des logiciels sur mesure
+            pour faire gagner du temps aux entreprises. Aucun élément de l’ancienne charte : ni
+            couleurs, ni typographies, ni logo.
           </Text>
         </Stack>
       </Container>

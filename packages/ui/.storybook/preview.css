@@ -7,6 +7,10 @@
 @import "@fontsource/shippori-mincho-b1/800.css";
 @import "@fontsource/zen-kaku-gothic-new/400.css";
 @import "@fontsource/zen-kaku-gothic-new/500.css";
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/bodoni-moda";
+@import "@fontsource-variable/bodoni-moda/wght-italic.css";
 @import "../src/styles/globals.css";
 
 :root {
@@ -17,4 +21,6 @@
   --font-family-hanken: "Hanken Grotesk Variable";
   --font-family-mincho: "Shippori Mincho B1";
   --font-family-zen: "Zen Kaku Gothic New";
+  --font-family-instrument: "Instrument Serif";
+  --font-family-bodoni: "Bodoni Moda Variable";
 }

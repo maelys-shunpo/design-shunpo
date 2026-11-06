@@ -1,3 +1,5 @@
+import { firstSeries, proposals } from "@/features/proposals/proposals";
+import { ProposalsFirstSeries } from "@/features/proposals/proposals-first-series";
 import { ProposalsFooter } from "@/features/proposals/proposals-footer";
 import { ProposalsGrid } from "@/features/proposals/proposals-grid";
 import { ProposalsHeader } from "@/features/proposals/proposals-header";
@@ -9,7 +11,9 @@ export default function HomePage() {
       <ProposalsHeader />
       <main>
         <ProposalsIntro />
-        <ProposalsGrid />
+        <ProposalsGrid items={proposals} columns="2" />
+        <ProposalsFirstSeries />
+        <ProposalsGrid items={firstSeries} columns="3" />
       </main>
       <ProposalsFooter />
     </>

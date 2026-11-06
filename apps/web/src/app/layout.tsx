@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
-import { Archivo, Bricolage_Grotesque, Geist, Geist_Mono, Hanken_Grotesk } from "next/font/google";
+import {
+  Archivo,
+  Bodoni_Moda,
+  Bricolage_Grotesque,
+  Geist,
+  Geist_Mono,
+  Hanken_Grotesk,
+  Instrument_Serif,
+} from "next/font/google";
 import localFont from "next/font/local";
 
 import { Providers } from "./providers";
@@ -46,7 +54,31 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   preload: false,
 });
-const fontVariables = [hanken, bricolage, mincho, zen, archivo, geist, geistMono]
+const instrument = Instrument_Serif({
+  variable: "--font-family-instrument",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  preload: false,
+});
+const bodoni = Bodoni_Moda({
+  variable: "--font-family-bodoni",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
+  preload: false,
+});
+const fontVariables = [
+  hanken,
+  bricolage,
+  mincho,
+  zen,
+  archivo,
+  geist,
+  geistMono,
+  instrument,
+  bodoni,
+]
   .map((font) => font.variable)
   .join(" ");
 

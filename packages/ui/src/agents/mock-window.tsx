@@ -1,0 +1,65 @@
+import { cva, type VariantProps } from "class-variance-authority";
+import type { ReactNode } from "react";
+
+import { cn } from "../lib/cn.ts";
+
+const bodyVariants = cva("grid min-h-0 divide-agents-line", {
+  variants: {
+    layout: {
+      single: "grid-cols-1",
+      split: "grid-cols-1 md:grid-cols-2 md:divide-x",
+      /* A list, a document and the agent's panel, the way an inbox is laid out. */
+      triple: "grid-cols-1 md:grid-cols-2 md:divide-x lg:grid-cols-3",
+    },
+  },
+  defaultVariants: { layout: "single" },
+});
+
+interface MockWindowProps extends VariantProps<typeof bodyVariants> {
+  /* The app's name in its title bar, such as « Agent factures ». */
+  title: string;
+  /* Where the app lives: « Back-office · Lyon ». */
+  context?: string | undefined;
+  /* The top-right corner: a status, a button. */
+  status?: ReactNode;
+  children: ReactNode;
+  className?: string | undefined;
+}
+
+/* The window of an application built by SHUNPO, shown on a photographed surface: white, hairlines, a soft shadow. */
+export function MockWindow({
+  title,
+  context,
+  status,
+  layout,
+  children,
+  className,
+}: MockWindowProps) {
+  return (
+    <div
+      data-slot="mock-window"
+      className={cn(
+        "flex w-full flex-col overflow-clip rounded-xl border border-agents-line bg-agents-paper text-agents-ink shadow-agents-float",
+        className,
+      )}
+    >
+      <div className="flex items-center justify-between gap-4 border-b border-agents-line bg-surface px-4 py-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <span aria-hidden className="flex gap-1">
+            <span className="size-3 rounded-full bg-agents-line" />
+            <span className="size-3 rounded-full bg-agents-line" />
+            <span className="size-3 rounded-full bg-agents-line" />
+          </span>
+          <span className="truncate text-sm font-medium">{title}</span>
+          {context === undefined ? null : (
+            <span className="hidden truncate text-sm text-muted-foreground sm:inline">
+              {context}
+            </span>
+          )}
+        </div>
+        {status}
+      </div>
+      <div className={bodyVariants({ layout })}>{children}</div>
+    </div>
+  );
+}

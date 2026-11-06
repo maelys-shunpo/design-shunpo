@@ -47,6 +47,7 @@
   --font-sans: var(--font-family-hanken), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-family-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
   --font-display: var(--font-family-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-family-instrument), ui-serif, Georgia, serif;
 
   --font-weight-light: 300;
   --font-weight-regular: 400;
@@ -138,11 +139,34 @@
   --color-tenku: var(--brand-tenku);
   --color-fushimi: var(--brand-fushimi);
   --color-frost: var(--brand-frost);
+  --color-agents-paper: #f6f5f1;
+  --color-agents-ink: #0e0e0c;
+  --color-agents-signal: #ff4f1a;
+  /* Statuses inside the « Agents » mockups: done, waiting on a human, in progress. */
+  --color-agents-ok: #12703c;
+  --color-agents-ok-tint: #e3f2e8;
+  --color-agents-wait: #8a4b00;
+  --color-agents-wait-tint: #fbeeda;
+  --color-agents-info: #2f3bff;
+  --color-agents-info-tint: #e8e9ff;
+  --color-agents-signal-tint: #ffe9e1;
+  --color-agents-line: #e7e5df;
+  /* The grey of a headline's context words, for large type only: 3.4:1 on the paper, 3.1:1 on the muted ground. */
+  --color-agents-dim: #83827c;
+  /* A window resting on a photographed surface: a contact shadow and a long soft one. */
+  --shadow-agents-float:
+    0 1px 2px rgb(14 14 12 / 0.06), 0 12px 32px -8px rgb(14 14 12 / 0.16),
+    0 48px 96px -32px rgb(14 14 12 / 0.28);
+  --shadow-agents-card: 0 1px 2px rgb(14 14 12 / 0.06), 0 8px 24px -12px rgb(14 14 12 / 0.18);
+  --color-origami-night: #0d0e12;
+  --color-origami-ivory: #f2efe9;
+  --color-origami-citron: #e4f05a;
 
   /* Each direction's display face, for the same previews. */
   --font-mincho: var(--font-family-mincho), "Hiragino Mincho ProN", "Yu Mincho", ui-serif, serif;
   --font-archivo: var(--font-family-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-bricolage: var(--font-family-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-bodoni: var(--font-family-bodoni), ui-serif, Georgia, serif;
 }
 
 /* The four brand colours and their few derived shades. Semantic roles below read them; scenes resolve them
@@ -166,28 +190,27 @@
   --brand-ink-muted: #545c60;
 }
 
-/* Neutral SHUNPO, used by the index of proposals: paper by day, Fuji Night by night. */
+/* Neutral ground of the proposals index: off-white by day, near black by night, outside every direction. */
 :root,
 .scheme-light,
 .scheme-dark {
-  --background: light-dark(#e5dfd3, #1e2629);
-  --foreground: light-dark(#1e2629, #e5dfd3);
-  --muted: light-dark(#dcd5c7, #273236);
-  --muted-foreground: light-dark(#545c60, #bdc8cc);
-  --surface: light-dark(#f3f0e9, #273236);
-  --primary: light-dark(#1e2629, #e5dfd3);
-  --primary-foreground: light-dark(#f3f0e9, #1e2629);
-  --secondary: light-dark(#1f637d, #7ab6cc);
-  --secondary-foreground: light-dark(#f3f0e9, #141a1c);
-  --accent: light-dark(#b94532, #e5dfd3);
-  --accent-foreground: light-dark(#f3f0e9, #1e2629);
-  --destructive: light-dark(#9a3626, #e08a7b);
-  /* Fushimi for small text: the brand red reaches 4:1 on Shiro, this shade 5.4:1 (and a light coral by night). */
-  --accent-ink: light-dark(#9a3626, #e08a7b);
-  --destructive-foreground: light-dark(#f3f0e9, #141a1c);
-  --border: light-dark(rgb(30 38 41 / 0.16), rgb(229 223 211 / 0.16));
-  --rule: light-dark(rgb(30 38 41 / 0.55), rgb(229 223 211 / 0.5));
-  --ring: light-dark(#b94532, #e5dfd3);
+  --background: light-dark(#f4f3ef, #101011);
+  --foreground: light-dark(#111112, #f4f3ef);
+  --muted: light-dark(#e9e7e1, #1b1b1d);
+  --muted-foreground: light-dark(#5e5d59, #a9a8a3);
+  --surface: light-dark(#ffffff, #1b1b1d);
+  --primary: light-dark(#111112, #f4f3ef);
+  --primary-foreground: light-dark(#ffffff, #111112);
+  --secondary: light-dark(#2f3bff, #9aa1ff);
+  --secondary-foreground: light-dark(#ffffff, #111112);
+  --accent: light-dark(#111112, #f4f3ef);
+  --accent-foreground: light-dark(#ffffff, #111112);
+  --destructive: light-dark(#b42318, #f97066);
+  --destructive-foreground: light-dark(#ffffff, #111112);
+  --accent-ink: light-dark(#b42318, #f97066);
+  --border: light-dark(rgb(17 17 18 / 0.1), rgb(244 243 239 / 0.12));
+  --rule: light-dark(rgb(17 17 18 / 0.45), rgb(244 243 239 / 0.45));
+  --ring: light-dark(#2f3bff, #9aa1ff);
 }
 
 /* A field of Blue Tenku: Kome type on the blue, Fuji for actions. */
@@ -308,4 +331,75 @@
   --border: light-dark(rgb(30 38 41 / 0.14), rgb(243 240 233 / 0.16));
   --rule: light-dark(rgb(30 38 41 / 0.55), rgb(243 240 233 / 0.55));
   --ring: light-dark(#b94532, #f3f0e9);
+}
+
+/* ── Direction « Agents »: a product site for AI agents. Warm paper white, ink, live interfaces, one signal orange. ── */
+:root:has([data-direction="agents"]) {
+  color-scheme: light;
+  --corner-scale: 2;
+  --heading-weight: 400;
+  --font-display: var(--font-family-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-family-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-family-instrument), ui-serif, Georgia, serif;
+  --text-8xl--letter-spacing: -0.05em;
+  --text-7xl--letter-spacing: -0.045em;
+  --text-6xl--letter-spacing: -0.04em;
+  --text-5xl--letter-spacing: -0.035em;
+  --text-4xl--letter-spacing: -0.03em;
+}
+
+:root:has([data-direction="agents"]),
+:root:has([data-direction="agents"]) .scheme-light,
+:root:has([data-direction="agents"]) .scheme-dark {
+  --background: light-dark(#f6f5f1, #0e0e0c);
+  --foreground: light-dark(#0e0e0c, #f6f5f1);
+  --muted: light-dark(#edebe5, #1a1a17);
+  --muted-foreground: light-dark(#66655f, #a3a29b);
+  --surface: light-dark(#ffffff, #1a1a17);
+  --primary: light-dark(#0e0e0c, #f6f5f1);
+  --primary-foreground: light-dark(#ffffff, #0e0e0c);
+  --secondary: light-dark(#2f3bff, #9aa1ff);
+  --secondary-foreground: light-dark(#ffffff, #0e0e0c);
+  --accent: #ff4f1a;
+  --accent-foreground: #0e0e0c;
+  --accent-ink: light-dark(#c2360a, #ff8a63);
+  --border: light-dark(rgb(14 14 12 / 0.1), rgb(246 245 241 / 0.12));
+  --rule: light-dark(rgb(14 14 12 / 0.4), rgb(246 245 241 / 0.4));
+  --ring: light-dark(#2f3bff, #9aa1ff);
+}
+
+/* ── Direction « Origami »: folded paper in a dark studio. Ink night, ivory paper, a citron fold. ── */
+:root:has([data-direction="origami"]) {
+  color-scheme: dark;
+  --corner-scale: 0;
+  --heading-weight: 400;
+  --font-display: var(--font-family-bodoni), ui-serif, Georgia, serif;
+  --font-sans: var(--font-family-geist), ui-sans-serif, system-ui, sans-serif;
+  --text-8xl--letter-spacing: -0.03em;
+  --text-7xl--letter-spacing: -0.025em;
+  /* The papers the scene folds, read on its canvas (resolveColor). */
+  --origami-ivory: #efe9dd;
+  --origami-citron: #e4f05a;
+  --origami-cobalt: #2b44ff;
+  --origami-white: #fbfaf7;
+}
+
+:root:has([data-direction="origami"]),
+:root:has([data-direction="origami"]) .scheme-light,
+:root:has([data-direction="origami"]) .scheme-dark {
+  --background: light-dark(#f2efe9, #0d0e12);
+  --foreground: light-dark(#121318, #f2efe9);
+  --muted: light-dark(#e6e2da, #16171d);
+  --muted-foreground: light-dark(#5f5d58, #a6a39c);
+  --surface: light-dark(#fbfaf7, #1b1c23);
+  --primary: light-dark(#121318, #f2efe9);
+  --primary-foreground: light-dark(#f2efe9, #0d0e12);
+  --secondary: light-dark(#2b44ff, #8e9cff);
+  --secondary-foreground: light-dark(#ffffff, #0d0e12);
+  --accent: #e4f05a;
+  --accent-foreground: #0d0e12;
+  --accent-ink: light-dark(#5c6300, #e4f05a);
+  --border: light-dark(rgb(18 19 24 / 0.12), rgb(242 239 233 / 0.12));
+  --rule: light-dark(rgb(18 19 24 / 0.45), rgb(242 239 233 / 0.4));
+  --ring: light-dark(#2b44ff, #e4f05a);
 }

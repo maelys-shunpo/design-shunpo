@@ -12,6 +12,8 @@ const visualVariants = cva("block size-full overflow-visible", {
       instant: "",
       mecanique: "",
       fil: "",
+      agents: "",
+      origami: "",
     },
   },
 });
@@ -89,10 +91,57 @@ function FilVisual() {
   );
 }
 
+/* The live interface of « Agents »: a request, the agent's reply, a tool call; the reply slides up on hover. */
+function AgentsVisual() {
+  return (
+    <>
+      <rect
+        x="10"
+        y="40"
+        width="180"
+        height="120"
+        rx="12"
+        className="fill-agents-paper stroke-agents-ink/10"
+      />
+      <rect x="24" y="56" width="96" height="18" rx="9" className="fill-agents-ink/10" />
+      <g className="transition-transform duration-500 ease-emphasized group-hover:-translate-y-2">
+        <rect x="80" y="84" width="96" height="18" rx="9" className="fill-agents-ink" />
+        <rect
+          x="24"
+          y="112"
+          width="120"
+          height="30"
+          rx="8"
+          className="fill-none stroke-agents-ink/20"
+        />
+        <rect x="32" y="122" width="10" height="10" className="fill-agents-signal" />
+        <rect x="50" y="124" width="70" height="6" rx="3" className="fill-agents-ink/30" />
+      </g>
+    </>
+  );
+}
+
+/* A folded crane of « Origami »: facets of ivory and one citron wing, which lifts on hover. */
+function OrigamiVisual() {
+  return (
+    <>
+      <polygon points="20,130 100,110 70,150" className="fill-origami-ivory/70" />
+      <polygon points="100,110 180,60 140,130" className="fill-origami-ivory" />
+      <polygon points="70,150 100,110 140,130" className="fill-origami-ivory/50" />
+      <g className="origin-center transition-transform duration-700 ease-emphasized group-hover:-rotate-12">
+        <polygon points="100,110 80,40 120,95" className="fill-origami-citron" />
+      </g>
+      <polygon points="20,130 8,100 40,125" className="fill-origami-ivory/80" />
+    </>
+  );
+}
+
 const visuals = {
   instant: InstantVisual,
   mecanique: MecaniqueVisual,
   fil: FilVisual,
+  agents: AgentsVisual,
+  origami: OrigamiVisual,
 } satisfies Record<DirectionName, () => ReactNode>;
 
 interface ProposalVisualProps {

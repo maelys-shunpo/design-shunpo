@@ -1,3 +1,3 @@
 import type { Route } from "next";
 
-export const routes: Route[] = ["/", "/instant", "/mecanique", "/fil"];
+export const routes: Route[] = ["/", "/agents", "/origami", "/instant", "/mecanique", "/fil"];

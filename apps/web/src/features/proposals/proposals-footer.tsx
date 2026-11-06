@@ -7,7 +7,7 @@ export function ProposalsFooter() {
     <Section as="footer" spacing="sm">
       <Container size="wide">
         <Text size="sm" tone="muted" measure="prose">
-          Les trois pages se lisent aussi sans animation (réglage « réduire les animations ») et sur
+          Chaque page se lit aussi sans animation (réglage « réduire les animations ») et sur
           téléphone, où chaque scène passe dans une version allégée.
         </Text>
       </Container>

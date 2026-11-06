@@ -53,7 +53,14 @@ export default defineConfig({
       },
       {
         extends: true,
-        test: { name: "browser", include: ["tests/**/*.test.tsx"], browser: chromium() },
+        /* One file at a time: the WebGL scenes measure motion over real time, and several at once
+           starve each other of frames and of the browser's sixteen live contexts. */
+        test: {
+          name: "browser",
+          include: ["tests/**/*.test.tsx"],
+          browser: chromium(),
+          fileParallelism: false,
+        },
       },
       {
         extends: true,

@@ -9,6 +9,8 @@ const directionVariants = cva("min-h-svh bg-background text-foreground", {
       instant: "",
       mecanique: "",
       fil: "",
+      agents: "",
+      origami: "",
     },
   },
 });

@@ -1,5 +1,7 @@
 # Design direction
 
+> **Second series (November 2026).** Maëlys rejected the first series (Instant, Mécanique, Le fil) and asked for two proposals built from scratch, outside the SHUNPO charter: no brand colour, face, logo or Japanese reference. `/agents` and `/origami` are that series; the first series stays below for comparison.
+
 Values live in `packages/ui/src/styles/theme.css`; this file holds the direction only.
 
 ## Point of view
@@ -126,3 +128,58 @@ Things untangle, tighten and knot. `ease.emphasized` for entrances, `ease.inOut`
 ### Assets
 
 Poster and two still plates captured from the scene, AVIF (96, 32 and 41 KB). 0 credits.
+
+## Page: agents
+
+Direction « Agents ». A product site for an agency that builds AI agents, at the level of intercom.com. The proof is interfaces at work, laid on photographed surfaces (plaster, linen, travertine, black paper) like objects on a table. The headline speaks low (grey words) and lands on what matters (a black word, a serif word). Warm paper #F6F5F1, ink #0E0E0C, one signal orange #FF4F1A for markers (small text goes through `--accent-ink`), a cobalt for states. Geist light with tight tracking, Instrument Serif italic for one word, Geist Mono for labels behind a colour square. A lower-case « shunpo » wordmark beside a signal square.
+
+- Do: dense, credible mockups (names, times, statuses, confidence, cited sources); a person at the sensitive moment; one orange per screen.
+- Don't: orbs, decorative gradients, generic icon cards, invented result figures (the mockups' amounts are illustrative and fictitious).
+- References: intercom.com (interfaces on photographs, tabs with progress, wall of tools), horizonx.so (curved 3D wall, floating pill nav), refero.design (editorial serif).
+
+### Transitions
+
+| Boundary                  | Treatment                                                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Hero to references        | Clean cut; the band scrolls continuously                                                                |
+| References to agents      | Clean cut; the panel changes by a fade of live pieces                                                   |
+| Agents to tools           | Muted ground, clean cut                                                                                 |
+| Tools to method           | Cut, then a scene held three screens from md: steps light in turn, boards fade and slide (`ease.inOut`) |
+| Method to references      | Cut; the curved wall turns with the scroll (direct scrub)                                               |
+| Composer, FAQ, final call | Clean cuts; the final call is a dark island                                                             |
+
+### Storyboard
+
+1. **Hero console, « Agent factures »** (live, a ten-second loop held four seconds): invoices arrive, the document is framed while read, fields are extracted with confidence, Odoo is called, a person approves above 2,000 €, a #compta toast confirms.
+2. **Three agents in auto-advancing tabs** (nine seconds each): support (Shopify, carrier, Gmail, cited sources), sales (enriched HubSpot record, typed follow-up, Calendly), steering (Sheets, Airtable, QuickBooks, Monday summary).
+3. **Method held on scroll.** Everything else lives in micro-motion: marquees, activity feed, curved wall, composer. The pointer pauses live interfaces and tabs.
+
+### Assets
+
+Eight Magnific images (Nano Banana Pro 2K, four prompts × two), five shipped as 1,920 px WebP; 600 credits of a 5,000 cap. Tool logos from simple-icons (CC0).
+
+## Page: origami
+
+Direction « Origami ». A night studio where paper truly folds. Night ground #0D0E12, ivory paper, one citron fold (the crane, the italic words, the action) and a cobalt box, white inside. Bodoni Moda for titles with one citron italic word each, Geist for text, Geist Mono capitals for marks. Sharp corners, much black: the 3D carries the page and the editorial lets it breathe.
+
+- Do: one citron fold per screen; every motion is a paper gesture (fold, take off, land); the camera holds each piece while it folds.
+- Don't: glossy or plastic paper, heavy post-processing, decorative gradients, invented figures.
+- References: step-by-step folding diagrams (a form understood by its folds), studio photography of paper objects (raking light, back light), Didone editorial posters.
+
+### Transitions
+
+| Boundary                   | Treatment                                                                                          |
+| -------------------------- | -------------------------------------------------------------------------------------------------- |
+| Chapters of the scene      | Copy scrolls in normal flow over the fixed scene; the camera moves from shot to shot between holds |
+| End of the scene to method | Clean cut on the same night ground                                                                 |
+| References                 | Muted surface, clean cut                                                                           |
+| Questions to final call    | Back to night, large italic title                                                                  |
+
+### Storyboard
+
+1. **Signature, the studio** (seven windows of scroll): the sheet from above, a corner barely lifted (poster); folding into a plane (0.05 to 0.28); take-off (0.29 to 0.47); the crane (fold 0.42 to 0.54, camera hold 0.48 to 0.57); the masu box (0.58 to 0.70); the boat (0.73 to 0.85); a flock in a wide shot (0.84 to 1). Pointer: camera parallax. At rest: floating, slow turn, beating folds, a turning key light. Still plates under reduced motion.
+2. Everything else is calm: hover only (a button corner that folds, a reference name that slides, a turning `+`).
+
+### Assets
+
+Procedural geometry (folding patterns in code), three.js `RoomEnvironment` (MIT), a poster captured from the first frame and six still plates. 0 credits.

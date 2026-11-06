@@ -61,8 +61,8 @@ export function layoutOf(weave: Weave): Layout {
 }
 
 function tangled(thread: Thread, y: number, time: number): Strand {
-  const p1 = thread.p1 + time * 0.11;
-  const p2 = thread.p2 - time * 0.17;
+  const p1 = thread.p1 + time * 0.16;
+  const p2 = thread.p2 - time * 0.24;
   const first = thread.w1 * y + p1;
   const second = thread.w2 * y + p2;
   return {
@@ -80,8 +80,8 @@ function tangled(thread: Thread, y: number, time: number): Strand {
 }
 
 function combed(thread: Thread, y: number, layout: Layout): Strand {
-  const swayAngle = y * 2.6 + layout.time * 0.35;
-  const flutterAngle = y * 11 + thread.index * 1.7 + layout.time * 0.9;
+  const swayAngle = y * 2.6 + layout.time * 0.5;
+  const flutterAngle = y * 11 + thread.index * 1.7 + layout.time * 1.25;
   return {
     x:
       layout.cord +

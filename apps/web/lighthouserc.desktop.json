@@ -5,6 +5,8 @@
       "startServerReadyPattern": "Ready",
       "url": [
         "http://localhost:3200/",
+        "http://localhost:3200/agents",
+        "http://localhost:3200/origami",
         "http://localhost:3200/instant",
         "http://localhost:3200/mecanique",
         "http://localhost:3200/fil"
