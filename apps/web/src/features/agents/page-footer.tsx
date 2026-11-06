@@ -1,9 +1,9 @@
 import { NavAnchor } from "@repo/ui/agents/nav-anchor";
 import { Wordmark } from "@repo/ui/agents/wordmark";
-import { Container } from "@repo/ui/layout/container";
+import { GridArea } from "@repo/ui/layout/grid-area";
 import { Inline } from "@repo/ui/layout/inline";
+import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
-import { Stack } from "@repo/ui/layout/stack";
 import { Text } from "@repo/ui/typography/text";
 
 import { casesUrl, contactUrl } from "../shunpo/content";
@@ -17,24 +17,26 @@ const links = [
 
 export function PageFooter() {
   return (
-    <Section as="footer" spacing="md">
-      <Container size="wide">
-        <Stack gap="xl">
-          <Inline justify="between" align="center" gap="lg">
-            <Wordmark size="lg" />
-            <Inline gap="lg">
-              {links.map((link) => (
-                <NavAnchor key={link.label} href={link.href}>
-                  {link.label}
-                </NavAnchor>
-              ))}
-            </Inline>
+    <Section as="footer" spacing="tight">
+      <PageGrid rows="md" align="center">
+        <GridArea columns={{ md: { start: 1, span: 3 }, lg: { start: 1, span: 4 } }}>
+          <Wordmark size="lg" />
+        </GridArea>
+        <GridArea columns={{ md: { start: 4, span: 5 }, lg: { start: 6, span: 7 } }} justify="end">
+          <Inline gap="lg">
+            {links.map((link) => (
+              <NavAnchor key={link.label} href={link.href}>
+                {link.label}
+              </NavAnchor>
+            ))}
           </Inline>
+        </GridArea>
+        <GridArea>
           <Text size="sm" tone="muted">
             SHUNPO · agents IA, automatisations et logiciels sur mesure · Lyon
           </Text>
-        </Stack>
-      </Container>
+        </GridArea>
+      </PageGrid>
     </Section>
   );
 }

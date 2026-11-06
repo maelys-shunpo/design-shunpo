@@ -7,12 +7,14 @@ import { type ReactNode, useEffect, useState } from "react";
 const FLOAT_AFTER = 24;
 
 const barVariants = cva(
-  "mx-auto flex w-full items-center justify-between gap-6 rounded-2xl border px-4 py-3 transition-all duration-300 ease-emphasized md:px-6",
+  "col-content flex items-center justify-between gap-6 rounded-2xl border py-3 transition-all duration-300 ease-emphasized",
   {
     variants: {
+      /* Flat, the logo and the action sit on the first and last columns; floating, the pill keeps the content
+         width and pads its own edges. */
       floating: {
-        true: "max-w-default border-border bg-surface",
-        false: "max-w-wide border-transparent bg-transparent",
+        true: "border-border bg-surface px-4 md:px-6",
+        false: "border-transparent bg-transparent px-0",
       },
     },
   },
@@ -45,7 +47,7 @@ function useFloating(): boolean {
 export function AgentsNav({ brand, links, action, label }: AgentsNavProps) {
   const floating = useFloating();
   return (
-    <header data-slot="agents-nav" className="sticky top-0 z-40 p-3">
+    <header data-slot="agents-nav" className="sticky top-0 z-40 grid-page py-3">
       <nav aria-label={label} className={barVariants({ floating })}>
         {brand}
         <div className="hidden items-center gap-8 text-sm lg:flex">{links}</div>

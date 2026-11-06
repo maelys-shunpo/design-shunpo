@@ -2,18 +2,20 @@ import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
 import { HeadlinePart } from "@repo/ui/agents/headline-part";
 import { TaskComposer } from "@repo/ui/agents/task-composer";
-import { Container } from "@repo/ui/layout/container";
+import { GridArea } from "@repo/ui/layout/grid-area";
+import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
 import { Stack } from "@repo/ui/layout/stack";
 import { Text } from "@repo/ui/typography/text";
 
 import { fallback, scenarios } from "./composer-scenarios";
 
+/* Centred: the question on 8 columns, the composer on the same 8. */
 export function ComposerSection() {
   return (
-    <Section id="essayer" spacing="lg" tone="muted">
-      <Container size="narrow">
-        <Stack gap="2xl">
+    <Section id="essayer" spacing="regular" tone="muted">
+      <PageGrid rows="lg">
+        <GridArea columns={{ md: 8, lg: 8 }}>
           <Stack gap="lg" align="center">
             <Eyebrow>Essayer</Eyebrow>
             <Headline level={2} size="title" align="center">
@@ -26,6 +28,8 @@ export function ComposerSection() {
               avec vous, pendant le diagnostic.
             </Text>
           </Stack>
+        </GridArea>
+        <GridArea columns={{ md: 8, lg: 8 }}>
           <TaskComposer
             scenarios={scenarios}
             fallback={fallback}
@@ -34,8 +38,8 @@ export function ComposerSection() {
             submit="Voir le plan"
             humanLabel="Ce qui reste à votre équipe :"
           />
-        </Stack>
-      </Container>
+        </GridArea>
+      </PageGrid>
     </Section>
   );
 }

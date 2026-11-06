@@ -24,6 +24,8 @@
   --container-narrow: 52rem;
   --container-default: 76rem;
   --container-wide: 90rem;
+  /* The page grid's widest content: beyond it, the margins grow and the content stays centred. */
+  --container-page: 100rem;
 
   --spacing-0: 0rem;
   --spacing-px: 1px;
@@ -43,6 +45,14 @@
   --spacing-32: calc(8rem * var(--module-scale));
   --spacing-40: calc(10rem * var(--module-scale));
   --spacing-48: calc(12rem * var(--module-scale));
+
+  /* The page grid's gutter, and the vertical rhythm between sections. A section pads each side with half of its
+     rhythm, so two sections meet at the sum of their halves: regular + regular = 128 px, regular + breath = 160 px. */
+  --spacing-gutter: var(--page-gutter);
+  --spacing-rhythm-seam: clamp(1rem, 0.5rem + 1.3vw, 2rem);
+  --spacing-rhythm-tight: clamp(2rem, 1.5rem + 1.3vw, 3rem);
+  --spacing-rhythm-regular: clamp(2.5rem, 1.5rem + 2.6vw, 4rem);
+  --spacing-rhythm-breath: clamp(3rem, 1rem + 5.2vw, 6rem);
 
   --font-sans: var(--font-family-hanken), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-family-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
@@ -171,6 +181,53 @@
 
 /* The four brand colours and their few derived shades. Semantic roles below read them; scenes resolve them
    (resolveColor) for their uniforms. */
+/* The page grid: 4 columns on phones, 8 on tablets, 12 from 64rem; margins of 20, 32 and 56 px (at 1440), gutters
+   of 12, 20 and 24 px. Read by the `grid-page` utility and the `gap-gutter` spacing. */
+:root {
+  --grid-columns: 4;
+  --page-margin: 1.25rem;
+  --page-gutter: 0.75rem;
+}
+
+@media (width >= 48rem) {
+  :root {
+    --grid-columns: 8;
+    --page-margin: 2rem;
+    --page-gutter: 1.25rem;
+  }
+}
+
+@media (width >= 64rem) {
+  :root {
+    --grid-columns: 12;
+    --page-margin: clamp(2.5rem, 3.9vw, 4.5rem);
+    --page-gutter: 1.5rem;
+  }
+}
+
+/* Two margin tracks around the content columns: an element can sit on the columns, run to the page's edges
+   (full bleed) or start in a margin, all on one grid. The content never grows past --container-page. */
+@utility grid-page {
+  --page-edge: max(
+    calc(var(--page-margin) - var(--page-gutter)),
+    calc((100% - var(--container-page)) / 2 - var(--page-gutter))
+  );
+  display: grid;
+  column-gap: var(--page-gutter);
+  grid-template-columns:
+    [full-start] var(--page-edge) [content-start] repeat(var(--grid-columns), minmax(0, 1fr))
+    [content-end] var(--page-edge) [full-end];
+}
+
+/* Every content column, whatever their count; and from page edge to page edge, through the margins. */
+@utility col-content {
+  grid-column: content;
+}
+
+@utility col-bleed {
+  grid-column: full;
+}
+
 :root {
   --module-scale: 1;
   --corner-scale: 1;

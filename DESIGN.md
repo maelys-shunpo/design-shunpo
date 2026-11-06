@@ -133,6 +133,24 @@ Poster and two still plates captured from the scene, AVIF (96, 32 and 41 KB). 0 
 
 Direction « Agents ». A product site for an agency that builds AI agents, at the level of intercom.com. The proof is interfaces at work, laid on photographed surfaces (plaster, linen, travertine, black paper) like objects on a table. The headline speaks low (grey words) and lands on what matters (a black word, a serif word). Warm paper #F6F5F1, ink #0E0E0C, one signal orange #FF4F1A for markers (small text goes through `--accent-ink`), a cobalt for states. Geist light with tight tracking, Instrument Serif italic for one word, Geist Mono for labels behind a colour square. A lower-case « shunpo » wordmark beside a signal square.
 
+### Grid and spacing (chosen on 6 November 2026)
+
+A hybrid of the product sites (Intercom, HorizonX: content around 1,200 px, 12 columns, 16 to 20 px gutters, 80 to 112 px sections) and the studios on Awwwards (Locomotive, Lusion, Basement, Darkroom: full-width fluid grids, fine margins, tight gutters, very large type and space). Measured on each site at 1,440 px; captures and figures in `.context/grid/`.
+
+| Screen | Columns | Margin               | Gutter | Content                          |
+| ------ | ------- | -------------------- | ------ | -------------------------------- |
+| < 768  | 4       | 20 px                | 12 px  | fluid                            |
+| 768+   | 8       | 32 px                | 20 px  | fluid                            |
+| 1,024+ | 12      | 3.9 vw (56 at 1,440) | 24 px  | at most 1,600 px, centred beyond |
+
+- **Four compositions, one grid.** Centred (a span centred on 8 or 10 columns), symmetric (6 + 6), asymmetric (label on 1–3, title from 4), full bleed or immersive (edge to edge through the margins). The content and its intent choose; no section template is imposed, and no H1 must fill 12 columns or offset its last line.
+- **Vertical rhythm.** Continuous transitions 0–64 px, closely linked content 64–96 px, a regular section 128 px, a great breath 160–192 px. Each section pads half of its rhythm on each side, so two sections meet at the sum of their halves.
+- **Inner grids.** Interfaces, product captures and demonstrations keep their own inner layout inside their area.
+- **Stable, not rigid.** Titles, photographs and graphic pieces may run past their columns (`overflow="visible"`); running text, controls, CTAs and the main alignments stay on the columns.
+- **Type on the grid.** The largest title steps need room: a centred title on 10 columns takes `display`, not `hero`.
+
+Tested before adoption on a centred hero, a symmetric two-column section and an editorial section with a product interface, at 390, 834 and 1,440 px: no horizontal scroll, margins and gutters as specified, 1,600 px cap at 1,920.
+
 ### Colour (chosen on 6 November 2026)
 
 The eight colours of the SHUNPO charter, each with one role. Values live in `theme.css` (`--color-agents-*` and the `agents` block).

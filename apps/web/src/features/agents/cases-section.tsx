@@ -3,7 +3,8 @@ import { CaseRing } from "@repo/ui/agents/case-ring";
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
 import { HeadlinePart } from "@repo/ui/agents/headline-part";
-import { Container } from "@repo/ui/layout/container";
+import { GridArea } from "@repo/ui/layout/grid-area";
+import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
 import { Stack } from "@repo/ui/layout/stack";
 
@@ -11,18 +12,21 @@ import { references } from "../shunpo/content";
 
 const tones = ["ink", "signal", "paper", "cobalt", "sand"] as const;
 
+/* Centred title on 10 columns, then the curved wall full bleed, from page edge to page edge. */
 export function CasesSection() {
   return (
-    <Section id="references" spacing="lg">
-      <Container size="wide">
-        <Stack gap="2xl">
-          <Stack gap="lg">
+    <Section id="references" spacing="breath">
+      <PageGrid rows="xl">
+        <GridArea columns={{ md: 8, lg: 10 }}>
+          <Stack gap="lg" align="center">
             <Eyebrow tone="ink">Références</Eyebrow>
-            <Headline level={2} size="title">
+            <Headline level={2} size="title" align="center">
               <HeadlinePart tone="dim">Des projets sérieux, </HeadlinePart>
               <HeadlinePart>livrés et utilisés.</HeadlinePart>
             </Headline>
           </Stack>
+        </GridArea>
+        <GridArea columns={{ md: "bleed", lg: "bleed" }}>
           <CaseRing
             label="Projets publiés"
             items={references.map((reference, index) => (
@@ -37,8 +41,8 @@ export function CasesSection() {
               />
             ))}
           />
-        </Stack>
-      </Container>
+        </GridArea>
+      </PageGrid>
     </Section>
   );
 }

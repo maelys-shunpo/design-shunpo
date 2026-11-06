@@ -11,6 +11,12 @@ const sectionVariants = cva("text-foreground", {
       md: "py-16 md:py-24",
       lg: "py-24 md:py-32",
       xl: "py-32 md:py-48",
+      /* The rhythm of the page grid: each side pads half the gap it names, so neighbours add up. */
+      flush: "py-0",
+      seam: "py-rhythm-seam",
+      tight: "py-rhythm-tight",
+      regular: "py-rhythm-regular",
+      breath: "py-rhythm-breath",
     },
     tone: {
       default: "",
