@@ -2,10 +2,11 @@
 
 import { type ComponentProps, type SyntheticEvent, useState } from "react";
 
-import { AgentsAction } from "./action.tsx";
+import { type ActionState, AgentsAction } from "./action.tsx";
 import { Chip } from "./chip.tsx";
 import { type ComposerScenario, ComposerPlan } from "./composer-plan.tsx";
 import { TextField } from "./text-field.tsx";
+import { useThinking } from "./use-thinking.ts";
 
 interface TaskComposerProps {
   scenarios: ComposerScenario[];
@@ -30,13 +31,14 @@ function match(
 }
 
 interface ComposerFormProps {
+  state: ActionState;
   label: string;
   placeholder: string;
   submit: string;
   onAsk: (text: string) => void;
 }
 
-function ComposerForm({ label, placeholder, submit, onAsk }: ComposerFormProps) {
+function ComposerForm({ state, label, placeholder, submit, onAsk }: ComposerFormProps) {
   const [draft, setDraft] = useState("");
   function onSubmit(event: SyntheticEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -57,7 +59,7 @@ function ComposerForm({ label, placeholder, submit, onAsk }: ComposerFormProps) 
         }}
         placeholder={placeholder}
       />
-      <AgentsAction render={renderSubmit} size="lg">
+      <AgentsAction render={renderSubmit} size="lg" state={state}>
         {submit}
       </AgentsAction>
     </form>
@@ -104,8 +106,11 @@ export function TaskComposer({
   humanLabel,
 }: TaskComposerProps) {
   const [asked, setAsked] = useState<{ scenario: ComposerScenario; turn: number } | null>(null);
+  const [state, think] = useThinking();
   function ask(scenario: ComposerScenario): void {
-    setAsked({ scenario, turn: (asked?.turn ?? 0) + 1 });
+    think(() => {
+      setAsked((previous) => ({ scenario, turn: (previous?.turn ?? 0) + 1 }));
+    });
   }
   return (
     <div
@@ -113,6 +118,7 @@ export function TaskComposer({
       className="flex flex-col gap-4 rounded-surface border border-agents-line bg-surface p-4 text-agents-ink shadow-agents-float md:p-6"
     >
       <ComposerForm
+        state={state}
         label={label}
         placeholder={placeholder}
         submit={submit}

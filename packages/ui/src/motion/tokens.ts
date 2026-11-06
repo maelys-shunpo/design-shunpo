@@ -23,3 +23,11 @@ export const sceneLength = {
 } as const;
 
 export const scrub = 0.6;
+
+/* A control's answer to a press: it dips while a highlight spreads from the point pressed, then lets go. */
+export const press = {
+  in: 0.18,
+  out: 0.12,
+  easeIn: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+  easeOut: "cubic-bezier(0.4, 0, 1, 1)",
+} as const;

@@ -119,6 +119,15 @@
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-shift: cubic-bezier(0.8, 0, 0.1, 1);
+  --ease-press: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --animate-spin: spin 0.9s linear infinite;
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
   --default-font-family: var(--font-sans);
   --default-mono-font-family: var(--font-mono);
@@ -134,6 +143,7 @@
   --color-surface: var(--surface);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
@@ -263,6 +273,7 @@
   --surface: light-dark(#ffffff, #1b1b1d);
   --primary: light-dark(#111112, #f4f3ef);
   --primary-foreground: light-dark(#ffffff, #111112);
+  --primary-hover: light-dark(#2c2c2e, #ffffff);
   --secondary: light-dark(#2f3bff, #9aa1ff);
   --secondary-foreground: light-dark(#ffffff, #111112);
   --accent: light-dark(#111112, #f4f3ef);
@@ -436,6 +447,8 @@
   --surface: light-dark(#ffffff, #263034);
   --primary: light-dark(#1e2629, #f3f0e9);
   --primary-foreground: light-dark(#f3f0e9, #1e2629);
+  /* Fuji Night lifted a step on hover; Kome turns to white on a dark island. */
+  --primary-hover: light-dark(#323e43, #ffffff);
   --secondary: light-dark(#2b718c, #bdc8cc);
   --secondary-foreground: light-dark(#f3f0e9, #1e2629);
   --accent: #b94532;

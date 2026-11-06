@@ -6,7 +6,7 @@ const twMerge = extendTailwindMerge({
     theme: {
       text: ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl", "7xl", "8xl"],
       container: ["prose", "narrow", "default", "wide"],
-      ease: ["standard", "emphasized", "shift"],
+      ease: ["standard", "emphasized", "shift", "press"],
       font: ["sans", "mono", "display", "mincho", "archivo", "bricolage", "bodoni"],
       "font-weight": ["light", "regular", "medium", "semibold", "heading"],
       tracking: ["normal", "wide", "wider"],

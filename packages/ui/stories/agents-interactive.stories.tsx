@@ -135,7 +135,8 @@ export const Composer: Story = {
   ),
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole("button", { name: "Saisir les factures" }));
-    await expect(await canvas.findByText("Plan : factures")).toBeVisible();
+    /* The agent thinks for a beat before it answers. */
+    await expect(await canvas.findByText("Plan : factures", {}, { timeout: 3000 })).toBeVisible();
   },
 };
 
