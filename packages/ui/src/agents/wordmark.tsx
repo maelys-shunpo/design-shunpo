@@ -1,40 +1,29 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
+import { ShunpoLogo } from "../brand/shunpo-logo.tsx";
 import { cn } from "../lib/cn.ts";
 
-const wordmarkVariants = cva(
-  "inline-flex items-center gap-2 font-sans font-medium tracking-normal text-foreground",
-  {
-    variants: {
-      size: {
-        md: "text-xl",
-        lg: "text-3xl",
-      },
-    },
-    defaultVariants: { size: "md" },
-  },
-);
-
-const markVariants = cva("relative inline-block shrink-0 bg-accent", {
+const wordmarkVariants = cva("inline-flex text-foreground", {
   variants: {
     size: {
-      md: "size-3",
-      lg: "size-5",
+      md: "",
+      lg: "",
     },
   },
   defaultVariants: { size: "md" },
 });
 
+const logoSize = { md: "md", lg: "lg" } as const;
+
 interface WordmarkProps extends VariantProps<typeof wordmarkVariants> {
   className?: string | undefined;
 }
 
-/* The « Agents » wordmark: the name set in lowercase beside a signal square, the cursor of an agent at work. */
+/* The « Agents » wordmark: the official SHUNPO logo, in the ink of the page. */
 export function Wordmark({ size, className }: WordmarkProps) {
   return (
     <span data-slot="wordmark" className={cn(wordmarkVariants({ size }), className)}>
-      <span aria-hidden className={markVariants({ size })} />
-      shunpo
+      <ShunpoLogo size={logoSize[size ?? "md"]} />
     </span>
   );
 }

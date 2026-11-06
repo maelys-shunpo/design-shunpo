@@ -1,26 +1,27 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ReactNode } from "react";
 
+import { Shuriken } from "../brand/shuriken.tsx";
 import { cn } from "../lib/cn.ts";
 
-const squareVariants = cva("size-2 shrink-0", {
+const markVariants = cva("", {
   variants: {
     tone: {
-      signal: "bg-accent",
-      cobalt: "bg-secondary",
-      ink: "bg-foreground",
+      signal: "text-accent",
+      cobalt: "text-secondary",
+      ink: "text-foreground",
     },
   },
   defaultVariants: { tone: "signal" },
 });
 
-interface EyebrowProps extends VariantProps<typeof squareVariants> {
+interface EyebrowProps extends VariantProps<typeof markVariants> {
   children: ReactNode;
   as?: "p" | "span" | "li";
   className?: string | undefined;
 }
 
-/* A section's label: a coloured square and a few words in mono capitals, the way a product names its modules. */
+/* A section's label: the SHUNPO shuriken in a colour and a few words in mono capitals. */
 export function Eyebrow({ children, tone, as: Element = "p", className }: EyebrowProps) {
   return (
     <Element
@@ -30,7 +31,7 @@ export function Eyebrow({ children, tone, as: Element = "p", className }: Eyebro
         className,
       )}
     >
-      <span aria-hidden className={squareVariants({ tone })} />
+      <Shuriken tone="glyph" size="xs" className={markVariants({ tone })} />
       {children}
     </Element>
   );

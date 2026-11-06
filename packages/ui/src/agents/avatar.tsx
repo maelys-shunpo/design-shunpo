@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
+import { Shuriken } from "../brand/shuriken.tsx";
 import { cn } from "../lib/cn.ts";
 
 const avatarVariants = cva(
@@ -11,8 +12,8 @@ const avatarVariants = cva(
         cobalt: "bg-agents-info-tint text-agents-info",
         warm: "bg-agents-wait-tint text-agents-wait",
         mint: "bg-agents-ok-tint text-agents-ok",
-        /* The agent itself: the signal square, never a face. */
-        agent: "rounded-md bg-agents-signal text-agents-paper",
+        /* The agent itself: the SHUNPO shuriken, never a face. */
+        agent: "",
       },
       size: {
         sm: "size-6",
@@ -24,13 +25,22 @@ const avatarVariants = cva(
 );
 
 interface AvatarProps extends VariantProps<typeof avatarVariants> {
-  /* Initials of a person, or a glyph for the agent. */
+  /* Initials of a person; the agent shows the shuriken instead. */
   initials: string;
   className?: string | undefined;
 }
 
 /* Who wrote a message or owns a record in a mockup. Decorative: the name always sits beside it. */
 export function Avatar({ initials, tone, size, className }: AvatarProps) {
+  if (tone === "agent") {
+    return (
+      <Shuriken
+        tone="signal"
+        size="md"
+        className={cn(avatarVariants({ tone: "agent", size }), className)}
+      />
+    );
+  }
   return (
     <span aria-hidden data-slot="avatar" className={cn(avatarVariants({ tone, size }), className)}>
       {initials}

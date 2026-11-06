@@ -43,7 +43,7 @@ export const Marks: Story = {
     </Stack>
   ),
   play: async ({ canvas }) => {
-    await expect(canvas.getAllByText("shunpo")).toHaveLength(2);
+    await expect(canvas.getAllByText("SHUNPO")).toHaveLength(2);
   },
 };
 
