@@ -8,7 +8,7 @@ const events = [
   {
     icon: siGmail,
     tool: "Gmail",
-    event: "3 factures reçues, 3 lues",
+    event: "A lu 3 factures fournisseurs",
     time: "09:41",
     tone: "done",
     status: "Lu",
@@ -16,7 +16,7 @@ const events = [
   {
     icon: siOdoo,
     tool: "Odoo",
-    event: "2 factures fournisseurs créées",
+    event: "A préparé 2 brouillons de facture",
     time: "09:42",
     tone: "done",
     status: "Écrit",
@@ -24,7 +24,7 @@ const events = [
   {
     icon: siHubspot,
     tool: "HubSpot",
-    event: "Fiche Atelier Brunel enrichie",
+    event: "A complété la fiche Atelier Brunel",
     time: "09:43",
     tone: "done",
     status: "À jour",
@@ -32,7 +32,7 @@ const events = [
   {
     icon: siShopify,
     tool: "Shopify",
-    event: "Commande 10482 : relivraison demandée",
+    event: "A demandé la relivraison de la commande 10482",
     time: "09:44",
     tone: "working",
     status: "En cours",
@@ -40,7 +40,7 @@ const events = [
   {
     icon: siGooglesheets,
     tool: "Google Sheets",
-    event: "Planning chantiers synchronisé",
+    event: "A mis à jour le planning des chantiers",
     time: "09:45",
     tone: "done",
     status: "À jour",
@@ -48,7 +48,7 @@ const events = [
   {
     icon: siNotion,
     tool: "Notion",
-    event: "Compte rendu client à valider",
+    event: "A rédigé un compte rendu, en attente de Claire",
     time: "09:46",
     tone: "waiting",
     status: "À valider",
@@ -60,7 +60,7 @@ export function SyncFeed() {
   return (
     <LiveSurface hold={5}>
       <MockWindow
-        title="Activité des agents"
+        title="Ce que les agents ont fait ce matin"
         context="Aujourd’hui"
         status={<StatusPill tone="done">6 outils reliés</StatusPill>}
       >

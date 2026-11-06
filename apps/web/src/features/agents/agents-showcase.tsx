@@ -1,7 +1,6 @@
 import { AgentTabs } from "@repo/ui/agents/agent-tabs";
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
-import { HeadlinePart } from "@repo/ui/agents/headline-part";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
@@ -23,9 +22,7 @@ export function AgentsShowcase() {
           overflow="visible"
         >
           <Headline level={2} size="title">
-            <HeadlinePart tone="dim">Un agent, c’est </HeadlinePart>
-            <HeadlinePart>un collègue qui ne lâche rien</HeadlinePart>
-            <HeadlinePart tone="dim"> et sait quand demander.</HeadlinePart>
+            Chaque agent tient un rôle précis dans votre équipe
           </Headline>
         </GridArea>
         <GridArea columns={{ md: { start: 3, span: 6 }, lg: { start: 4, span: 6 } }}>

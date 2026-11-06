@@ -2,7 +2,6 @@ import { CaseCard } from "@repo/ui/agents/case-card";
 import { CaseRing } from "@repo/ui/agents/case-ring";
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
-import { HeadlinePart } from "@repo/ui/agents/headline-part";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
@@ -23,8 +22,7 @@ export function CasesSection() {
               Références
             </Eyebrow>
             <Headline level={2} size="title" align="center">
-              <HeadlinePart tone="dim">Des projets sérieux, </HeadlinePart>
-              <HeadlinePart>livrés et utilisés.</HeadlinePart>
+              Des projets livrés et utilisés au quotidien
             </Headline>
           </Stack>
         </GridArea>

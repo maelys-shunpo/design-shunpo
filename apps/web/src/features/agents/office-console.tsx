@@ -52,7 +52,7 @@ export function OfficeConsole() {
         />
         <ApprovalCard
           reason="Validation requise"
-          detail="Montant supérieur au seuil de 2 000 € fixé par la direction financière."
+          detail="Le montant dépasse le seuil de 2 000 € fixé par l’équipe. Validation par Claire."
           approve="Approuver"
           edit="Modifier"
           live={6}

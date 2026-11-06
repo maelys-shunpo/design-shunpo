@@ -1,6 +1,5 @@
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
-import { HeadlinePart } from "@repo/ui/agents/headline-part";
 import { TaskComposer } from "@repo/ui/agents/task-composer";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
@@ -19,9 +18,7 @@ export function ComposerSection() {
           <Stack gap="lg" align="center">
             <Eyebrow align="center">Essayer</Eyebrow>
             <Headline level={2} size="heading" align="center">
-              <HeadlinePart>Quelle tâche voulez-vous </HeadlinePart>
-              <HeadlinePart>ne plus jamais </HeadlinePart>
-              <HeadlinePart>faire ?</HeadlinePart>
+              Quelle tâche voulez-vous ne plus faire ?
             </Headline>
             <Text size="lg" tone="muted" align="center" measure="prose">
               Décrivez-la en une phrase. Voici le plan qu’un agent suivrait. Le vrai se construit

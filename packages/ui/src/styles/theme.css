@@ -445,7 +445,8 @@
   --foreground: light-dark(#1e2629, #f3f0e9);
   --muted: light-dark(#e5dfd3, #263034);
   --muted-foreground: light-dark(#474747, #bdc8cc);
-  --agents-dim: light-dark(#474747, #bdc8cc);
+  /* Titles keep one colour: secondary words read in the same ink. */
+  --agents-dim: var(--foreground);
   --surface: light-dark(#ffffff, #263034);
   --primary: light-dark(#1e2629, #f3f0e9);
   --primary-foreground: light-dark(#f3f0e9, #1e2629);

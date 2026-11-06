@@ -7,9 +7,9 @@ import { Stack } from "@repo/ui/layout/stack";
 import { ScrollScene } from "@repo/ui/motion/scroll-scene";
 import { Text } from "@repo/ui/typography/text";
 
-import { method } from "../shunpo/content";
 import { AdoptBoard, AuditBoard, BuildBoard } from "./method-boards";
 import { walkMethod } from "./method-choreography";
+import { agentsMethod } from "./method-steps";
 
 const boards = [<AuditBoard key="audit" />, <BuildBoard key="build" />, <AdoptBoard key="adopt" />];
 
@@ -18,7 +18,7 @@ export function MethodScene() {
   return (
     <ScrollScene choreography={walkMethod} length="long" minWidth="md">
       <PairedLayers
-        items={method.map((step, index) => ({
+        items={agentsMethod.map((step, index) => ({
           id: step.id,
           aside: (
             <Stack gap="sm" data-scene-item={`step-${String(index + 1)}`}>

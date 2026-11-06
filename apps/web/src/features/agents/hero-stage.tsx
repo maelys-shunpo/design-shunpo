@@ -11,9 +11,7 @@ export function HeroStage() {
   return (
     <LiveSurface hold={4}>
       <PhotoStage
-        backdrop={
-          <Image src={plaster} alt="" fill sizes="(min-width: 90rem) 90rem, 100vw" priority />
-        }
+        backdrop={<Image src={plaster} alt="" fill sizes="(min-width: 100rem) 100rem, 100vw" />}
         floating={
           <ToastNote
             app="Canal #compta"

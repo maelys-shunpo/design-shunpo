@@ -1,6 +1,5 @@
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
-import { HeadlinePart } from "@repo/ui/agents/headline-part";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
@@ -20,9 +19,7 @@ export function MethodSection() {
           overflow="visible"
         >
           <Headline level={2} size="title">
-            <HeadlinePart tone="dim">D’abord comprendre, </HeadlinePart>
-            <HeadlinePart>ensuite construire, </HeadlinePart>
-            <HeadlinePart tone="dim">puis vous rendre la main.</HeadlinePart>
+            Nous construisons l’interface avec votre équipe
           </Headline>
         </GridArea>
         <GridArea>

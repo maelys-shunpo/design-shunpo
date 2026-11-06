@@ -1,6 +1,5 @@
 import { AgentsAction } from "@repo/ui/agents/action";
 import { Headline } from "@repo/ui/agents/headline";
-import { HeadlinePart } from "@repo/ui/agents/headline-part";
 import { Stack } from "@repo/ui/layout/stack";
 import { Text } from "@repo/ui/typography/text";
 
@@ -10,10 +9,7 @@ export function ClosingCopy() {
   return (
     <Stack gap="xl" align="center">
       <Headline level={2} size="display" align="center">
-        <HeadlinePart tone="dim" block>
-          Gardez le jugement.
-        </HeadlinePart>
-        <HeadlinePart>Confiez la répétition.</HeadlinePart>
+        Commençons par une tâche qui vous prend du temps
       </Headline>
       <Text size="lg" align="center" measure="prose">
         Un diagnostic pour repérer, dans votre quotidien, ce qu’un agent peut prendre en charge et
