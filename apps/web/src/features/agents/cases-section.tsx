@@ -2,6 +2,7 @@ import { CaseCard } from "@repo/ui/agents/case-card";
 import { CaseRing } from "@repo/ui/agents/case-ring";
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
+import { SectionTab } from "@repo/ui/agents/section-tab";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
@@ -18,6 +19,7 @@ export function CasesSection() {
       <PageGrid rows="xl">
         <GridArea columns={{ md: 8, lg: 10 }}>
           <Stack gap="lg" align="center">
+            <SectionTab align="center" />
             <Eyebrow tone="ink" align="center">
               Références
             </Eyebrow>

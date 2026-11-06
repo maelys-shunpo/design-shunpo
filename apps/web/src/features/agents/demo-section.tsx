@@ -1,5 +1,6 @@
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
+import { SectionTab } from "@repo/ui/agents/section-tab";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
@@ -15,7 +16,10 @@ export function DemoSection() {
     <Section id="exemple" spacing="regular">
       <PageGrid rows="lg">
         <GridArea columns={{ md: { start: 1, span: 2 }, lg: { start: 1, span: 3 } }}>
-          <Eyebrow>Exemple · une facture fournisseur</Eyebrow>
+          <Stack gap="md">
+            <SectionTab />
+            <Eyebrow>Exemple · une facture fournisseur</Eyebrow>
+          </Stack>
         </GridArea>
         <GridArea columns={{ md: { start: 3, span: 6 }, lg: { start: 4, span: 8 } }}>
           <Stack gap="lg">

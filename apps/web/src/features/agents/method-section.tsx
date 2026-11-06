@@ -1,4 +1,5 @@
 import { Headline } from "@repo/ui/agents/headline";
+import { SectionTab } from "@repo/ui/agents/section-tab";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
@@ -15,6 +16,7 @@ export function MethodSection() {
       <PageGrid rows="md">
         <GridArea columns={{ md: { start: 1, span: 7 }, lg: { start: 1, span: 8 } }}>
           <Stack gap="md">
+            <SectionTab />
             <Headline level={2} size="heading">
               Chaque projet commence par une Immersion
             </Headline>
