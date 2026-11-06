@@ -55,7 +55,7 @@ export function ComposerPlan({
   return (
     <div
       data-slot="composer-plan"
-      className="flex flex-col gap-4 rounded-xl border border-agents-line bg-agents-paper p-4"
+      className="flex flex-col gap-4 rounded-surface border border-agents-line bg-agents-paper p-4"
     >
       <span className="flex items-center gap-2 text-sm font-medium">
         <span aria-hidden className="size-2 bg-agents-signal" />

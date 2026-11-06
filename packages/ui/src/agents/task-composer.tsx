@@ -1,8 +1,11 @@
 "use client";
 
-import { type SyntheticEvent, useState } from "react";
+import { type ComponentProps, type SyntheticEvent, useState } from "react";
 
+import { AgentsAction } from "./action.tsx";
+import { Chip } from "./chip.tsx";
 import { type ComposerScenario, ComposerPlan } from "./composer-plan.tsx";
+import { TextField } from "./text-field.tsx";
 
 interface TaskComposerProps {
   scenarios: ComposerScenario[];
@@ -46,25 +49,24 @@ function ComposerForm({ label, placeholder, submit, onAsk }: ComposerFormProps) 
   }
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row">
-      <label className="flex flex-1 flex-col">
-        <span className="sr-only">{label}</span>
-        <input
-          value={draft}
-          onChange={(event) => {
-            setDraft(event.target.value);
-          }}
-          placeholder={placeholder}
-          className="h-12 w-full rounded-lg border border-agents-line bg-agents-paper px-4 text-md placeholder:text-muted-foreground"
-        />
-      </label>
-      <button
-        type="submit"
-        className="h-12 shrink-0 cursor-pointer rounded-lg bg-agents-ink px-5 text-md font-medium text-agents-paper hover:bg-agents-ink/85"
-      >
+      <TextField
+        label={label}
+        value={draft}
+        onChange={(event) => {
+          setDraft(event.target.value);
+        }}
+        placeholder={placeholder}
+      />
+      <AgentsAction render={renderSubmit} size="lg">
         {submit}
-      </button>
+      </AgentsAction>
     </form>
   );
+}
+
+/* The action rendered as the form's submit button; its label comes from the action's children. */
+function renderSubmit(props: ComponentProps<"button">) {
+  return <button type="submit" {...props} />;
 }
 
 function ComposerChips({
@@ -78,15 +80,14 @@ function ComposerChips({
     <ul className="flex flex-wrap gap-2">
       {scenarios.map((scenario) => (
         <li key={scenario.id}>
-          <button
+          <Chip
             type="button"
             onClick={() => {
               onPick(scenario);
             }}
-            className="inline-flex min-h-8 cursor-pointer items-center rounded-full border border-agents-line px-3 text-sm text-muted-foreground transition-colors duration-200 hover:border-agents-ink hover:text-agents-ink"
           >
             {scenario.label}
-          </button>
+          </Chip>
         </li>
       ))}
     </ul>
@@ -109,7 +110,7 @@ export function TaskComposer({
   return (
     <div
       data-slot="task-composer"
-      className="flex flex-col gap-4 rounded-2xl border border-agents-line bg-surface p-4 text-agents-ink shadow-agents-float md:p-6"
+      className="flex flex-col gap-4 rounded-surface border border-agents-line bg-surface p-4 text-agents-ink shadow-agents-float md:p-6"
     >
       <ComposerForm
         label={label}
@@ -123,7 +124,7 @@ export function TaskComposer({
       <output aria-live="polite" className="flex flex-col gap-3">
         {asked === null ? null : (
           <>
-            <span className="self-end rounded-2xl bg-agents-ink px-4 py-3 text-sm text-agents-paper">
+            <span className="self-end rounded-surface bg-agents-ink px-4 py-3 text-sm text-agents-paper">
               {asked.scenario.request}
             </span>
             <ComposerPlan key={asked.turn} scenario={asked.scenario} humanLabel={humanLabel} />

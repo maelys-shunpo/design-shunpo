@@ -7,7 +7,7 @@ import { type ReactNode, useEffect, useState } from "react";
 const FLOAT_AFTER = 24;
 
 const barVariants = cva(
-  "col-content flex items-center justify-between gap-6 rounded-2xl border py-3 transition-all duration-300 ease-emphasized",
+  "col-content flex items-center justify-between gap-6 rounded-surface border py-3 transition-all duration-300 ease-emphasized",
   {
     variants: {
       /* Flat, the logo and the action sit on the first and last columns; floating, the pill keeps the content

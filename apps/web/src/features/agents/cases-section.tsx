@@ -19,7 +19,9 @@ export function CasesSection() {
       <PageGrid rows="xl">
         <GridArea columns={{ md: 8, lg: 10 }}>
           <Stack gap="lg" align="center">
-            <Eyebrow tone="ink">Références</Eyebrow>
+            <Eyebrow tone="ink" align="center">
+              Références
+            </Eyebrow>
             <Headline level={2} size="title" align="center">
               <HeadlinePart tone="dim">Des projets sérieux, </HeadlinePart>
               <HeadlinePart>livrés et utilisés.</HeadlinePart>

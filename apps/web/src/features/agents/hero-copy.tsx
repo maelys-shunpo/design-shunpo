@@ -11,7 +11,7 @@ import { contactUrl } from "../shunpo/content";
 export function HeroCopy() {
   return (
     <Stack gap="xl" align="center">
-      <Eyebrow>Agence IA · agents, automatisations, logiciels</Eyebrow>
+      <Eyebrow align="center">Agence IA · agents, automatisations, logiciels</Eyebrow>
       <Headline level={1} size="display" align="center">
         <HeadlinePart tone="dim" block>
           Des agents IA
@@ -26,7 +26,7 @@ export function HeroCopy() {
         décision compte.
       </Text>
       <Inline gap="sm" justify="center">
-        <AgentsAction href={contactUrl} size="lg">
+        <AgentsAction href={contactUrl} size="lg" arrow>
           Réserver un diagnostic
         </AgentsAction>
         <AgentsAction href="#agents" size="lg" variant="outline">

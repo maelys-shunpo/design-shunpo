@@ -10,6 +10,7 @@ const twMerge = extendTailwindMerge({
       font: ["sans", "mono", "display", "mincho", "archivo", "bricolage", "bodoni"],
       "font-weight": ["light", "regular", "medium", "semibold", "heading"],
       tracking: ["normal", "wide", "wider"],
+      radius: ["sm", "md", "lg", "xl", "2xl", "full", "control", "surface", "stage"],
     },
   },
 });

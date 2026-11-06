@@ -13,7 +13,9 @@ export function ReferencesBand() {
     <Section spacing="tight" aria-label="Références">
       <PageGrid rows="md">
         <GridArea columns={{ md: 6, lg: 6 }} justify="center">
-          <Eyebrow tone="ink">Ils nous ont confié des projets</Eyebrow>
+          <Eyebrow tone="ink" align="center">
+            Ils nous ont confié des projets
+          </Eyebrow>
         </GridArea>
         <GridArea>
           <Marquee label="Références" lap={30}>

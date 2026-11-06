@@ -17,7 +17,7 @@ export function ComposerSection() {
       <PageGrid rows="lg">
         <GridArea columns={{ md: 8, lg: 8 }}>
           <Stack gap="lg" align="center">
-            <Eyebrow>Essayer</Eyebrow>
+            <Eyebrow align="center">Essayer</Eyebrow>
             <Headline level={2} size="title" align="center">
               <HeadlinePart tone="dim">Quelle tâche voulez-vous </HeadlinePart>
               <HeadlinePart tone="ink">ne plus jamais </HeadlinePart>

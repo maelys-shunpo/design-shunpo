@@ -107,6 +107,11 @@
   --radius-xl: calc(0.5rem * var(--corner-scale));
   --radius-2xl: calc(0.75rem * var(--corner-scale));
   --radius-full: 9999px;
+  /* Corners by role, scaled by each direction: controls (buttons, fields), surfaces (cards, windows, tiles),
+     stages (large photographed panels). Chips and statuses are pills (radius-full). */
+  --radius-control: calc(0.25rem * var(--corner-scale));
+  --radius-surface: calc(0.5rem * var(--corner-scale));
+  --radius-stage: calc(0.75rem * var(--corner-scale));
 
   --blur-sm: 0.5rem;
   --blur-md: 1rem;

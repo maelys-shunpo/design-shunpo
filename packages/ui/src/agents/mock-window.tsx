@@ -39,7 +39,7 @@ export function MockWindow({
     <div
       data-slot="mock-window"
       className={cn(
-        "flex w-full flex-col overflow-clip rounded-xl border border-agents-line bg-agents-paper text-agents-ink shadow-agents-float",
+        "flex w-full flex-col overflow-clip rounded-surface border border-agents-line bg-agents-paper text-agents-ink shadow-agents-float",
         className,
       )}
     >

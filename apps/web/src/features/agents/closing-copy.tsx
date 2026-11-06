@@ -19,7 +19,7 @@ export function ClosingCopy() {
         Un diagnostic pour repérer, dans votre quotidien, ce qu’un agent peut prendre en charge et
         ce que vous gagnez à le lui confier.
       </Text>
-      <AgentsAction href={contactUrl} size="lg">
+      <AgentsAction href={contactUrl} size="lg" arrow>
         Réserver un diagnostic
       </AgentsAction>
     </Stack>

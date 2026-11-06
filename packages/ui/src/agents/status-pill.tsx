@@ -5,7 +5,7 @@ import { cn } from "../lib/cn.ts";
 import { type LiveStep, liveAttributes } from "./live.ts";
 
 const pillVariants = cva(
-  "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap",
+  "inline-flex min-h-6 shrink-0 items-center gap-1 rounded-full px-2 text-xs font-medium whitespace-nowrap",
   {
     variants: {
       tone: {

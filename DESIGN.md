@@ -133,6 +133,24 @@ Poster and two still plates captured from the scene, AVIF (96, 32 and 41 KB). 0 
 
 Direction « Agents ». A product site for an agency that builds AI agents, at the level of intercom.com. The proof is interfaces at work, laid on photographed surfaces (plaster, linen, travertine, black paper) like objects on a table. The headline speaks low (grey words) and lands on what matters (a black word, a serif word). Warm paper #F6F5F1, ink #0E0E0C, one signal orange #FF4F1A for markers (small text goes through `--accent-ink`), a cobalt for states. Geist light with tight tracking, Instrument Serif italic for one word, Geist Mono for labels behind a colour square. A lower-case « shunpo » wordmark beside a signal square.
 
+### Components (chosen on 6 November 2026)
+
+Measured on the references: Intercom 40 px buttons with 4 px corners, HorizonX and Linear 36 to 56 px pills, Refero 40 px with 12 px corners. « Agents » had five radii (8, 12, 16, 24 and pills) with no rule; now one per role.
+
+| Role    | Radius | Used by                                                              |
+| ------- | ------ | -------------------------------------------------------------------- |
+| Control | 8 px   | Buttons, fields                                                      |
+| Surface | 16 px  | Cards, interface windows, tool tiles, the floating nav, the composer |
+| Stage   | 24 px  | Large photographed panels                                            |
+| Pill    | full   | Chips, statuses, avatars                                             |
+
+- **Buttons.** 40 px (nav, inline) and 48 px (hero, calls), Instrument Sans 500. Solid Fuji Night for the one action of a screen (Kome on a dark island), outline beside it, quiet as underlined text. A trailing arrow, stepping 2 px on hover, for actions that take the visitor somewhere. Pressed: scale 98 %. Focus: a 2 px Blue Tenku ring that follows the corner. Disabled: 40 % opacity.
+- **Field.** The height of the button beside it, on the page ground, a hairline that darkens on hover and focus.
+- **Chips.** 32 px choices (a suggestion to pick, pressed when picked) and 24 px quiet references (a cited source, a tag), both pills.
+- **Statuses.** 24 px pills, a 8 px dot and a tinted ground per meaning: done and in progress in Tenku, waiting on a person in Kurenai, new in Fushimi, neutral in Shiro.
+- **Labels.** Geist Mono capitals behind the shuriken glyph, which rides the first line when a label wraps; centred above a centred title.
+- **Interfaces keep their own corners**: they are product material, laid on the page.
+
 ### Grid and spacing (chosen on 6 November 2026)
 
 A hybrid of the product sites (Intercom, HorizonX: content around 1,200 px, 12 columns, 16 to 20 px gutters, 80 to 112 px sections) and the studios on Awwwards (Locomotive, Lusion, Basement, Darkroom: full-width fluid grids, fine margins, tight gutters, very large type and space). Measured on each site at 1,440 px; captures and figures in `.context/grid/`.

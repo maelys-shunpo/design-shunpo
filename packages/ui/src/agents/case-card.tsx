@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/cn.ts";
 
 const cardVariants = cva(
-  "group/case flex aspect-3/4 w-full flex-col justify-between gap-6 overflow-clip rounded-2xl p-6 transition-transform duration-500 ease-emphasized hover:-translate-y-2",
+  "group/case flex aspect-3/4 w-full flex-col justify-between gap-6 overflow-clip rounded-surface p-6 transition-transform duration-500 ease-emphasized hover:-translate-y-2",
   {
     variants: {
       tone: {
