@@ -12,7 +12,7 @@ const markVariants = cva("inline-block align-middle", {
       ink: "text-foreground",
     },
   },
-  defaultVariants: { tone: "signal" },
+  defaultVariants: { tone: "ink" },
 });
 
 const eyebrowVariants = cva(

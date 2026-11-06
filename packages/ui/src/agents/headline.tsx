@@ -8,7 +8,10 @@ const headlineVariants = cva("font-display font-heading text-foreground", {
     size: {
       hero: "text-7xl",
       display: "text-6xl",
+      /* Chapter openers. */
       title: "text-5xl",
+      /* Functional sections: questions, try-outs. */
+      heading: "text-4xl",
       subtitle: "text-3xl",
     },
     align: {

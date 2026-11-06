@@ -16,7 +16,7 @@ export function QuestionsSection() {
         <GridArea columns={{ lg: { start: 1, span: 5 } }}>
           <Stack gap="lg">
             <Eyebrow tone="ink">Questions</Eyebrow>
-            <Headline level={2} size="title">
+            <Headline level={2} size="heading">
               Ce qu’on nous demande avant de commencer.
             </Headline>
           </Stack>

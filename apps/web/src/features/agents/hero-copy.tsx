@@ -26,7 +26,7 @@ export function HeroCopy() {
         décision compte.
       </Text>
       <Inline gap="sm" justify="center">
-        <AgentsAction href={contactUrl} size="lg" arrow>
+        <AgentsAction href={contactUrl} size="lg" variant="signal" arrow>
           Réserver un diagnostic
         </AgentsAction>
         <AgentsAction href="#agents" size="lg" variant="outline">

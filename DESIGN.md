@@ -151,6 +151,17 @@ Measured on the references: Intercom 40 px buttons with 4 px corners, HorizonX a
 - **Labels.** Geist Mono capitals behind the shuriken glyph, which rides the first line when a label wraps; centred above a centred title.
 - **Interfaces keep their own corners**: they are product material, laid on the page.
 
+### Title hierarchy (6 November 2026)
+
+The grey title words were Fuji Night thinned on Kome (#848886): 2.71:1 on Shiro, under AA. They are now Ink Shadow on light grounds and Hikari Frost on dark ones. The large scale belongs to major openings only.
+
+| Step       | Desktop | Used for                                             |
+| ---------- | ------- | ---------------------------------------------------- |
+| `display`  | ~136 px | The hero promise, the closing manifesto              |
+| `title`    | ~81 px  | Chapter openers: agents, tools, method, references   |
+| `heading`  | ~54 px  | Functional sections, all in Fuji Night: try-out, FAQ |
+| `subtitle` | ~36 px  | Steps, tabs, cards                                   |
+
 ### Grid and spacing (chosen on 6 November 2026)
 
 A hybrid of the product sites (Intercom, HorizonX: content around 1,200 px, 12 columns, 16 to 20 px gutters, 80 to 112 px sections) and the studios on Awwwards (Locomotive, Lusion, Basement, Darkroom: full-width fluid grids, fine margins, tight gutters, very large type and space). Measured on each site at 1,440 px; captures and figures in `.context/grid/`.
@@ -173,16 +184,16 @@ Tested before adoption on a centred hero, a symmetric two-column section and an 
 
 The eight colours of the SHUNPO charter, each with one role. Values live in `theme.css` (`--color-agents-*` and the `agents` block).
 
-| Colour        | Hex     | Role                                                                                                  |
-| ------------- | ------- | ----------------------------------------------------------------------------------------------------- |
-| Kome          | #F3F0E9 | Page ground                                                                                           |
-| Shiro         | #E5DFD3 | Muted sections, hairlines, neutral chips                                                              |
-| Fuji Night    | #1E2629 | Text, title ink, primary buttons, dark sections; thinned to half on Kome for grey title words         |
-| Ink Shadow    | #474747 | Secondary text                                                                                        |
-| Hikari Frost  | #BDC8CC | Secondary text and rings on Fuji Night                                                                |
-| Fushimi Glow  | #B94532 | The one signal per screen: markers, the wordmark square, tab progress, small red text (4.6:1 on Kome) |
-| Blue Tenku    | #2B718C | Information, links, focus, « done » and « in progress » statuses (#1F637D for small text)             |
-| Kurenai Blush | #B05F60 | What waits on a person (#8E4547 for small text, a blush tint behind it)                               |
+| Colour        | Hex     | Role                                                                                                                               |
+| ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Kome          | #F3F0E9 | Page ground                                                                                                                        |
+| Shiro         | #E5DFD3 | Muted sections, hairlines, neutral chips                                                                                           |
+| Fuji Night    | #1E2629 | Text, title ink, primary buttons, dark sections; thinned to half on Kome for grey title words                                      |
+| Ink Shadow    | #474747 | Secondary text                                                                                                                     |
+| Hikari Frost  | #BDC8CC | Secondary text and rings on Fuji Night                                                                                             |
+| Fushimi Glow  | #B94532 | The main call, « Réserver un diagnostic », in the hero and the closing: the one red of the screen. Labels' shuriken default to ink |
+| Blue Tenku    | #2B718C | Information, links, focus, « done » and « in progress » statuses (#1F637D for small text)                                          |
+| Kurenai Blush | #B05F60 | What waits on a person (#8E4547 for small text, a blush tint behind it)                                                            |
 
 Interfaces stay pure white: they are product material laid on the page, not page colour. Text on Fushimi and Tenku is Kome, never Fuji Night (2.9:1).
 

@@ -149,6 +149,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-ink: var(--accent-ink);
+  --color-accent-hover: var(--accent-hover);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -178,8 +179,8 @@
   --color-agents-info-tint: #e7eff2;
   --color-agents-signal-tint: #f5e4df;
   --color-agents-line: #e5dfd3;
-  /* The grey of a headline's context words, for large type only: Fuji Night thinned to half on Kome, 3.1:1. */
-  --color-agents-dim: #848886;
+  /* A headline's secondary words: Ink Shadow on light grounds, Hikari Frost on dark ones (set per scheme below). */
+  --color-agents-dim: var(--agents-dim);
   /* A window resting on a photographed surface: a contact shadow and a long soft one, in Fuji Night. */
   --shadow-agents-float:
     0 1px 2px rgb(30 38 41 / 0.06), 0 12px 32px -8px rgb(30 38 41 / 0.16),
@@ -444,6 +445,7 @@
   --foreground: light-dark(#1e2629, #f3f0e9);
   --muted: light-dark(#e5dfd3, #263034);
   --muted-foreground: light-dark(#474747, #bdc8cc);
+  --agents-dim: light-dark(#474747, #bdc8cc);
   --surface: light-dark(#ffffff, #263034);
   --primary: light-dark(#1e2629, #f3f0e9);
   --primary-foreground: light-dark(#f3f0e9, #1e2629);
@@ -453,6 +455,7 @@
   --secondary-foreground: light-dark(#f3f0e9, #1e2629);
   --accent: #b94532;
   --accent-foreground: #f3f0e9;
+  --accent-hover: #a33b2a;
   --accent-ink: light-dark(#b94532, #e5dfd3);
   --border: light-dark(rgb(30 38 41 / 0.12), rgb(243 240 233 / 0.14));
   --rule: light-dark(rgb(30 38 41 / 0.4), rgb(243 240 233 / 0.4));

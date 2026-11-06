@@ -16,6 +16,8 @@ const actionVariants = cva(
       variant: {
         /* The one action that matters on a screen: ink, or Kome on a dark island. */
         solid: "bg-primary text-primary-foreground hover:bg-primary-hover",
+        /* The page's main call, « Réserver un diagnostic »: the one Fushimi of the screen. */
+        signal: "bg-accent text-accent-foreground hover:bg-accent-hover",
         /* A second choice beside it. */
         outline:
           "border border-foreground/20 bg-transparent text-foreground hover:border-foreground/50 hover:bg-foreground/5",
