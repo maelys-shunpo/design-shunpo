@@ -31,10 +31,10 @@ export function StagePlayback({
       {children}
       {controllable ? (
         <Button
-          variant="secondary"
+          variant="ghost"
           size="icon"
           aria-label={paused ? playLabel : pauseLabel}
-          className="absolute inset-e-3 bottom-3 hover:bg-muted"
+          className="absolute inset-e-4 bottom-4 size-10 rounded-full border border-rule bg-background text-foreground hover:bg-muted"
           onClick={() => {
             setPaused((wasPaused) => !wasPaused);
           }}

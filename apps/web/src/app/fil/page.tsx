@@ -1,18 +1,25 @@
-import { Container } from "@repo/ui/layout/container";
+import { FilMotion } from "@repo/ui/fil/fil-motion";
 import { Direction } from "@repo/ui/layout/direction";
-import { Section } from "@repo/ui/layout/section";
-import { Heading } from "@repo/ui/typography/heading";
+import type { Metadata } from "next";
 
-export default function Page() {
+import { PageBody } from "@/features/fil/page-body";
+import { PageFooter } from "@/features/fil/page-footer";
+import { PageHeader } from "@/features/fil/page-header";
+
+export const metadata: Metadata = {
+  title: "Le fil",
+  description:
+    "SHUNPO vous libère du temps : nous relions vos outils, automatisons ce qui se répète et construisons les logiciels qui vous manquent.",
+};
+
+export default function FilPage() {
   return (
     <Direction name="fil">
-      <main>
-        <Section>
-          <Container>
-            <Heading level={1}>SHUNPO vous libère du temps.</Heading>
-          </Container>
-        </Section>
-      </main>
+      <FilMotion>
+        <PageHeader />
+        <PageBody />
+        <PageFooter />
+      </FilMotion>
     </Direction>
   );
 }

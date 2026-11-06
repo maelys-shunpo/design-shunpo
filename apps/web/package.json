@@ -17,11 +17,9 @@
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",
-    "lucide-react": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "simple-icons": "catalog:"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@axe-core/playwright": "catalog:",

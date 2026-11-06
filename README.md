@@ -1,37 +1,31 @@
-# Design Boilerplate
+# SHUNPO · propositions de landing pages
 
-A starting point for every new project: a Turborepo with a Next.js front end and a design system that neither people nor agents can drift from.
+Trois directions artistiques animées pour SHUNPO, agence IA, automatisation et logiciels sur mesure à Lyon. Une promesse, « SHUNPO vous libère du temps », trois façons de la faire ressentir.
 
-- **Tokens live in code.** `packages/ui/src/styles/theme.css` is the only source of colours, sizes, type and motion. The Tailwind theme is locked to it.
-- **Lint blocks invention.** Arbitrary values, margins, asymmetric paddings and off-scale values fail. Apps cannot style at all: they compose design-system components.
-- **The browser verifies.** Every page is audited on mobile, tablet and desktop, in light and dark: WCAG 2.2 AA, token conformance, symmetric paddings, overlaps, touch targets, horizontal overflow, plus Lighthouse budgets.
-- **Decisions are recorded.** Every architecture choice is an ADR that a human approves.
-- **Agents are first-class.** `AGENTS.md`, project skills, hooks that lint every edit, and a design reviewer agent.
+| Route        | Direction | Signature                                                                 |
+| ------------ | --------- | ------------------------------------------------------------------------- |
+| `/`          | Index     | Les trois propositions côte à côte                                        |
+| `/instant`   | Instant   | Estampe japonaise, particules d’encre qui sautent d’une forme à l’autre   |
+| `/mecanique` | Mécanique | Horlogerie de nuit, calibre 3D éclaté puis assemblé                       |
+| `/fil`       | Le fil    | Tressage kumihimo, fils emmêlés puis tressés, fil rouge à travers la page |
 
-## Quick start
+## Démarrer
 
-Requirements: Node.js 24 and pnpm 12 (`npm install -g pnpm@12`). An older global pnpm cannot switch to pnpm 12 on its own.
+Node.js 24 et pnpm 12 (`npm install -g pnpm@12`).
 
 ```bash
 pnpm install
-pnpm dev          # site on :3000, Storybook on :6006
-pnpm check        # format, lint, types, tests, dead code, ADRs
-pnpm test:e2e     # build + browser design audit
+pnpm dev          # site sur :3000, Storybook sur :6006
+pnpm check        # format, lint, types, tests, code mort, ADR
+pnpm test:e2e     # build + audit design et motion dans le navigateur
 ```
 
-In Conductor, each workspace is installed automatically and gets its own ports through the `dev`, `check` and `e2e` actions (`.conductor/settings.toml`).
+Dans Conductor, utilisez les actions `dev`, `check` et `e2e` : chaque workspace a ses ports.
 
-## Stack
+## Où regarder
 
-Next.js 16 (App Router, Cache Components, React Compiler) · React 19.3 · TypeScript 7 · Tailwind CSS 4 · Base UI · TanStack Query · GSAP + Lenis · Storybook 10 · Vitest 5 · Playwright · Oxlint + Oxfmt · Turborepo + pnpm. Each choice is explained in [`docs/adr`](docs/adr/README.md).
-
-## Method
-
-Every project follows the same phases, each closed by your approval: context → visual direction → design system → Figma → story (copy and scroll storyboard) → build → verify. The `project-kickoff` skill drives it; ask your agent to "start a new project".
-
-## Where to look
-
-- [`AGENTS.md`](AGENTS.md): commands, structure, rules and skill routing.
-- [`docs/design/principles.md`](docs/design/principles.md): the design rules tooling cannot check.
-- [`docs/adr`](docs/adr/README.md): architecture decisions awaiting or holding approval.
-- [`packages/ui/AGENTS.md`](packages/ui/AGENTS.md): the component inventory.
+- [`DESIGN.md`](DESIGN.md) : les trois directions, les décisions, les storyboards.
+- [`PRODUCT.md`](PRODUCT.md) et [`.agents/product-marketing.md`](.agents/product-marketing.md) : surfaces, public, voix.
+- [`AGENTS.md`](AGENTS.md) : commandes, structure, règles.
+- [`packages/ui/AGENTS.md`](packages/ui/AGENTS.md) : l’inventaire du design system.
+- [`docs/adr`](docs/adr/README.md) : décisions techniques.

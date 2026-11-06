@@ -1,80 +1,40 @@
-# Product Marketing Context
+# SHUNPO, contexte produit et marketing
 
-**Document version:** v1
-**Last updated:** 2026-10-28
+Source : brief stratégique de marque (novembre 2026). Les autres skills marketing lisent ce fichier.
 
-## Product Overview
+## L’entreprise
 
-**One-liner:** A Next.js monorepo and agent toolkit for designing with your agent, built from one design system that keeps every piece on scale.
-**What it does:** Locks every visual value to design tokens, rejects anything off-scale in lint and in agent hooks, audits every page in a real browser, records decisions as ADRs approved by a human, and mirrors the system in Figma.
-**Product category:** Project starter (boilerplate) for agent-driven product development.
-**Product type:** Open-source repository to fork.
-**Business model:** Free; used to start Shunpo's own client projects.
+Agence française (Lyon) d’intelligence artificielle, d’automatisation des process et de développement sur mesure. Elle conçoit, développe, intègre et déploie des solutions utilisées au quotidien par les équipes : agents IA, automatisations, logiciels métier, applications web et mobiles, sites web.
 
-## Target Audience
+- Promesse : SHUNPO vous libère du temps.
+- Conviction : la technologie doit s’adapter à l’entreprise, pas l’entreprise à la technologie.
+- Trois expertises complémentaires : IA et automatisation ; logiciels métier et applications sur mesure ; sites web et expériences digitales.
+- Méthode : comprendre et auditer ; concevoir et intégrer ; accompagner et former.
+- Ce que SHUNPO n’est pas : un cabinet de conseil seul, une simple agence no-code, un prestataire qui exécute un cahier des charges, une agence qui vend de l’IA pour suivre une tendance.
 
-**Primary use case:** Starting a new website or product with coding agents (Claude Code first) without losing design quality.
-**Jobs to be done:**
+## Public
 
-- Start a project with a complete, enforced design system on day one.
-- Let agents ship UI fast while every value stays on the scale.
-- Keep code, design and decisions in one reviewable place.
+- Prioritaire : dirigeants de PME et d’ETI dont l’entreprise fonctionne mais dont les équipes perdent du temps (ressaisies, outils dispersés, process dépendants d’une personne).
+- Secondaire : directeurs métier (opérations, finance, RH, commerce, marketing, production, SI).
+- Complémentaire : startups et scale-ups ; grands comptes sur des projets ciblés.
+- Profil : conscient d’un problème, orienté résultats, intéressé par l’IA mais prudent, pressé, cherche un partenaire fiable qui parle son langage.
 
-## Personas
+## Ce qu’ils achètent vraiment
 
-| Persona                     | Cares about                 | Challenge                                   | Value we promise                                   |
-| --------------------------- | --------------------------- | ------------------------------------------- | -------------------------------------------------- |
-| Design engineer / UX lead   | Visual consistency, craft   | Agents invent sizes, colours and spacing    | Off-scale values fail before a pull request exists |
-| Founder or freelance studio | Speed without rework        | Every new project starts from scratch       | Fork, brief the agent, approve each phase          |
-| Tech lead                   | Code quality, decisions, CI | Conventions live in reviews, not in tooling | Strict TypeScript, lint, tests and ADR gates       |
-
-## Problems & Pain Points
-
-**Core problem:** Agents produce interfaces that drift from the design system: arbitrary values, cramped spacing, inconsistent sizes.
-**Why alternatives fall short:**
-
-- Starters (create-next-app, shadcn templates) ship components but let any class through.
-- Rules in a prompt or a style guide are advice; nothing blocks the agent.
-
-**What it costs them:** Review time spent on pixel fixes, inconsistent pages, eroded trust in agent output.
-
-## Differentiation
-
-**Key differentiators:**
-
-- Locked Tailwind theme: only tokens generate utilities.
-- Apps cannot style; pages compose design-system components.
-- A browser audit checks token values, symmetric padding, overlaps, touch targets and WCAG 2.2 AA on three viewports in light and dark.
-- Creative toolkit: skills for directions, design systems, generated assets (Magnific), scroll choreography and 3D, conversion copy and Figma prototypes, plus hooks that lint every edit and a design reviewer agent.
-- Every technical choice is an ADR that only a human can accept.
+Du temps retrouvé, moins de charge opérationnelle, plus de rentabilité et de maîtrise, une exécution plus rapide, une organisation plus simple. La technologie est le moyen.
 
 ## Objections
 
-| Objection                 | Response                                                                                            |
-| ------------------------- | --------------------------------------------------------------------------------------------------- |
-| Too strict to be original | Originality goes into tokens and variants in `packages/ui`; pages compose them.                     |
-| Do I need Figma?          | No. Code is the source of truth; the Figma mirror is optional.                                      |
-| Only for Claude Code?     | Claude Code gets hooks and skills; any agent reading AGENTS.md follows the rules, CI enforces them. |
-| Can I change the stack?   | Yes: write an ADR that supersedes the current one.                                                  |
+L’IA est-elle adaptée à mon entreprise ? L’outil sera-t-il utilisé ? Nous avons déjà trop de logiciels. Je ne veux pas dépendre d’un prestataire. Je ne suis pas assez technique. Quel retour sur investissement ?
 
-## Brand Voice
+## Preuves publiées
 
-| Attribute | Means                                | Doesn't mean            | Example line                                     |
-| --------- | ------------------------------------ | ----------------------- | ------------------------------------------------ |
-| Precise   | Names the file, the rule, the number | Jargon for its own sake | "Off-scale values fail lint."                    |
-| Calm      | Short sentences, no hype             | Cold                    | "Fork it, brief your agent, approve each phase." |
+TF1 (application de jeu en prime time, montée en charge), Altaroc (plateforme d’investissement), lemlist (plateforme d’affiliation), 1817 · Groupe Vicat (expérience web, SEO), Ops Clean (infrastructure e-commerce). Ne jamais attribuer à SHUNPO les performances commerciales d’un client ; aucun chiffre non vérifié.
 
-**Never use:** "revolutionary", "blazing fast", "AI-powered magic", invented metrics or testimonials.
+## Voix
 
-## Proof Points
+Française, directe, phrases courtes, bénéfice avant la techno, vouvoiement, pas de superlatif sans preuve, pas de double cadratin. Experte sans jargon, ambitieuse sans prétention, humaine sans familiarité.
 
-**Metrics (verifiable in the repository):** the landing page counts tokens, components, skills and ADRs from the repository at build time; never hard-code them in copy. CI budgets: Lighthouse performance ≥ 95, accessibility, best practices and SEO = 100; 18 browser checks per route.
-**Testimonials:** none yet. Do not invent any.
+## Action principale
 
-## Goals
-
-**Conversion action:** Fork the repository on GitHub.
-
-## Changelog
-
-- v1 (2026-10-28) — Initial context for the boilerplate's own landing page.
+Réserver un diagnostic : https://shunpo.fr/contact

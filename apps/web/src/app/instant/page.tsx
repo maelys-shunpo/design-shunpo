@@ -1,18 +1,26 @@
-import { Container } from "@repo/ui/layout/container";
 import { Direction } from "@repo/ui/layout/direction";
-import { Section } from "@repo/ui/layout/section";
-import { Heading } from "@repo/ui/typography/heading";
+import type { Metadata } from "next";
 
-export default function Page() {
+import { Proof } from "@/features/instant/proof";
+import { SiteFooter } from "@/features/instant/site-footer";
+import { SiteHeader } from "@/features/instant/site-header";
+import { Story } from "@/features/instant/story";
+
+export const metadata: Metadata = {
+  title: "Instant",
+  description:
+    "SHUNPO vous libère du temps : automatisations, agents IA et logiciels sur mesure qui retirent de vos journées tout ce qui se répète. Agence à Lyon.",
+};
+
+export default function InstantPage() {
   return (
     <Direction name="instant">
+      <SiteHeader />
       <main>
-        <Section>
-          <Container>
-            <Heading level={1}>SHUNPO vous libère du temps.</Heading>
-          </Container>
-        </Section>
+        <Story />
+        <Proof />
       </main>
+      <SiteFooter />
     </Direction>
   );
 }

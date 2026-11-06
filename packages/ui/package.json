@@ -8,7 +8,6 @@
   "exports": {
     "./globals.css": "./src/styles/globals.css",
     "./motion/tokens": "./src/motion/tokens.ts",
-    "./lib/isometric": "./src/lib/isometric.ts",
     "./components/*": "./src/components/*.tsx",
     "./layout/*": "./src/layout/*.tsx",
     "./typography/*": "./src/typography/*.tsx",
@@ -37,7 +36,6 @@
     "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "simple-icons": "catalog:",
     "tailwind-merge": "catalog:",
     "three": "catalog:"
   },

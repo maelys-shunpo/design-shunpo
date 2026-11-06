@@ -123,11 +123,26 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-ink: var(--accent-ink);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-rule: var(--rule);
   --color-ring: var(--ring);
+
+  /* Raw brand colours, for previews that must show a direction outside its page (the proposals index). */
+  --color-fuji: var(--brand-fuji);
+  --color-fuji-deep: var(--brand-fuji-deep);
+  --color-shiro: var(--brand-shiro);
+  --color-kome: var(--brand-kome);
+  --color-tenku: var(--brand-tenku);
+  --color-fushimi: var(--brand-fushimi);
+  --color-frost: var(--brand-frost);
+
+  /* Each direction's display face, for the same previews. */
+  --font-mincho: var(--font-family-mincho), "Hiragino Mincho ProN", "Yu Mincho", ui-serif, serif;
+  --font-archivo: var(--font-family-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-bricolage: var(--font-family-bricolage), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* The four brand colours and their few derived shades. Semantic roles below read them; scenes resolve them
@@ -166,7 +181,9 @@
   --secondary-foreground: light-dark(#f3f0e9, #141a1c);
   --accent: light-dark(#b94532, #e5dfd3);
   --accent-foreground: light-dark(#f3f0e9, #1e2629);
-  --destructive: light-dark(#b94532, #e08a7b);
+  --destructive: light-dark(#9a3626, #e08a7b);
+  /* Fushimi for small text: the brand red reaches 4:1 on Shiro, this shade 5.4:1 (and a light coral by night). */
+  --accent-ink: light-dark(#9a3626, #e08a7b);
   --destructive-foreground: light-dark(#f3f0e9, #141a1c);
   --border: light-dark(rgb(30 38 41 / 0.16), rgb(229 223 211 / 0.16));
   --rule: light-dark(rgb(30 38 41 / 0.55), rgb(229 223 211 / 0.5));
@@ -179,7 +196,7 @@
   --background: #2b718c;
   --foreground: #f3f0e9;
   --muted: #26667e;
-  --muted-foreground: #e5dfd3;
+  --muted-foreground: #eeeae2;
   --surface: #1f637d;
   --primary: #f3f0e9;
   --primary-foreground: #1e2629;
@@ -222,6 +239,12 @@
   --ring: light-dark(#b94532, #e5dfd3);
 }
 
+/* Instant: kanji set top to bottom, as on a printed scroll (VerticalText). */
+@utility writing-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
 /* ── Direction « Mécanique »: night horology, engineering drawing, Tenku light, one Fushimi jewel. ── */
 :root:has([data-direction="mecanique"]) {
   color-scheme: dark;
@@ -229,6 +252,11 @@
   --heading-weight: 700;
   --font-display: var(--font-family-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-family-geist), ui-sans-serif, system-ui, sans-serif;
+  /* Archivo set wide, like the engraving on a movement; the other faces have no width axis and ignore it. */
+  font-stretch: 116%;
+  --text-5xl--letter-spacing: -0.035em;
+  --text-6xl--letter-spacing: -0.04em;
+  --text-4xl--letter-spacing: -0.03em;
 }
 
 :root:has([data-direction="mecanique"]),
@@ -257,6 +285,10 @@
   --heading-weight: 700;
   --font-display: var(--font-family-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-family-hanken), ui-sans-serif, system-ui, sans-serif;
+  /* Bricolage condensed reads tight already: the largest sizes keep a little more air between letters. */
+  --text-8xl--letter-spacing: -0.03em;
+  --text-7xl--letter-spacing: -0.022em;
+  --text-6xl--letter-spacing: -0.02em;
 }
 
 :root:has([data-direction="fil"]),

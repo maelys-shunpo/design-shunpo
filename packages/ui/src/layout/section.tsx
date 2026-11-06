@@ -30,9 +30,12 @@ const sectionVariants = cva("text-foreground", {
 type SectionElement = "section" | "header" | "footer" | "aside";
 type SectionVariants = VariantProps<typeof sectionVariants>;
 
-/* The colour scheme a section shows, whatever the page's: islands set it (field is a Blue Tenku island). */
-function shownScheme({ scheme }: SectionVariants): "light" | "dark" | "field" | undefined {
-  if (scheme === "light" || scheme === "dark" || scheme === "field") {
+/* The colour scheme a section shows, whatever the page's: islands set it; the Blue Tenku field reads as dark. */
+function shownScheme({ scheme }: SectionVariants): "light" | "dark" | undefined {
+  if (scheme === "field") {
+    return "dark";
+  }
+  if (scheme === "light" || scheme === "dark") {
     return scheme;
   }
   return undefined;

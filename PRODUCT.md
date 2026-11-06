@@ -1,14 +1,17 @@
 # Product
 
-Design Boilerplate: the starting point for every new project, built so AI agents can ship interfaces that never leave the design system. Positioning, audience and voice live in `.agents/product-marketing.md`; this file only lists the surfaces.
+SHUNPO, agence lyonnaise d’intelligence artificielle, d’automatisation et de développement sur mesure (9 personnes). Promesse : « SHUNPO vous libère du temps. » Positionnement, public et voix : `.agents/product-marketing.md`. Ce fichier liste seulement les surfaces.
 
 ## Surfaces
 
-| Surface                   | Mode     | Visitor's success                                     |
-| ------------------------- | -------- | ----------------------------------------------------- |
-| Landing page (`/`)        | Persuade | Understands what the repository enforces and forks it |
-| Storybook (`packages/ui`) | Read     | Finds the right component and props                   |
+| Surface                       | Mode      | Réussite du visiteur                                        |
+| ----------------------------- | --------- | ----------------------------------------------------------- |
+| Index des propositions (`/`)  | Choisir   | Compare les trois directions et ouvre celle qui l’intéresse |
+| Proposition 01 (`/instant`)   | Persuader | Comprend ce que fait SHUNPO et réserve un diagnostic        |
+| Proposition 02 (`/mecanique`) | Persuader | Idem, direction « Mécanique »                               |
+| Proposition 03 (`/fil`)       | Persuader | Idem, direction « Le fil »                                  |
+| Storybook (`packages/ui`)     | Lire      | Trouve le bon composant, ses props et sa direction          |
 
-## Design direction
+## Direction artistique
 
-A box of building blocks on a painted, gridded table (Fröbel's gifts): every page is assembled from one box of pieces, and the visitor can swap pieces to watch the page rebuild. Direction and references live in `DESIGN.md`; token values live in `packages/ui/src/styles/theme.css`.
+Trois directions concurrentes sur un même système, chacune nommée par `Direction` : « Instant » (estampe japonaise et particules d’encre), « Mécanique » (horlogerie de nuit et calibre en 3D), « Le fil » (tressage kumihimo et shader de fils). Seules les quatre couleurs de marque sont imposées. Direction et décisions : `DESIGN.md` ; valeurs : `packages/ui/src/styles/theme.css`.

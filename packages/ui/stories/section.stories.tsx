@@ -33,3 +33,4 @@ export const Muted: Story = { args: { tone: "muted" } };
 export const DarkScheme: Story = { args: { scheme: "dark" } };
 export const ExtraLarge: Story = { args: { spacing: "xl" } };
 export const Sheet: Story = { args: { tone: "sheet" } };
+export const FieldScheme: Story = { args: { scheme: "field" } };

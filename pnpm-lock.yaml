@@ -308,9 +308,6 @@ catalogs:
     react-dom:
       specifier: ^19.3.1
       version: 19.3.1
-    simple-icons:
-      specifier: 16.36.0
-      version: 16.36.0
     storybook:
       specifier: ^10.6.4
       version: 10.6.4
@@ -394,9 +391,6 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: 'catalog:'
         version: 5.105.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1)
-      lucide-react:
-        specifier: 'catalog:'
-        version: 1.62.0(@types/react@19.3.0)(react@19.3.1)
       next:
         specifier: 'catalog:'
         version: 16.4.3(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.64.1)(@types/node@26.6.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -406,9 +400,6 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.3.1(react@19.3.1)
-      simple-icons:
-        specifier: 'catalog:'
-        version: 16.36.0
     devDependencies:
       '@axe-core/playwright':
         specifier: 'catalog:'
@@ -499,9 +490,6 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.3.1(react@19.3.1)
-      simple-icons:
-        specifier: 'catalog:'
-        version: 16.36.0
       tailwind-merge:
         specifier: 'catalog:'
         version: 3.7.0
@@ -4811,10 +4799,6 @@ packages:
   signal-exit@4.1.0:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
-
-  simple-icons@16.36.0:
-    resolution: {integrity: sha512-+VNPPkqSOLidFeSgBKUWX4n50WPpDC09hav+BgS26anIF1oQOlGBb8LvwGR+6fYRjo+B6CiKzNBceMPkSVXANQ==}
-    engines: {node: '>=0.12.18'}
 
   sirv@3.0.2:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
@@ -9368,8 +9352,6 @@ snapshots:
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
-
-  simple-icons@16.36.0: {}
 
   sirv@3.0.2:
     dependencies:

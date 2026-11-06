@@ -1,15 +1,17 @@
-import { Container } from "@repo/ui/layout/container";
-import { Section } from "@repo/ui/layout/section";
-import { Heading } from "@repo/ui/typography/heading";
+import { ProposalsFooter } from "@/features/proposals/proposals-footer";
+import { ProposalsGrid } from "@/features/proposals/proposals-grid";
+import { ProposalsHeader } from "@/features/proposals/proposals-header";
+import { ProposalsIntro } from "@/features/proposals/proposals-intro";
 
 export default function HomePage() {
   return (
-    <main>
-      <Section>
-        <Container>
-          <Heading level={1}>Trois directions pour SHUNPO</Heading>
-        </Container>
-      </Section>
-    </main>
+    <>
+      <ProposalsHeader />
+      <main>
+        <ProposalsIntro />
+        <ProposalsGrid />
+      </main>
+      <ProposalsFooter />
+    </>
   );
 }

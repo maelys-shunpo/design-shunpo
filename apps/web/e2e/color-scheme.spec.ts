@@ -1,4 +1,6 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
+
+import { routes } from "./support/routes.ts";
 
 interface Island {
   expected: string | undefined;
@@ -27,6 +29,18 @@ function readIslands(elements: Element[]): Island[] {
 
 const MID_LUMINANCE = 0.5;
 
+/* Every route, one after the other on the same tab. */
+async function islandsOnEveryRoute(page: Page): Promise<Island[]> {
+  const islands: Island[] = [];
+  for (const route of routes) {
+    // oxlint-disable-next-line no-await-in-loop -- one tab visits the routes in turn.
+    await page.goto(route);
+    // oxlint-disable-next-line no-await-in-loop -- read each route before leaving it.
+    islands.push(...(await page.locator("[data-scheme]").evaluateAll(readIslands)));
+  }
+  return islands;
+}
+
 function schemeOf({ luminance }: Island): "dark" | "light" {
   return luminance < MID_LUMINANCE ? "dark" : "light";
 }
@@ -36,8 +50,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     test.use({ colorScheme });
 
     test("scheme islands keep their own scheme", async ({ page }) => {
-      await page.goto("/");
-      const islands = await page.locator("[data-scheme]").evaluateAll(readIslands);
+      const islands = await islandsOnEveryRoute(page);
 
       expect(islands.length).toBeGreaterThan(0);
       expect(islands.map((island) => schemeOf(island))).toEqual(

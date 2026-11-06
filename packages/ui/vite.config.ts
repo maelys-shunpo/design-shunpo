@@ -37,6 +37,7 @@ export default defineConfig({
       "lucide-react",
       "three",
       "@react-three/fiber",
+      "three/addons/environments/RoomEnvironment.js",
     ],
   },
   test: {
