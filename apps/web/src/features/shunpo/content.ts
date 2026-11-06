@@ -210,7 +210,7 @@ export const objections: Objection[] = [
     id: "adapte",
     question: "Je ne sais pas si l’IA est adaptée à mon entreprise.",
     answer:
-      "Toutes les entreprises n’ont pas besoin des mêmes solutions. Le diagnostic sert justement à repérer les cas d’usage utiles chez vous, et à écarter les autres.",
+      "Toutes les entreprises n’ont pas besoin des mêmes solutions. L’Immersion sert justement à repérer les cas d’usage utiles chez vous, et à écarter les autres.",
   },
   {
     id: "adoption",

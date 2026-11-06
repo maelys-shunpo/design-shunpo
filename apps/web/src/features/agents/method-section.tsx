@@ -3,6 +3,8 @@ import { Headline } from "@repo/ui/agents/headline";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
+import { Stack } from "@repo/ui/layout/stack";
+import { Text } from "@repo/ui/typography/text";
 
 import { MethodScene } from "./method-scene";
 
@@ -18,9 +20,16 @@ export function MethodSection() {
           columns={{ md: { start: 3, span: 6 }, lg: { start: 4, span: 9 } }}
           overflow="visible"
         >
-          <Headline level={2} size="title">
-            Nous construisons l’interface avec votre équipe
-          </Headline>
+          <Stack gap="lg">
+            <Headline level={2} size="title">
+              Chaque projet commence par une Immersion
+            </Headline>
+            <Text size="lg" tone="muted" measure="prose">
+              Le diagnostic est un premier échange : vous nous décrivez votre situation, nous vous
+              disons si un projet a du sens. S’il en a, il démarre par l’Immersion, puis la
+              Construction et l’Évolution.
+            </Text>
+          </Stack>
         </GridArea>
         <GridArea>
           <MethodScene />

@@ -1,24 +1,27 @@
-/* How SHUNPO builds the workspace on this page: the interface, the connections, the rules. */
+/* The three phases of a SHUNPO project, as on the home page. Each one ends with what the client receives. */
 export const agentsMethod = [
   {
-    id: "interface",
+    id: "immersion",
     index: "01",
-    title: "Concevoir l’interface avec l’équipe",
+    name: "Immersion",
     detail:
-      "Nous observons comment l’équipe travaille et ce qu’elle veut suivre. L’espace de travail montre ces tâches, rien de plus.",
+      "SHUNPO observe le travail des équipes, les outils utilisés et les tâches qui leur prennent du temps. À l’issue de l’Immersion, le client reçoit une carte de ses processus, une estimation des heures perdues et une feuille de route priorisée. On choisit ensemble le premier flux à automatiser.",
+    delivers: ["Carte des processus", "Heures perdues estimées", "Feuille de route priorisée"],
   },
   {
-    id: "outils",
+    id: "construction",
     index: "02",
-    title: "Connecter vos outils",
+    name: "Construction",
     detail:
-      "Messagerie, CRM, ERP, tableurs : nous relions ce que vous utilisez déjà, sans rien remplacer. Chaque action d’un agent arrive au bon endroit.",
+      "SHUNPO crée l’interface, connecte les outils existants et configure les agents, brique par brique. L’équipe teste chaque parcours avec ses cas métier, y compris les exceptions et les validations humaines.",
+    delivers: ["Interface", "Outils connectés", "Agents configurés"],
   },
   {
-    id: "regles",
+    id: "evolution",
     index: "03",
-    title: "Régler les agents sur vos règles",
+    name: "Évolution",
     detail:
-      "Seuils, validations, exceptions : les règles du métier sont écrites avec vous. Ce qui engage l’entreprise repasse toujours par une personne.",
+      "Après la mise en service, SHUNPO accompagne l’équipe, maintient les connexions et ajuste les agents au fil des usages. Quand les règles ou les besoins changent, on fait évoluer le flux ou on ajoute une nouvelle brique.",
+    delivers: ["Accompagnement", "Maintenance des connexions", "Nouvelles briques"],
   },
 ] as const;

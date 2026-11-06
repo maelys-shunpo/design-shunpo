@@ -7,8 +7,8 @@ import { siGmail, siOdoo } from "simple-icons";
 export function AuditBoard() {
   return (
     <MockWindow
-      title="Cartographie"
-      context="Process actuel"
+      title="Carte des processus"
+      context="Immersion · comptabilité"
       status={<StatusPill tone="waiting">4 étapes manuelles</StatusPill>}
     >
       <ol>
@@ -44,8 +44,8 @@ export function AuditBoard() {
 export function BuildBoard() {
   return (
     <MockWindow
-      title="Workflow"
-      context="Version 1 · en test"
+      title="Flux factures"
+      context="Construction · brique 1 en test"
       status={<StatusPill tone="working">En recette</StatusPill>}
     >
       <ol>
@@ -79,8 +79,8 @@ export function BuildBoard() {
 export function AdoptBoard() {
   return (
     <MockWindow
-      title="Mise en service"
-      context="Équipe comptabilité"
+      title="Suivi du flux"
+      context="Évolution · après la mise en service"
       status={<StatusPill tone="done">En production</StatusPill>}
     >
       <ol>

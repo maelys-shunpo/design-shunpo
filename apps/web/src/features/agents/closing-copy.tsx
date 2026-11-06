@@ -12,8 +12,8 @@ export function ClosingCopy() {
         Commençons par une tâche qui vous prend du temps
       </Headline>
       <Text size="lg" align="center" measure="prose">
-        Un diagnostic pour repérer, dans votre quotidien, ce qu’un agent peut prendre en charge et
-        ce que vous gagnez à le lui confier.
+        Le diagnostic est un premier échange pour comprendre votre situation. Si un projet a du
+        sens, il commence par l’Immersion.
       </Text>
       <AgentsAction href={contactUrl} size="lg" variant="signal" arrow>
         Réserver un diagnostic
