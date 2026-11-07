@@ -158,7 +158,11 @@ function ThreadStage({
       {items.map((item, index) => (
         <div
           key={item.id}
+          /* A waiting board keeps its place, so the stage never resizes, but leaves focus, the reading order and
+             the layout audit (an aria-hidden layer out of the tab order). */
           aria-hidden={index === active ? undefined : true}
+          tabIndex={index === active ? undefined : -1}
+          inert={index !== active}
           className={cn(
             "col-start-1 row-start-1 grid min-w-0 transition-opacity duration-300 motion-reduce:transition-none",
             index === active ? "opacity-100" : "invisible opacity-0",
