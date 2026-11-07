@@ -3,8 +3,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 
-import { AgentTabs } from "../src/agents/agent-tabs.tsx";
-import { PhaseStack } from "../src/agents/phase-stack.tsx";
 import { PhaseThread } from "../src/agents/phase-thread.tsx";
 import { DESKTOP } from "./support/viewports.ts";
 
@@ -69,42 +67,5 @@ describe("PhaseThread", () => {
     await expect.element(screen.getByText("On observe.")).not.toBeInTheDocument();
     await screen.getByRole("button", { name: "Évolution" }).click();
     expect(onSelect).toHaveBeenCalledWith(2);
-  });
-});
-
-describe("PhaseStack", () => {
-  it("names every phase as a card and spreads the deck from its middle", async () => {
-    const screen = await render(<PhaseStack label="Phases" items={items} backdrop={backdrop} />);
-    await expect.element(screen.getByRole("list", { name: "Phases" })).toBeVisible();
-    await expect.element(screen.getByRole("heading", { name: "Évolution" })).toBeInTheDocument();
-    const cards = screen.container.querySelectorAll<HTMLElement>("[data-stack-card]");
-    expect([...cards].map((card) => card.style.getPropertyValue("--agents-stack-offset"))).toEqual([
-      "-1",
-      "0",
-      "1",
-    ]);
-  });
-});
-
-describe("AgentTabs driven by the scroll", () => {
-  it("follows the phase it is handed, either way, with the rail and each phase's facts", async () => {
-    const screen = await render(
-      <AgentTabs label="Phases" items={items} layout="below" backdrop={backdrop} active={2} rail />,
-    );
-    await expect.element(screen.getByText("Tableau C")).toBeVisible();
-    await expect.element(screen.getByText("5 jours")).toBeInTheDocument();
-    expect(screen.container.querySelector("[data-phase-rail]")).not.toBeNull();
-    await screen.rerender(
-      <AgentTabs label="Phases" items={items} layout="below" backdrop={backdrop} active={0} rail />,
-    );
-    await expect.element(screen.getByText("Tableau A")).toBeVisible();
-    await expect
-      .element(screen.getByRole("tab", { name: "Immersion" }))
-      .toHaveAttribute("aria-selected", "true");
-  });
-
-  it("shows each agent's kicker in the side showcase", async () => {
-    const screen = await render(<AgentTabs label="Agents" items={items} every={60_000} />);
-    await expect.element(screen.getByText("5 jours")).toBeInTheDocument();
   });
 });

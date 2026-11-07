@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { expect } from "storybook/test";
+import { expect, fn, waitFor } from "storybook/test";
 
-import { PhaseStack } from "../src/agents/phase-stack.tsx";
 import { PhaseThread } from "../src/agents/phase-thread.tsx";
 import { inAgents, PLATE } from "./support/agents-direction.tsx";
 
@@ -37,18 +36,25 @@ const backdrop = <img src={PLATE} alt="" />;
 
 const meta = {
   title: "Agents/Method",
-  component: PhaseStack,
+  component: PhaseThread,
   decorators: [inAgents],
   parameters: {
     docs: {
       description: {
         component:
-          "Two ways through the phases of a project. PhaseThread is an agent's plan: a thread from dot to dot, the current phase open with its deliverables ticking, the stage beside. PhaseStack is a deck: from tablets up with motion the cards share one place, each laid over the one before with its tab still showing; the page's scroll deals them.",
+          "PhaseThread walks the phases of a project as an agent's plan: a thread from dot to dot, past phases ticked and folded, the current one open with its deliverables ticking and the thread drawn down as they tick, its board on the stage beside. The page drives `active` and `checked` from the scroll; a click hands the phase back through `onSelect`.",
       },
     },
   },
-  args: { label: "Les trois phases d’un projet", items, backdrop },
-} satisfies Meta<typeof PhaseStack>;
+  args: {
+    label: "Les trois phases d’un projet",
+    items,
+    backdrop,
+    active: 0,
+    checked: 0,
+    onSelect: fn<(index: number) => void>(),
+  },
+} satisfies Meta<typeof PhaseThread>;
 
 export default meta;
 
@@ -72,12 +78,9 @@ export const Thread: Story = {
   render: () => <ThreadDemo />,
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole("button", { name: "Construction" }));
-    await expect(canvas.getByText("Interface de suivi")).toBeVisible();
-  },
-};
-
-export const Stack: Story = {
-  play: async ({ canvas }) => {
-    await expect(canvas.getAllByRole("heading", { level: 3 })).toHaveLength(3);
+    /* The opened phase rises into place. */
+    await waitFor(async () => {
+      await expect(canvas.getByText("Interface de suivi")).toBeVisible();
+    });
   },
 };

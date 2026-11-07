@@ -126,7 +126,7 @@ function ThreadStep({ item, state, last, checked, onSelect }: ThreadStepProps) {
           <span className={titleVariants({ state })}>{item.title}</span>
         </button>
         {state === "active" ? (
-          <div className="flex animate-agents-phase-slide flex-col gap-4">
+          <div className="flex flex-col gap-4 motion-safe:animate-agents-phase-slide">
             {item.kicker === undefined ? null : (
               <span className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
                 {item.kicker}

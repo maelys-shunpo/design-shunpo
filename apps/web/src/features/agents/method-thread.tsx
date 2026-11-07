@@ -18,7 +18,7 @@ function stepAt(progress: number) {
   };
 }
 
-/* Piste A. Held on screen from tablets up: the scroll walks the phases down the thread and ticks what each delivers.
+/* Held on screen from tablets up: the scroll walks the phases down the thread and ticks what each delivers.
    A phase picked by the visitor opens complete; on phones the thread is the only way through. */
 export function MethodThread() {
   const [step, setStep] = useState({ phase: 0, checked: 0 });

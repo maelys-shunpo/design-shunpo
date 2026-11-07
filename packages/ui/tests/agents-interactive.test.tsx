@@ -40,26 +40,14 @@ describe("AgentTabs", () => {
     await userEvent.unhover(screen.getByRole("tablist"));
   });
 
-  it("puts the phase controls before the example and keeps the chosen phase visible", async () => {
+  it("shows each agent's kicker above its name", async () => {
     const screen = await render(
-      <AgentTabs label="Méthode" items={items} every={700} layout="below" />,
+      <AgentTabs
+        label="Agents"
+        items={items.map((item) => ({ ...item, kicker: item.title.toUpperCase() }))}
+      />,
     );
-    const controls = screen.getByRole("tablist");
-    const panel = screen.getByRole("tabpanel");
-
-    expect(
-      controls.element().compareDocumentPosition(panel.element()) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
-
-    await expect.element(screen.getByText("Panneau A")).toBeVisible();
-    await screen.getByRole("tab", { name: /Relancer/u }).click();
-    await userEvent.unhover(controls);
-    await pause(SETTLE_MS * 2);
-    await expect.element(screen.getByText("Panneau B")).toBeVisible();
-    await expect
-      .element(screen.getByRole("tab", { name: /Relancer/u }))
-      .toHaveAttribute("aria-selected", "true");
+    await expect.element(screen.getByText("RÉPONDRE")).toBeInTheDocument();
   });
 
   it("never advances under reduced motion", async () => {

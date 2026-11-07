@@ -223,7 +223,7 @@ Newsreader Medium for every title, Instrument Sans for text and interfaces, Geis
 | Hero to references        | Clean cut; the band scrolls continuously                  |
 | References to agents      | Clean cut; the panel changes by a fade of live pieces     |
 | Agents to tools           | Muted ground, clean cut                                   |
-| Tools to method           | Cut to a static Immersion board and a manual phase rail   |
+| Tools to method           | Cut; the method holds while the scroll walks its thread   |
 | Method to references      | Cut; the curved wall turns with the scroll (direct scrub) |
 | Composer, FAQ, final call | Clean cuts; the final call is a dark island               |
 
@@ -231,7 +231,7 @@ Newsreader Medium for every title, Instrument Sans for text and interfaces, Geis
 
 1. **Hero console, « Agent factures »** (live, a ten-second loop held four seconds): invoices arrive, the document is framed while read, fields are extracted with confidence, Odoo is called, a person approves above 2,000 €, a #compta toast confirms.
 2. **Three agents in auto-advancing tabs** (nine seconds each): support (Shopify, carrier, Gmail, cited sources), sales (enriched HubSpot record, typed follow-up, Calendly), steering (Sheets, Airtable, QuickBooks, Monday summary).
-3. **Method, one continuous set.** The photo and stage stay fixed. Selecting a phase moves the signal rule along the rail and slides the new invoice board in from the direction of travel with the emphasized ease. Workflow connectors draw from top to bottom in reading order. The first frame is complete, and reduced motion updates the board instantly. The page scrolls freely.
+3. **Method, a thread of steps**, held three screens from tablets, one third per phase. The phases stand as an agent's plan on the left: a passed phase is ticked and folded, the current one opens with its fact, its words and three deliverables that tick one by one through the first three quarters of its third while the Fushimi thread draws down to the next dot, the next ones wait in grey. The stage beside cross-fades to the phase's invoice board on the same photograph. A phase picked by the visitor opens complete. Phones and reduced motion scroll freely: the phases open on a tap.
 
 ### Assets
 
