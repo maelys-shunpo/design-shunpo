@@ -2,7 +2,7 @@
 
 import { cva } from "class-variance-authority";
 import { Check } from "lucide-react";
-import type { ReactElement } from "react";
+import { type ReactElement, useLayoutEffect, useRef } from "react";
 
 import { cn } from "../lib/cn.ts";
 import type { AgentTab } from "./agent-tabs.tsx";
@@ -24,7 +24,7 @@ const dotVariants = cva(
 );
 
 const titleVariants = cva(
-  "font-display text-2xl transition-colors duration-300 motion-reduce:transition-none",
+  "font-display text-3xl transition-colors duration-300 motion-reduce:transition-none",
   {
     variants: {
       state: {
@@ -102,15 +102,18 @@ interface ThreadStepProps {
   onSelect: () => void;
 }
 
-/* One phase on the thread: its dot, its title (the control), and once reached the segment down to the next dot. */
+/* One phase on the thread: its dot, its title (the control), and once reached the segment down to the next dot. Every
+   phase's words are in the page; only the current one shows them. */
 function ThreadStep({ item, state, last, checked, onSelect }: ThreadStepProps) {
+  const deliverables = item.details?.length ?? 0;
+  const ticked = state === "done" ? deliverables : checked;
   return (
     <li aria-current={state === "active" ? "step" : undefined} className="relative flex gap-4 py-3">
       {last ? null : (
         <span aria-hidden className="absolute agents-thread-segment w-px overflow-clip bg-border">
           <span
             className="block size-full origin-top bg-agents-signal transition-transform duration-300 motion-reduce:transition-none"
-            style={{ scale: `1 ${String(threadFill(state, checked, item.details?.length ?? 0))}` }}
+            style={{ scale: `1 ${String(threadFill(state, checked, deliverables))}` }}
           />
         </span>
       )}
@@ -118,32 +121,36 @@ function ThreadStep({ item, state, last, checked, onSelect }: ThreadStepProps) {
         <Dot state={state} />
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-3">
-        <button
-          type="button"
-          onClick={onSelect}
-          className="flex h-10 cursor-pointer items-center rounded-control text-start focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+        <h3>
+          <button
+            type="button"
+            onClick={onSelect}
+            aria-expanded={state === "active"}
+            className="flex h-10 cursor-pointer items-center rounded-control text-start focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+          >
+            <span className={titleVariants({ state })}>{item.title}</span>
+          </button>
+        </h3>
+        <div
+          hidden={state !== "active"}
+          className="flex flex-col gap-4 motion-safe:animate-agents-phase-slide"
         >
-          <span className={titleVariants({ state })}>{item.title}</span>
-        </button>
-        {state === "active" ? (
-          <div className="flex flex-col gap-4 motion-safe:animate-agents-phase-slide">
-            {item.kicker === undefined ? null : (
-              <span className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
-                {item.kicker}
-              </span>
-            )}
-            <p className="text-md text-muted-foreground">{item.description}</p>
-            {item.details === undefined ? null : (
-              <Deliverables details={item.details} checked={checked} />
-            )}
-          </div>
-        ) : null}
+          {item.kicker === undefined ? null : (
+            <span className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+              {item.kicker}
+            </span>
+          )}
+          <p className="text-md text-muted-foreground">{item.description}</p>
+          {item.details === undefined ? null : (
+            <Deliverables details={item.details} checked={ticked} />
+          )}
+        </div>
       </div>
     </li>
   );
 }
 
-/* Every phase's board on one stage, only the current one shown. */
+/* One photographed surface; every phase's board laid on it, only the current one shown. */
 function ThreadStage({
   items,
   active,
@@ -154,27 +161,63 @@ function ThreadStage({
   backdrop: ReactElement;
 }) {
   return (
-    <div className="grid md:col-span-7 lg:col-span-8">
-      {items.map((item, index) => (
-        <div
-          key={item.id}
-          /* A waiting board keeps its place, so the stage never resizes, but leaves focus, the reading order and
-             the layout audit (an aria-hidden layer out of the tab order). */
-          aria-hidden={index === active ? undefined : true}
-          tabIndex={index === active ? undefined : -1}
-          inert={index !== active}
-          className={cn(
-            "col-start-1 row-start-1 grid min-w-0 transition-opacity duration-300 motion-reduce:transition-none",
-            index === active ? "opacity-100" : "invisible opacity-0",
-          )}
-        >
-          <PhotoStage padding="md" width="narrow" backdrop={backdrop}>
-            {item.panel}
-          </PhotoStage>
-        </div>
-      ))}
-    </div>
+    <PhotoStage
+      padding="md"
+      width="narrow"
+      backdrop={backdrop}
+      className="md:col-span-7 lg:col-span-8"
+    >
+      <div className="grid">
+        {items.map((item, index) => (
+          <div
+            key={item.id}
+            /* A waiting board keeps its place, so the stage never resizes, but leaves focus, the reading order and
+               the layout audit (an aria-hidden layer out of the tab order). */
+            aria-hidden={index === active ? undefined : true}
+            tabIndex={index === active ? undefined : -1}
+            inert={index !== active}
+            className={cn(
+              "col-start-1 row-start-1 flex min-w-0 items-center transition-opacity duration-300 motion-reduce:transition-none",
+              index === active ? "opacity-100" : "invisible opacity-0",
+            )}
+          >
+            <div className="w-full min-w-0">{item.panel}</div>
+          </div>
+        ))}
+      </div>
+    </PhotoStage>
   );
+}
+
+/* Where a phase's title sits in the window. */
+function titleTop(list: HTMLOListElement | null, index: number) {
+  return list?.children.item(index)?.querySelector("button")?.getBoundingClientRect().top;
+}
+
+/* Keeps the title the visitor picked under their finger while the phase above it folds. */
+function useSteadyPick(active: number) {
+  const list = useRef<HTMLOListElement>(null);
+  const picked = useRef<{ index: number; top: number } | null>(null);
+  useLayoutEffect(() => {
+    const pick = picked.current;
+    picked.current = null;
+    if (pick?.index !== active) {
+      return;
+    }
+    const top = titleTop(list.current, active);
+    if (top !== undefined && top !== pick.top) {
+      window.scrollBy(0, top - pick.top);
+    }
+  }, [active]);
+  function remember(index: number) {
+    const top = titleTop(list.current, index);
+    picked.current = top === undefined ? null : { index, top };
+    /* A pick the page answers later (by scrolling to it) is not one to hold. */
+    requestAnimationFrame(() => {
+      picked.current = null;
+    });
+  }
+  return { list, remember };
 }
 
 interface PhaseThreadProps {
@@ -198,12 +241,13 @@ export function PhaseThread({
   backdrop,
   onSelect,
 }: PhaseThreadProps) {
+  const { list, remember } = useSteadyPick(active);
   return (
     <div
       data-slot="phase-thread"
       className="grid w-full grid-cols-1 gap-8 md:grid-cols-12 md:items-center md:gap-10"
     >
-      <ol aria-label={label} className="flex flex-col md:col-span-5 lg:col-span-4">
+      <ol ref={list} aria-label={label} className="flex flex-col md:col-span-5 lg:col-span-4">
         {items.map((item, index) => (
           <ThreadStep
             key={item.id}
@@ -212,6 +256,7 @@ export function PhaseThread({
             last={index === items.length - 1}
             checked={checked}
             onSelect={() => {
+              remember(index);
               onSelect(index);
             }}
           />

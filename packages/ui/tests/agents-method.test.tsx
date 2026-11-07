@@ -40,7 +40,7 @@ describe("PhaseThread", () => {
     const current = screen.getByRole("listitem").filter({ hasText: "Immersion" }).first();
     await expect.element(current).toHaveAttribute("aria-current", "step");
     await expect.element(screen.getByText("On observe.")).toBeVisible();
-    await expect.element(screen.getByText("On construit.")).not.toBeInTheDocument();
+    await expect.element(screen.getByText("On construit.")).not.toBeVisible();
     await expect.element(screen.getByText("Tableau A")).toBeVisible();
     await expect.element(screen.getByText("Tableau B")).not.toBeVisible();
     const fill = current.element().querySelector<HTMLElement>(".agents-thread-segment > span");
@@ -64,7 +64,7 @@ describe("PhaseThread", () => {
     );
     expect(segments[0]?.style.scale).toBe("1");
     expect(segments[1]?.style.scale).toBe("1 0");
-    await expect.element(screen.getByText("On observe.")).not.toBeInTheDocument();
+    await expect.element(screen.getByText("On observe.")).not.toBeVisible();
     await screen.getByRole("button", { name: "Évolution" }).click();
     expect(onSelect).toHaveBeenCalledWith(2);
   });

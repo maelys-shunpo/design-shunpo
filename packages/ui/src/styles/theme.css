@@ -49,6 +49,8 @@
   /* The page grid's gutter, and the vertical rhythm between sections. A section pads each side with half of its
      rhythm, so two sections meet at the sum of their halves: regular + regular = 128 px, regular + breath = 160 px. */
   --spacing-gutter: var(--page-gutter);
+  /* Room for a page's floating header: a scene held under it starts here. */
+  --spacing-header: 5rem;
   --spacing-rhythm-seam: clamp(1rem, 0.5rem + 1.3vw, 2rem);
   --spacing-rhythm-tight: clamp(2rem, 1.5rem + 1.3vw, 3rem);
   --spacing-rhythm-regular: clamp(2.5rem, 1.5rem + 2.6vw, 4rem);
@@ -518,6 +520,11 @@
   [data-direction="agents"] #methode {
     scroll-margin-block-start: var(--spacing-12);
   }
+}
+
+/* A held scene under the floating header fills the rest of the small viewport. */
+@utility scene-below-header {
+  height: calc(100svh - var(--spacing-header));
 }
 
 /* The thread of the method, from under one phase's dot (a 40 px row in a 12 px padded step) to the top of the next. */

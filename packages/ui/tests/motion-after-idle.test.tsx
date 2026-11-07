@@ -53,4 +53,29 @@ describe("Motion once the page is idle", () => {
     releaseIdleCallbacks();
     await expect.poll(() => choreography.mock.calls.length).toBe(1);
   });
+
+  it("holds a scene under the header and hands a seek that scrolls to a point of it", async () => {
+    const onSeek = vi.fn<(seek: ((progress: number) => void) | null) => void>();
+    const screen = await render(
+      <ScrollScene
+        choreography={vi.fn<(timeline: gsap.core.Timeline) => void>()}
+        below="header"
+        onSeek={onSeek}
+      >
+        <p>Held scene</p>
+      </ScrollScene>,
+    );
+    const stage = screen.getByText("Held scene").element().parentElement;
+    expect(stage).toHaveClass("motion-safe:top-header");
+
+    releaseIdleCallbacks();
+    await expect.poll(() => onSeek.mock.calls.length).toBe(1);
+    const seek = onSeek.mock.calls[0]?.[0];
+    const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(vi.fn<() => void>());
+    seek?.(0.5);
+    expect(scrollTo).toHaveBeenCalledWith(expect.objectContaining({ behavior: "smooth" }));
+
+    await screen.unmount();
+    expect(onSeek).toHaveBeenLastCalledWith(null);
+  });
 });
