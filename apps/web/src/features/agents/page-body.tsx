@@ -17,7 +17,8 @@ export function PageBody() {
       <ReferencesBand />
       <AgentsShowcase />
       <ToolsSection />
-      <MethodSection />
+      <MethodSection track="thread" />
+      <MethodSection track="stack" />
       <CasesSection />
       <ComposerSection />
       <QuestionsSection />

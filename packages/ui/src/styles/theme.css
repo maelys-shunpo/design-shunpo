@@ -554,6 +554,27 @@
   }
 }
 
+/* The thread of the method, from under one phase's dot (a 40 px row in a 12 px padded step) to the top of the next. */
+@utility agents-thread-segment {
+  inset-inline-start: var(--spacing-3);
+  inset-block: calc(var(--spacing-3) + var(--spacing-8)) calc(-1 * var(--spacing-5));
+  translate: -50% 0;
+}
+
+/* The method as a deck, from tablets up with motion: the cards share one cell (set on the component), each resting a
+   tab's height below the one it covers, the deck centred in the height it reserves. */
+@utility agents-phase-stack {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    padding-block: calc(var(--agents-stack-reach, 1) * var(--spacing-16));
+  }
+}
+
+@utility agents-stack-card {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    translate: 0 calc(var(--agents-stack-offset, 0) * var(--spacing-16));
+  }
+}
+
 @utility agents-phase-panel {
   @media (prefers-reduced-motion: no-preference) {
     &[data-phase-travel] {
