@@ -5,7 +5,6 @@ import { Section } from "@repo/ui/layout/section";
 import { Stack } from "@repo/ui/layout/stack";
 import { Text } from "@repo/ui/typography/text";
 
-import { MethodActions } from "./method-actions";
 import { MethodThread } from "./method-thread";
 
 /* One invoice carried through the three phases, held on screen while the scroll walks them down a thread. */
@@ -26,9 +25,6 @@ export function MethodSection() {
         </GridArea>
         <GridArea>
           <MethodThread />
-        </GridArea>
-        <GridArea>
-          <MethodActions />
         </GridArea>
       </PageGrid>
     </Section>

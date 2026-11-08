@@ -4,6 +4,7 @@ import { PhaseThread } from "@repo/ui/agents/phase-thread";
 import { ScrollScene } from "@repo/ui/motion/scroll-scene";
 import { useCallback, useRef, useState } from "react";
 
+import { MethodActions } from "./method-actions";
 import { agentsMethod, agentsMethodBackdrop } from "./method-steps";
 
 function deliverablesOf(phase: number) {
@@ -67,6 +68,7 @@ export function MethodThread() {
         backdrop={agentsMethodBackdrop}
         active={step.phase}
         checked={step.checked}
+        actions={<MethodActions />}
         onSelect={(phase) => {
           if (seek.current === null) {
             setStep({ phase, checked: deliverablesOf(phase) });

@@ -2,7 +2,7 @@
 
 import { cva } from "class-variance-authority";
 import { Check } from "lucide-react";
-import { type ReactElement, useLayoutEffect, useRef } from "react";
+import { type ReactElement, type ReactNode, useLayoutEffect, useRef } from "react";
 
 import { cn } from "../lib/cn.ts";
 import type { AgentTab } from "./agent-tabs.tsx";
@@ -162,7 +162,7 @@ function ThreadStage({
 }) {
   return (
     <PhotoStage
-      padding="md"
+      padding="sm"
       width="narrow"
       backdrop={backdrop}
       className="md:col-span-7 lg:col-span-8"
@@ -228,6 +228,8 @@ interface PhaseThreadProps {
   label: string;
   backdrop: ReactElement;
   onSelect: (index: number) => void;
+  /* The calls that follow the plan: under the phases from tablets up, held with them; after the stage on phones. */
+  actions?: ReactNode;
 }
 
 /* The phases as an agent's plan: a thread runs from dot to dot, past steps ticked and folded, the current one open
@@ -240,6 +242,7 @@ export function PhaseThread({
   label,
   backdrop,
   onSelect,
+  actions,
 }: PhaseThreadProps) {
   const { list, remember } = useSteadyPick(active);
   return (
@@ -247,21 +250,24 @@ export function PhaseThread({
       data-slot="phase-thread"
       className="grid w-full grid-cols-1 gap-8 md:grid-cols-12 md:items-center md:gap-10"
     >
-      <ol ref={list} aria-label={label} className="flex flex-col md:col-span-5 lg:col-span-4">
-        {items.map((item, index) => (
-          <ThreadStep
-            key={item.id}
-            item={item}
-            state={stateOf(index, active)}
-            last={index === items.length - 1}
-            checked={checked}
-            onSelect={() => {
-              remember(index);
-              onSelect(index);
-            }}
-          />
-        ))}
-      </ol>
+      <div className="contents md:col-span-5 md:flex md:flex-col md:gap-8 lg:col-span-4">
+        <ol ref={list} aria-label={label} className="flex flex-col">
+          {items.map((item, index) => (
+            <ThreadStep
+              key={item.id}
+              item={item}
+              state={stateOf(index, active)}
+              last={index === items.length - 1}
+              checked={checked}
+              onSelect={() => {
+                remember(index);
+                onSelect(index);
+              }}
+            />
+          ))}
+        </ol>
+        {actions === undefined ? null : <div className="order-last md:order-0">{actions}</div>}
+      </div>
       <ThreadStage items={items} active={active} backdrop={backdrop} />
     </div>
   );

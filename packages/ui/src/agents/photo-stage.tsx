@@ -6,6 +6,8 @@ import { cn } from "../lib/cn.ts";
 const stageVariants = cva("relative isolate grid overflow-clip rounded-stage bg-muted", {
   variants: {
     padding: {
+      /* Beside a column of text: the surface narrows to a frame on tablets, so the interface keeps its width. */
+      sm: "px-4 py-8 sm:px-8 md:p-6 lg:p-12",
       md: "px-4 py-8 sm:px-8 md:p-12",
       lg: "px-4 py-10 sm:px-10 md:p-20",
     },

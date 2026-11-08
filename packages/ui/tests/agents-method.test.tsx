@@ -57,8 +57,10 @@ describe("PhaseThread", () => {
         checked={0}
         backdrop={backdrop}
         onSelect={onSelect}
+        actions={<a href="#contact">Réserver</a>}
       />,
     );
+    await expect.element(screen.getByRole("link", { name: "Réserver" })).toBeVisible();
     const segments = screen.container.querySelectorAll<HTMLElement>(
       ".agents-thread-segment > span",
     );

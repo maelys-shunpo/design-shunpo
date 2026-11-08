@@ -39,7 +39,7 @@ export function MockWindow({
     <div
       data-slot="mock-window"
       className={cn(
-        "flex w-full flex-col overflow-clip rounded-surface border border-agents-line bg-agents-paper text-agents-ink shadow-agents-float",
+        "@container flex w-full flex-col overflow-clip rounded-surface border border-agents-line bg-agents-paper text-agents-ink shadow-agents-float",
         className,
       )}
     >
@@ -50,12 +50,15 @@ export function MockWindow({
             <span className="size-3 rounded-full bg-agents-line" />
             <span className="size-3 rounded-full bg-agents-line" />
           </span>
-          <span className="truncate text-sm font-medium">{title}</span>
-          {context === undefined ? null : (
-            <span className="hidden truncate text-sm text-muted-foreground sm:inline">
-              {context}
-            </span>
-          )}
+          {/* The name never gives way; in a narrow window the context drops under it and wraps rather than squeezing it. */}
+          <span className="flex min-w-0 flex-col @prose:flex-row @prose:items-baseline @prose:gap-3">
+            <span className="text-sm font-medium whitespace-nowrap">{title}</span>
+            {context === undefined ? null : (
+              <span className="text-xs text-muted-foreground @prose:truncate @prose:text-sm">
+                {context}
+              </span>
+            )}
+          </span>
         </div>
         {status}
       </div>
