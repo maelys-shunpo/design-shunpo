@@ -218,14 +218,15 @@ Newsreader Medium for every title, Instrument Sans for text and interfaces, Geis
 
 ### Transitions
 
-| Boundary                  | Treatment                                                    |
-| ------------------------- | ------------------------------------------------------------ |
-| Hero to references        | Clean cut; the copy beside three drifting columns of clients |
-| References to agents      | Clean cut; the panel changes by a fade of live pieces        |
-| Agents to tools           | Muted ground, clean cut; the copy centred over the hub       |
-| Tools to method           | Cut; the method holds while the scroll walks its thread      |
-| Method to references      | Cut; the curved wall turns with the scroll (direct scrub)    |
-| Composer, FAQ, final call | Clean cuts; the final call is a dark island                  |
+| Boundary                   | Treatment                                                                 |
+| -------------------------- | ------------------------------------------------------------------------- |
+| Hero to references         | Clean cut; the copy beside three drifting columns of clients              |
+| References to agents       | Clean cut; the panel changes by a fade of live pieces                     |
+| Agents to tools            | Muted ground, clean cut; the copy centred over the hub                    |
+| Tools to method            | Cut; the method holds while the scroll walks its thread                   |
+| Method to references       | Cut; the curved wall turns with the scroll (direct scrub)                 |
+| References to client words | Clean cut; the title beside signed quotes stepping down, no network badge |
+| Composer, FAQ, final call  | Clean cuts; the final call is a dark island                               |
 
 ### Storyboard
 

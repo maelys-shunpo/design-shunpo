@@ -18,6 +18,8 @@ const avatarVariants = cva(
       size: {
         sm: "size-6",
         md: "size-8",
+        /* Beside a quote's author. */
+        lg: "size-10 text-sm",
       },
     },
     defaultVariants: { tone: "ink", size: "md" },
