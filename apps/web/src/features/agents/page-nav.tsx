@@ -7,7 +7,6 @@ import Link from "next/link";
 import { contactUrl } from "../shunpo/content";
 
 const links = [
-  { href: "#agents", label: "Agents" },
   { href: "#outils", label: "Intégrations" },
   { href: "#methode", label: "Méthode" },
   { href: "#references", label: "Références" },

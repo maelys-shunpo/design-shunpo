@@ -1,4 +1,3 @@
-import { AgentsShowcase } from "./agents-showcase";
 import { ClosingSection } from "./closing-section";
 import { ComposerSection } from "./composer-section";
 import { HeroSection } from "./hero-section";
@@ -15,7 +14,6 @@ export function PageBody() {
       <HeroSection />
       <ProblemSection />
       <ReferencesBand />
-      <AgentsShowcase />
       <ToolsSection />
       <MethodSection />
       <ProofSections />
