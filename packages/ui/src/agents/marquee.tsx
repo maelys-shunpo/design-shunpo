@@ -23,14 +23,28 @@ const viewportVariants = cva("w-full min-w-0 overflow-clip", {
   defaultVariants: { direction: "left" },
 });
 
-/* A row is as long as its items; a column is as wide as its lane, so its items wrap inside it. */
-const trackVariants = cva("flex gap-4", {
+/* A row is as long as its items; a column is as wide as its lane, so its items wrap inside it. The two copies touch:
+   each copy carries half a gap on both ends, so moving the track by half its length lands exactly one copy on, with
+   no jump at the loop. */
+const trackVariants = cva("flex", {
   variants: {
     direction: {
       left: "w-max flex-row",
       right: "w-max flex-row",
       up: "w-full flex-col",
       down: "w-full flex-col",
+    },
+  },
+  defaultVariants: { direction: "left" },
+});
+
+const copyVariants = cva("flex gap-4", {
+  variants: {
+    direction: {
+      left: "w-max flex-row px-2",
+      right: "w-max flex-row px-2",
+      up: "w-full flex-col py-2",
+      down: "w-full flex-col py-2",
     },
   },
   defaultVariants: { direction: "left" },
@@ -47,7 +61,8 @@ interface MarqueeProps extends VariantProps<typeof viewportVariants> {
   className?: string;
 }
 
-/* An endless row or column that drifts: references, tools. It stands still under reduced motion and off screen. */
+/* An endless row or column that drifts: references, tools. It stands still under reduced motion and off screen, and
+   holds under the pointer and while something inside it has focus. */
 export function Marquee({ children, direction, lap = 40, label, className }: MarqueeProps) {
   const [track, setTrack] = useState<HTMLDivElement | null>(null);
   return (
@@ -58,8 +73,8 @@ export function Marquee({ children, direction, lap = 40, label, className }: Mar
       className={cn(viewportVariants({ direction }), className)}
     >
       <div ref={setTrack} className={trackVariants({ direction })}>
-        <div className={trackVariants({ direction })}>{children}</div>
-        <div aria-hidden inert className={trackVariants({ direction })}>
+        <div className={copyVariants({ direction })}>{children}</div>
+        <div aria-hidden inert className={copyVariants({ direction })}>
           {children}
         </div>
       </div>

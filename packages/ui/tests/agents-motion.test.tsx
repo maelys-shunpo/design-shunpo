@@ -47,6 +47,27 @@ describe("Agents motion", () => {
       .toContain("translate");
   });
 
+  it("holds a marquee under the pointer and lets it go after", async () => {
+    const screen = await render(
+      <Marquee label="Tenu" lap={2}>
+        <span>Un</span>
+        <span>Deux</span>
+      </Marquee>,
+    );
+    releaseIdleCallbacks();
+    function track() {
+      return transformOf(screen.container, "[data-slot=marquee] > div");
+    }
+    await expect.poll(track, { timeout: 5000 }).toContain("translate");
+    const viewport = screen.container.querySelector("[data-slot=marquee]");
+    viewport?.dispatchEvent(new PointerEvent("pointerenter"));
+    const held = track();
+    await pause(SETTLE_MS);
+    expect(track()).toBe(held);
+    viewport?.dispatchEvent(new PointerEvent("pointerleave"));
+    await expect.poll(track, { timeout: 5000 }).not.toBe(held);
+  });
+
   it("does not move a marquee under reduced motion", async () => {
     await preferReducedMotion();
     const screen = await render(
