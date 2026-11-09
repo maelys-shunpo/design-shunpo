@@ -7,7 +7,19 @@ import { Section } from "@repo/ui/layout/section";
 import { testimonials } from "../shunpo/testimonials";
 import { TestimonialsCopy } from "./testimonials-copy";
 
-const tones = ["ink", "cobalt", "mint"] as const;
+const tones = ["ink", "cobalt", "mint", "warm"] as const;
+
+const pairs = Math.ceil(testimonials.length / 2);
+
+const labels = {
+  pages: Array.from(
+    { length: pairs },
+    (_, page) =>
+      `Avis ${String(page * 2 + 1)} et ${String(page * 2 + 2)}, page ${String(page + 1)} sur ${String(pairs)}`,
+  ),
+  pause: "Mettre les avis en pause",
+  play: "Reprendre le défilement des avis",
+};
 
 /* The title on one half, the clients' own words stepping down on the other. */
 export function TestimonialsSection() {
@@ -18,7 +30,7 @@ export function TestimonialsSection() {
           <TestimonialsCopy />
         </GridArea>
         <GridArea columns={{ lg: { start: 7, span: 6 } }}>
-          <TestimonialCascade label="Avis de clients">
+          <TestimonialCascade label="Avis de clients" labels={labels}>
             {testimonials.map((testimonial, index) => (
               <Testimonial
                 key={testimonial.id}

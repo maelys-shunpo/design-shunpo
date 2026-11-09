@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Testimonial is a client's words, signed: initials, name and role above, the quote below, an optional source under it, no network badge. TestimonialCascade steps the cards from one edge to the other from tablets up.",
+          "Testimonial is a client's words, signed: initials, name and role above, the quote below, an optional source under it, no network badge. TestimonialCascade shows the cards two by two, stepping from one edge to the other from tablets up, the pairs taking turns in a loop with a pause control and one dot per pair.",
       },
     },
   },
@@ -39,12 +39,20 @@ export const Card: Story = {
 
 export const Cascade: Story = {
   render: (args) => (
-    <TestimonialCascade label="Avis de clients">
-      <Testimonial {...args} />
-      <Testimonial {...args} author="Simon Brossard" initials="SB" tone="ink" />
+    <TestimonialCascade
+      label="Avis de clients"
+      labels={{ pages: ["Avis 1 et 2", "Avis 3"], pause: "Pause", play: "Lecture" }}
+      every={60_000}
+    >
+      {[
+        <Testimonial key="a" {...args} />,
+        <Testimonial key="b" {...args} author="Simon Brossard" initials="SB" tone="ink" />,
+        <Testimonial key="c" {...args} author="Corentin Lambert" initials="CL" tone="cobalt" />,
+      ]}
     </TestimonialCascade>
   ),
-  play: async ({ canvas }) => {
-    await expect(canvas.getAllByRole("listitem")).toHaveLength(2);
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Avis 3" }));
+    await expect(canvas.getByText("Corentin Lambert")).toBeVisible();
   },
 };

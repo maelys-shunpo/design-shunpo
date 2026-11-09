@@ -6,7 +6,7 @@ export interface Testimonial {
   initials: string;
 }
 
-/* Published on shunpo.fr, word for word (checked on 9 November 2026), with the ratings shown on the same page. */
+/* Published on shunpo.fr, word for word, shown two by two (checked on 9 November 2026), with the ratings shown on the same page. */
 export const testimonials: Testimonial[] = [
   {
     id: "lemlist",
@@ -31,6 +31,29 @@ export const testimonials: Testimonial[] = [
     author: "Marc Biessy",
     position: "CEO, Ops Clean",
     initials: "MB",
+  },
+  {
+    id: "insiders",
+    quote: "Excellente prestation proactive, rien à redire, c’est top de chez top comme agence !",
+    author: "Thomas Chabrieres",
+    position: "CEO, Insiders Experiences",
+    initials: "TC",
+  },
+  {
+    id: "fondation-donnadieu",
+    quote:
+      "Équipe super performante, sympathique et honnête ! Je suis très exigeant, et ils ont su m’apporter le plus haut degré de satisfaction. Bravo et merci à vous. Je vous recommande XXL +++",
+    author: "Ludovic Donnadieu",
+    position: "Directeur Général, Fondation Donnadieu",
+    initials: "LD",
+  },
+  {
+    id: "initial-labo",
+    quote:
+      "Sam et Maxime ont fait un excellent travail en implémentant deux nouvelles fonctionnalités sur notre projet, avec des solutions techniques adaptées et efficaces. Communication claire, délais respectés, et en prime, une belle réactivité. Je recommande sans hésiter !",
+    author: "Helene Allain",
+    position: "Directrice de la communication, Initial Labo",
+    initials: "HA",
   },
 ];
 
