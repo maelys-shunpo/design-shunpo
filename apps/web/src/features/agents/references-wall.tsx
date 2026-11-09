@@ -23,7 +23,8 @@ export function ReferencesWall() {
             <ReferenceTile
               key={logo.name}
               name={logo.name}
-              size="lg"
+              material="paper"
+              size="wall"
               logo={<Image src={logo.image} alt="" width={logo.width} height={logo.height} />}
             />
           ))}

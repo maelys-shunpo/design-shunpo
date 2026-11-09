@@ -657,6 +657,41 @@
   }
 }
 
+/* A sheet of paper with its top right corner cut on the bias (`ReferenceTile material="paper"`): the sheet clipped
+   along the cut, its Shiro hairline drawn by `::before` along the same edge (1 px in: legs shorter by (2 − √2)·1). */
+@utility agents-paper-cut {
+  --agents-cut: calc(var(--spacing-3) + var(--spacing-0\.5));
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--agents-cut)) 0,
+    100% var(--agents-cut),
+    100% 100%,
+    0 100%
+  );
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--color-agents-line);
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut)) 0,
+      100% var(--agents-cut),
+      100% 100%,
+      0 100%,
+      0 0,
+      1px 1px,
+      1px calc(100% - 1px),
+      calc(100% - 1px) calc(100% - 1px),
+      calc(100% - 1px) calc(1px + var(--agents-cut) - 0.59px),
+      calc(100% - 1px - var(--agents-cut) + 0.59px) 1px,
+      1px 1px
+    );
+  }
+}
+
 /* A wall of logos turned a little in its own plane, flat and facing the reader (`ToolColumns lean="tilted"`). The pose
    is still: only the columns drift inside it, so reduced motion keeps it. */
 @utility agents-wall-tilt {
