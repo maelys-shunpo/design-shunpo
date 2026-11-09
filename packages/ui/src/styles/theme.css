@@ -527,6 +527,53 @@
   height: calc(100svh - var(--spacing-header));
 }
 
+/* The tools wired to one agent (`ConnectionHub`): orbits and threads in hairlines, a Fushimi pulse that runs down a
+   thread (a 12-unit dash over a 100-unit path, hidden before its start, its width set by the drawing), tools placed by
+   their own coordinates. */
+@utility agents-hub-orbit {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 1;
+  stroke-dasharray: 2 6;
+  vector-effect: non-scaling-stroke;
+}
+
+@utility agents-hub-thread {
+  stroke: var(--color-border);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+@utility agents-hub-pulse {
+  stroke: var(--color-agents-signal);
+  stroke-linecap: round;
+  stroke-dasharray: 12 100;
+  stroke-dashoffset: 12;
+}
+
+@utility agents-hub-place {
+  left: var(--hub-x);
+  top: var(--hub-y);
+  translate: -50% -50%;
+
+  @media (min-width: 48rem) {
+    left: var(--hub-x-wide);
+    top: var(--hub-y-wide);
+  }
+}
+
+/* The line under the hub: after the stage on phones, held just under the hub's disc from tablets up. */
+@utility agents-hub-caption {
+  position: relative;
+
+  @media (min-width: 48rem) {
+    position: absolute;
+    left: 50%;
+    top: calc(50% + var(--spacing-24));
+    translate: -50% 0;
+  }
+}
+
 /* The thread of the method, from under one phase's dot (a 40 px row in a 12 px padded step) to the top of the next. */
 @utility agents-thread-segment {
   inset-inline-start: var(--spacing-3);

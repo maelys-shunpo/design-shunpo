@@ -1,31 +1,32 @@
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
-import { Marquee } from "@repo/ui/agents/marquee";
+import { Headline } from "@repo/ui/agents/headline";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
 import { Section } from "@repo/ui/layout/section";
+import { Stack } from "@repo/ui/layout/stack";
 import { Text } from "@repo/ui/typography/text";
 
-import { references } from "../shunpo/content";
+import { ReferencesWall } from "./references-wall";
 
-/* A continuous band right under the hero: the label centred, the names running on every content column. */
+/* The clients under the hero: the copy on one half, their names drifting in three columns on the other. */
 export function ReferencesBand() {
   return (
-    <Section spacing="tight" aria-label="Références">
-      <PageGrid rows="md">
-        <GridArea columns={{ md: 6, lg: 6 }} justify="center">
-          <Eyebrow tone="ink" align="center">
-            Ils nous ont confié des projets
-          </Eyebrow>
+    <Section spacing="regular" aria-label="Références">
+      <PageGrid rows="xl" align="center">
+        <GridArea columns={{ lg: { start: 1, span: 6 } }}>
+          <Stack gap="xl">
+            <Eyebrow>Références</Eyebrow>
+            <Headline level={2} size="title">
+              Ils nous ont confié des projets
+            </Headline>
+            <Text size="lg" tone="muted" measure="prose">
+              Une application de jeu suivie en direct, une plateforme d’investissement, un programme
+              d’affiliation, une expérience web, une boutique en ligne.
+            </Text>
+          </Stack>
         </GridArea>
-        <GridArea>
-          <Marquee label="Références" lap={30}>
-            {references.map((reference) => (
-              <Text key={reference.id} as="span" size="lg" weight="medium" tone="muted">
-                {reference.name}
-                {"        "}
-              </Text>
-            ))}
-          </Marquee>
+        <GridArea columns={{ lg: { start: 7, span: 6 } }}>
+          <ReferencesWall />
         </GridArea>
       </PageGrid>
     </Section>

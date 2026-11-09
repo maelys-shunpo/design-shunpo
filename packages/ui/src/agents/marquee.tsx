@@ -23,11 +23,12 @@ const viewportVariants = cva("w-full min-w-0 overflow-clip", {
   defaultVariants: { direction: "left" },
 });
 
-const trackVariants = cva("flex w-max gap-4", {
+/* A row is as long as its items; a column is as wide as its lane, so its items wrap inside it. */
+const trackVariants = cva("flex gap-4", {
   variants: {
     direction: {
-      left: "flex-row",
-      right: "flex-row",
+      left: "w-max flex-row",
+      right: "w-max flex-row",
       up: "w-full flex-col",
       down: "w-full flex-col",
     },
