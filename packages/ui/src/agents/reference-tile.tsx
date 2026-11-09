@@ -21,7 +21,8 @@ interface ReferenceTileProps extends VariantProps<typeof tileVariants> {
   name: string;
   /* What we built for them, in a few words. */
   detail?: string | undefined;
-  /* The client's logo (an svg or a next/image), drawn in place of the typeset name. Decorative: the name is read. */
+  /* The client's logo (an svg or a next/image) at its own size, centred in place of the typeset name. Decorative: the
+     name is read. */
   logo?: ReactNode;
   className?: string | undefined;
 }
@@ -34,7 +35,10 @@ export function ReferenceTile({ name, detail, logo, size, className }: Reference
         <span className="font-display text-lg text-balance text-agents-ink sm:text-xl">{name}</span>
       ) : (
         <>
-          <span aria-hidden className="flex h-8 items-center [&_img]:h-full [&_svg]:h-full">
+          <span
+            aria-hidden
+            className="flex items-center justify-center [&_img]:h-auto [&_img]:max-w-full [&_svg]:h-auto [&_svg]:max-w-full"
+          >
             {logo}
           </span>
           <span className="sr-only">{name}</span>

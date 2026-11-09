@@ -221,7 +221,7 @@ Newsreader Medium for every title, Instrument Sans for text and interfaces, Geis
 | Boundary                   | Treatment                                                                 |
 | -------------------------- | ------------------------------------------------------------------------- |
 | Hero to problem            | Clean cut; the night arrives as a card around the question                |
-| Problem to references      | Clean cut; the copy beside three drifting columns of clients              |
+| Problem to references      | Clean cut; the title beside three drifting columns of client logos        |
 | References to agents       | Clean cut; the panel changes by a fade of live pieces                     |
 | Agents to tools            | Muted ground, clean cut; the copy centred over the hub                    |
 | Tools to method            | Cut; the method holds while the scroll walks its thread                   |

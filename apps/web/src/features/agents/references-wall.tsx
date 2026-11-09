@@ -1,38 +1,32 @@
 import { Marquee } from "@repo/ui/agents/marquee";
 import { ReferenceTile } from "@repo/ui/agents/reference-tile";
 import { ToolColumns } from "@repo/ui/agents/tool-columns";
+import Image from "next/image";
 
-import { references } from "../shunpo/content";
+import { referenceLogoColumns } from "./references-logos";
 
 const directions = ["up", "down", "up"] as const;
 const laps = [34, 40, 30] as const;
 
-/* Each column starts at a different client, so the wall never shows the same name side by side. */
-const columns = [0, 2, 4].map((offset) =>
-  references.map((_, index) => references[(index + offset) % references.length]),
-);
-
-/* The clients in three columns drifting in turn up and down, like the wall of tools. */
+/* The clients' logos in three columns drifting in turn up and down, like the wall of tools. */
 export function ReferencesWall() {
   return (
     <ToolColumns>
-      {columns.map((column, index) => (
+      {referenceLogoColumns.map((column, index) => (
         <Marquee
-          key={column[0]?.id}
+          key={column[0].name}
           direction={directions[index] ?? "up"}
           lap={laps[index] ?? 34}
           label={`Références, colonne ${String(index + 1)}`}
         >
-          {column.map((reference) =>
-            reference === undefined ? null : (
-              <ReferenceTile
-                key={reference.id}
-                name={reference.name}
-                detail={reference.project}
-                size="lg"
-              />
-            ),
-          )}
+          {column.map((logo) => (
+            <ReferenceTile
+              key={logo.name}
+              name={logo.name}
+              size="lg"
+              logo={<Image src={logo.image} alt="" width={logo.width} height={logo.height} />}
+            />
+          ))}
         </Marquee>
       ))}
     </ToolColumns>

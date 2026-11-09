@@ -119,6 +119,233 @@
       "credits": 75,
       "approvedBy": "autonomous run under the page cap",
       "date": "2026-11-06"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-lemlist.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "lemlist",
+        "licenceNote": "lemlist logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-lemlist.webp."
+      },
+      "edits": ["copied as is", "copied from shunpo-landing-page-design (home clients band)"],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-french-abroad.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "French Abroad",
+        "licenceNote": "French Abroad logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-frenchabroad.webp."
+      },
+      "edits": ["copied as is", "copied from shunpo-landing-page-design (home clients band)"],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-y-brush.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "Y-Brush",
+        "licenceNote": "Y-Brush logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-ybrush.webp."
+      },
+      "edits": ["copied as is", "copied from shunpo-landing-page-design (home clients band)"],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-carte-noire.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "Carte Noire",
+        "licenceNote": "Carte Noire logo, a SHUNPO client. Official vector from the brand's site (https://www.cartenoire.fr/content/dam/carte-noire-athena/language-masters/icons/header/logo/CN_Logo.svg), downloaded 2026-11-03, kept in assets/source/home/clients-carte-noire/; replaces the 67 px raster of « Home SHUNPO.zip », too small to stay sharp."
+      },
+      "edits": [
+        "rendered to 296 px wide on a transparent ground (Chromium), WebP q90",
+        "copied from shunpo-landing-page-design (home clients band)"
+      ],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-insiders.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "Insiders Experiences",
+        "licenceNote": "Insiders Experiences logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-insiders.webp."
+      },
+      "edits": ["copied as is", "copied from shunpo-landing-page-design (home clients band)"],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-ops-clean.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "Ops Clean",
+        "licenceNote": "Ops Clean logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-opsclean.webp."
+      },
+      "edits": ["copied as is", "copied from shunpo-landing-page-design (home clients band)"],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-hetic.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "HETIC",
+        "licenceNote": "HETIC logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-hetic.webp."
+      },
+      "edits": ["copied as is", "copied from shunpo-landing-page-design (home clients band)"],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-donnadieu.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "Fondation Donnadieu",
+        "licenceNote": "Fondation Donnadieu logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-donnadieu.webp."
+      },
+      "edits": ["copied as is", "copied from shunpo-landing-page-design (home clients band)"],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-initial.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "Initial Labo",
+        "licenceNote": "Initial Labo logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-initial.webp."
+      },
+      "edits": ["copied as is", "copied from shunpo-landing-page-design (home clients band)"],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-revoltrain.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "Revoltrain",
+        "licenceNote": "Revoltrain logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-revoltrain.webp."
+      },
+      "edits": ["copied as is", "copied from shunpo-landing-page-design (home clients band)"],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-tf1.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "TF1",
+        "licenceNote": "TF1 logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-tf1.svg."
+      },
+      "edits": [
+        "rasterised at 300 dpi, 58 px high (2x of its 29 px)",
+        "webp q90",
+        "copied from shunpo-landing-page-design (home clients band)"
+      ],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/clients-altaroc.webp",
+      "slot": "agents references wall",
+      "source": "client",
+      "origin": {
+        "owner": "Altaroc",
+        "licenceNote": "Altaroc logo, a SHUNPO client. From the client's Claude artifact archive « Home SHUNPO.zip », received 2026-10-28: img/08/lg-altaroc.svg."
+      },
+      "edits": [
+        "rasterised at 300 dpi, 50 px high (2x of its 25 px)",
+        "webp q90",
+        "copied from shunpo-landing-page-design (home clients band)"
+      ],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-09)",
+      "date": "2026-11-09",
+      "page": "agents"
     }
   ],
   "pages": {
