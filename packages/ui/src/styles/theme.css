@@ -527,6 +527,136 @@
   height: calc(100svh - var(--spacing-header));
 }
 
+/* The cut (« La coupe », as on the home page): an action's top right corner cut on the bias. The fill (`before:bg-*`)
+   or the hairline frame (`agents-cut-line`) is drawn by `::before` through the cut, the focus halo by `::after` around
+   it, the press highlight inside it (`[data-press-clip]`). The cut opens on hover and closes on press. Offset by d, a
+   45° cut's legs grow by (2 − √2)·d: the halo (4 px out, 3 px thick) and the frame (1 px in) follow it. */
+@property --agents-cut {
+  syntax: "<length>";
+  inherits: true;
+  /* In px: an initial value must not depend on the font, or the browser drops the registration and the cut jumps. */
+  initial-value: 8px;
+}
+
+@utility agents-cut {
+  --agents-cut-rest: var(--spacing-2);
+  --agents-cut-open: calc(var(--spacing-3) + var(--spacing-0\.5));
+  --agents-cut-press: calc(var(--spacing-1) + var(--spacing-px));
+  --agents-cut: var(--agents-cut-rest);
+
+  &::before,
+  & > [data-press-clip] {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut)) 0,
+      100% var(--agents-cut),
+      100% 100%,
+      0 100%
+    );
+  }
+
+  &::before {
+    z-index: -2;
+  }
+
+  & > [data-press-clip] {
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  &::before,
+  &::after,
+  & > [data-press-clip] {
+    transition:
+      --agents-cut 240ms var(--ease-shift),
+      background-color 200ms var(--ease-press);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--spacing-1));
+    pointer-events: none;
+    background: var(--color-ring);
+    opacity: 0;
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut) - 2.34px) 0,
+      100% calc(var(--agents-cut) + 2.34px),
+      100% 100%,
+      0 100%,
+      0 0,
+      3px 3px,
+      3px calc(100% - 3px),
+      calc(100% - 3px) calc(100% - 3px),
+      calc(100% - 3px) calc(3px + var(--agents-cut) + 0.59px),
+      calc(100% - 3px - var(--agents-cut) - 0.59px) 3px,
+      3px 3px
+    );
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::after {
+    opacity: 0.45;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --agents-cut: var(--agents-cut-open);
+    }
+  }
+
+  &:active {
+    --agents-cut: var(--agents-cut-press);
+  }
+
+  &[aria-disabled="true"] {
+    --agents-cut: var(--agents-cut-rest);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before,
+    &::after,
+    & > [data-press-clip] {
+      transition: none;
+    }
+  }
+}
+
+/* Larger calls cut deeper. */
+@utility agents-cut-lg {
+  --agents-cut-rest: calc(var(--spacing-2) + var(--spacing-0\.5));
+  --agents-cut-open: calc(var(--spacing-4) + var(--spacing-0\.5));
+  --agents-cut-press: calc(var(--spacing-1) + var(--spacing-0\.5));
+}
+
+/* A second choice: a 1 px frame along the cut instead of a fill. */
+@utility agents-cut-line {
+  &::before {
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut)) 0,
+      100% var(--agents-cut),
+      100% 100%,
+      0 100%,
+      0 0,
+      1px 1px,
+      1px calc(100% - 1px),
+      calc(100% - 1px) calc(100% - 1px),
+      calc(100% - 1px) calc(1px + var(--agents-cut) - 0.59px),
+      calc(100% - 1px - var(--agents-cut) + 0.59px) 1px,
+      1px 1px
+    );
+  }
+}
+
 /* The tools wired to one agent (`ConnectionHub`): orbits and threads in hairlines, a Fushimi pulse that runs down a
    thread (a 12-unit dash over a 100-unit path, hidden before its start, its width set by the drawing), tools placed by
    their own coordinates. */

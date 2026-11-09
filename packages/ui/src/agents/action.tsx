@@ -10,20 +10,21 @@ import { cn } from "../lib/cn.ts";
 import { centreOf, playPressHighlight } from "../lib/press-highlight.ts";
 
 const actionVariants = cva(
-  "group/action relative isolate inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-control font-medium whitespace-nowrap transition duration-200 ease-press select-none focus-visible:ring-3 focus-visible:ring-ring/45 focus-visible:outline-none active:scale-98 aria-disabled:pointer-events-none aria-disabled:opacity-40",
+  "group/action relative isolate inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 font-medium whitespace-nowrap transition duration-200 ease-press select-none active:scale-98 aria-disabled:pointer-events-none aria-disabled:opacity-40",
   {
     variants: {
       variant: {
-        /* The one action that matters on a screen: ink, or Kome on a dark island. */
-        solid: "bg-primary text-primary-foreground hover:bg-primary-hover",
+        /* The one action that matters on a screen: ink, or Kome on a dark island. Cut on the bias, as every
+           filled or framed action (`agents-cut`). */
+        solid: "agents-cut text-primary-foreground before:bg-primary hover:before:bg-primary-hover",
         /* The page's main call, « Réserver un diagnostic »: the one Fushimi of the screen. */
-        signal: "bg-accent text-accent-foreground hover:bg-accent-hover",
-        /* A second choice beside it. */
+        signal: "agents-cut text-accent-foreground before:bg-accent hover:before:bg-accent-hover",
+        /* A second choice beside it: a hairline frame along the same cut. */
         outline:
-          "border border-foreground/20 bg-transparent text-foreground hover:border-foreground/50 hover:bg-foreground/5",
+          "agents-cut text-foreground agents-cut-line before:bg-foreground/30 hover:before:bg-foreground/60",
         /* A link set as text, underlined. */
         quiet:
-          "overflow-visible text-foreground underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground",
+          "rounded-control text-foreground underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground focus-visible:ring-3 focus-visible:ring-ring/45 focus-visible:outline-none",
       },
       size: {
         /* Inside an interface. */
@@ -34,7 +35,10 @@ const actionVariants = cva(
         lg: "h-12 px-6 text-md",
       },
     },
-    compoundVariants: [{ variant: "quiet", className: "h-auto px-0" }],
+    compoundVariants: [
+      { variant: "quiet", className: "h-auto px-0" },
+      { variant: ["solid", "signal", "outline"], size: "lg", className: "agents-cut-lg" },
+    ],
     defaultVariants: { variant: "solid", size: "md" },
   },
 );
@@ -62,11 +66,12 @@ function Label({
   const waiting = state !== "idle";
   return (
     <>
-      <span
-        aria-hidden
-        data-press-highlight=""
-        className="pointer-events-none absolute -z-10 rounded-full bg-current opacity-0"
-      />
+      <span aria-hidden data-press-clip="" className="pointer-events-none absolute inset-0">
+        <span
+          data-press-highlight=""
+          className="pointer-events-none absolute rounded-full bg-current opacity-0"
+        />
+      </span>
       <span className={cn("inline-flex items-center gap-2", waiting && "invisible")}>
         {children}
         {arrow ? (
