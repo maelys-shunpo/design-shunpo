@@ -98,6 +98,8 @@
   --text-8xl: clamp(4.5rem, 0.8rem + 14.8vw, 14rem);
   --text-8xl--line-height: 0.85;
   --text-8xl--letter-spacing: -0.04em;
+  /* A kanji set as a watermark behind a board (the method wheel): larger than any title. */
+  --text-kanji: clamp(16rem, 2rem + 26vw, 30rem);
 
   --tracking-normal: 0em;
   --tracking-wide: 0.08em;
@@ -768,7 +770,7 @@
 @utility agents-wheel-kanji {
   inset-block-start: 0;
   inset-inline-start: 0;
-  font-size: clamp(16rem, 2rem + 26vw, 30rem);
+  font-size: var(--text-kanji);
   line-height: 1;
   translate: -42% -24%;
 
