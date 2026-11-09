@@ -5,10 +5,10 @@ import { cn } from "../lib/cn.ts";
 
 const columnsVariants = cva("grid grid-cols-3 gap-3 md:gap-4", {
   variants: {
-    /* flat stands straight; tilted turns the wall a little in its own plane, still facing the reader. */
+    /* flat aligns the columns; staggered sets them at different heights, the middle one lowest. */
     lean: {
       flat: "",
-      tilted: "agents-wall-tilt",
+      staggered: "agents-wall-stagger",
     },
   },
   defaultVariants: { lean: "flat" },
