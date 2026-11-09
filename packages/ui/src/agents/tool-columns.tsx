@@ -5,7 +5,7 @@ import { cn } from "../lib/cn.ts";
 
 const columnsVariants = cva("grid grid-cols-3 gap-3 md:gap-4", {
   variants: {
-    /* flat faces the reader; tilted lays the wall back in perspective, leaning, its near side larger. */
+    /* flat stands straight; tilted turns the wall a little in its own plane, still facing the reader. */
     lean: {
       flat: "",
       tilted: "agents-wall-tilt",

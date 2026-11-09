@@ -657,16 +657,10 @@
   }
 }
 
-/* A wall of logos laid back in perspective, leaning, its near (left) side larger (`ToolColumns lean="tilted"`). The pose is
-   still: only the columns drift inside it, so reduced motion keeps it. */
+/* A wall of logos turned a little in its own plane, flat and facing the reader (`ToolColumns lean="tilted"`). The pose
+   is still: only the columns drift inside it, so reduced motion keeps it. */
 @utility agents-wall-tilt {
-  transform: perspective(var(--agents-wall-depth)) rotateX(var(--agents-wall-tip))
-    rotateY(var(--agents-wall-turn)) rotateZ(var(--agents-wall-lean));
-  transform-origin: 50% 50%;
-  --agents-wall-depth: 1600px;
-  --agents-wall-tip: 16deg;
-  --agents-wall-turn: 14deg;
-  --agents-wall-lean: 6deg;
+  rotate: 6deg;
 }
 
 /* The tools wired to one agent (`ConnectionHub`): orbits and threads in hairlines, a Fushimi pulse that runs down a
