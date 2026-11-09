@@ -15,7 +15,6 @@ const PLATE_SLOTS = [
 ] as const;
 
 export interface QuestionPlate {
-  number: string;
   title: string;
   text: string;
 }
@@ -42,7 +41,7 @@ export function QuestionNight({ question, plates }: QuestionNightProps) {
         >
           <div className={QUESTION_SLOT}>{question}</div>
           {plates.map((plate, index) => (
-            <div key={plate.number} data-question-plate="" className={PLATE_SLOTS[index]}>
+            <div key={plate.title} data-question-plate="" className={PLATE_SLOTS[index]}>
               <NightPlate {...plate} />
             </div>
           ))}

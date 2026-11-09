@@ -5,6 +5,7 @@ import {
   courseLength,
   cutProgress,
   cutScale,
+  designatedAt,
   plateFrame,
 } from "../src/motion/question-geometry.ts";
 
@@ -90,5 +91,30 @@ describe("answerRise", () => {
     expect(answerRise(1.31, 0)).toBe(1);
     expect(answerRise(1.31, 1)).toBeGreaterThan(0);
     expect(answerRise(1.31, 2)).toBe(0);
+  });
+});
+
+describe("designatedAt", () => {
+  /* Two answer lines: the last one has risen 1.19 + 0.09 + 0.12 screens into the course. */
+  const LINES = 2;
+
+  it("designates nothing before the first plate has arrived", () => {
+    expect(designatedAt(0.1, LINES)).toBeUndefined();
+  });
+
+  it("designates each plate in turn as it arrives", () => {
+    expect(designatedAt(0.2, LINES)).toEqual({ kind: "plate", index: 0 });
+    expect(designatedAt(0.3, LINES)).toEqual({ kind: "plate", index: 1 });
+    expect(designatedAt(0.45, LINES)).toEqual({ kind: "plate", index: 2 });
+    expect(designatedAt(0.6, LINES)).toEqual({ kind: "plate", index: 3 });
+  });
+
+  it("lets go while the shuriken cuts the night away", () => {
+    expect(designatedAt(0.7, LINES)).toBeUndefined();
+    expect(designatedAt(1.35, LINES)).toBeUndefined();
+  });
+
+  it("lands on the answer once its last line has risen", () => {
+    expect(designatedAt(1.41, LINES)).toEqual({ kind: "answer" });
   });
 });

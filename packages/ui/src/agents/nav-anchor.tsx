@@ -9,12 +9,12 @@ interface NavAnchorProps extends useRender.ComponentProps<"a"> {
   className?: string | undefined;
 }
 
-/* A section link of the bar: grey, ink on hover. */
+/* A section link of the bar: grey, ink on hover, designated by the two-corner frame on hover and on focus. */
 export function NavAnchor({ render, className, ...props }: NavAnchorProps) {
   const ownProps = {
     "data-slot": "nav-anchor",
     className: cn(
-      "inline-flex min-h-6 items-center text-muted-foreground transition-colors duration-200 hover:text-foreground",
+      "agents-frame inline-flex min-h-6 items-center text-muted-foreground transition-colors duration-200 agents-frame-out hover:text-foreground",
       className,
     ),
   };

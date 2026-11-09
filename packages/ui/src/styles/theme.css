@@ -681,6 +681,177 @@
   }
 }
 
+/* The frame (SHUNPO signature): two corners, never four, one at the top start and one at the bottom end, 14 px legs,
+   1.5 px Fushimi. It designates, never decorates: hidden at rest, it jumps into place on hover (fine pointers), on
+   keyboard focus and on the current item (`aria-current`, an open menu), 240 ms on the shift ease, at once under reduced
+   motion. `agents-frame` sets the corners on the element's edges, `agents-frame-out` a step outside (a link in a line
+   of text), `agents-frame-inset` a step inside (a card that clips its content); `agents-frame-ink` draws them in the
+   element's own ink, for a coloured ground. */
+@utility agents-frame {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inline-size: calc(var(--spacing-3) + var(--spacing-0\.5));
+    block-size: calc(var(--spacing-3) + var(--spacing-0\.5));
+    border: 0 solid var(--agents-frame-color, var(--color-agents-signal));
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 240ms var(--ease-shift),
+      translate 240ms var(--ease-shift);
+  }
+
+  &::before {
+    inset-block-start: var(--agents-frame-inset-block, 0px);
+    inset-inline-start: var(--agents-frame-inset-inline, 0px);
+    border-block-start-width: 1.5px;
+    border-inline-start-width: 1.5px;
+    translate: calc(var(--spacing-1) * -1) calc(var(--spacing-1) * -1);
+  }
+
+  &::after {
+    inset-block-end: var(--agents-frame-inset-block, 0px);
+    inset-inline-end: var(--agents-frame-inset-inline, 0px);
+    border-block-end-width: 1.5px;
+    border-inline-end-width: 1.5px;
+    translate: var(--spacing-1) var(--spacing-1);
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::before,
+  &:focus-visible::after,
+  &[aria-current]:not([aria-current="false"])::before,
+  &[aria-current]:not([aria-current="false"])::after,
+  &[data-popup-open]::before,
+  &[data-popup-open]::after {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover::before,
+    &:hover::after {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before,
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+@utility agents-frame-out {
+  --agents-frame-inset-block: calc(var(--spacing-1) * -1);
+  --agents-frame-inset-inline: calc(var(--spacing-2) * -1);
+}
+
+@utility agents-frame-inset {
+  --agents-frame-inset-block: var(--spacing-3);
+  --agents-frame-inset-inline: var(--spacing-3);
+}
+
+/* On a coloured ground (a Fushimi card), the corners take the ground's own ink. */
+@utility agents-frame-ink {
+  --agents-frame-color: currentColor;
+}
+
+/* One frame that travels (the question scene's), the same two corners placed by the scene on what it designates
+   (`translate`, `width`, `height` set from script), jumping there in 240 ms on the shift curve. Hidden until shown
+   (`data-shown`); `data-instant` places it without the jump. Fushimi on paper, Kome on the night
+   (`data-tone="night"`). `data-shape="bracket"`: large brackets, a 3 px stroke whose upright runs the full height
+   of the line they hold. */
+@utility agents-frame-travel {
+  --agents-frame-leg: calc(var(--spacing-3) + var(--spacing-0\.5));
+  --agents-frame-stroke: 1.5px;
+  --agents-frame-upright: var(--agents-frame-leg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  pointer-events: none;
+  color: var(--color-agents-signal);
+  opacity: 0;
+  background:
+    linear-gradient(currentColor, currentColor) top left / var(--agents-frame-leg)
+      var(--agents-frame-stroke) no-repeat,
+    linear-gradient(currentColor, currentColor) top left / var(--agents-frame-stroke)
+      var(--agents-frame-upright) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / var(--agents-frame-leg)
+      var(--agents-frame-stroke) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / var(--agents-frame-stroke)
+      var(--agents-frame-upright) no-repeat;
+  transition:
+    translate 240ms var(--ease-shift),
+    width 240ms var(--ease-shift),
+    height 240ms var(--ease-shift),
+    opacity 120ms linear;
+
+  &[data-shown] {
+    opacity: 1;
+  }
+
+  &[data-instant] {
+    transition: none;
+  }
+
+  &[data-tone="night"] {
+    color: var(--color-agents-paper);
+  }
+
+  &[data-shape="bracket"] {
+    --agents-frame-leg: var(--spacing-6);
+    --agents-frame-stroke: 3px;
+    --agents-frame-upright: 100%;
+  }
+}
+
+/* A ghost the travelling frame leaves where it was: its corners at their own opacity (`--ghost`), gone in 200 ms. */
+@utility agents-frame-ghost {
+  --agents-frame-leg: calc(var(--spacing-3) + var(--spacing-0\.5));
+  --agents-frame-stroke: 1.5px;
+  --agents-frame-upright: var(--agents-frame-leg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  pointer-events: none;
+  color: var(--color-agents-signal);
+  background:
+    linear-gradient(currentColor, currentColor) top left / var(--agents-frame-leg)
+      var(--agents-frame-stroke) no-repeat,
+    linear-gradient(currentColor, currentColor) top left / var(--agents-frame-stroke)
+      var(--agents-frame-upright) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / var(--agents-frame-leg)
+      var(--agents-frame-stroke) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / var(--agents-frame-stroke)
+      var(--agents-frame-upright) no-repeat;
+  animation: agents-frame-ghost 200ms ease-out both;
+
+  &[data-tone="night"] {
+    color: var(--color-agents-paper);
+  }
+}
+
+@keyframes agents-frame-ghost {
+  from {
+    opacity: var(--ghost, 0.3);
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 /* A wall of logos whose columns stand at different heights (`ToolColumns lean="staggered"`): the middle one lower, the
    last a little lower, so the wall is not quite straight while every box stays upright and apart. The pose is still:
    only the columns drift inside it, so reduced motion keeps it. */

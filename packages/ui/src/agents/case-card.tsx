@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/cn.ts";
 
 const cardVariants = cva(
-  "group/case flex aspect-3/4 w-full flex-col justify-between gap-6 overflow-clip rounded-surface p-6 transition-transform duration-500 ease-emphasized hover:-translate-y-2",
+  "group/case agents-frame flex aspect-3/4 w-full flex-col justify-between gap-6 overflow-clip rounded-surface p-6 transition-transform duration-500 ease-emphasized agents-frame-inset agents-frame-ink hover:-translate-y-2",
   {
     variants: {
       tone: {
@@ -30,7 +30,8 @@ interface CaseCardProps extends useRender.ComponentProps<"a">, VariantProps<type
   className?: string;
 }
 
-/* A published reference as a poster: the client in large serif, what was built, what was at stake. */
+/* A published reference as a poster: the client in large serif, what was built, what was at stake. Designated by the
+   two-corner frame, a step inside its edges and in its own ink, on hover and on focus. */
 export function CaseCard({
   client,
   project,
@@ -43,7 +44,7 @@ export function CaseCard({
 }: CaseCardProps) {
   const children = (
     <>
-      <span className="font-mono text-xs tracking-wide uppercase">{project}</span>
+      <span className="text-sm font-medium">{project}</span>
       <span className="font-display text-4xl leading-none font-heading text-balance">{client}</span>
       <span className="flex flex-col gap-3">
         <span className="text-sm">{stake}</span>

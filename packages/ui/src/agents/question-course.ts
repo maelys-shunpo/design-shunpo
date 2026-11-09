@@ -1,5 +1,14 @@
-import { answerRise, cutProgress, cutScale, plateFrame } from "../motion/question-geometry.ts";
+import { frameAround } from "../lib/frame-jump.ts";
+import {
+  answerRise,
+  cutProgress,
+  cutScale,
+  type Designated,
+  designatedAt,
+  plateFrame,
+} from "../motion/question-geometry.ts";
 import { CUT_TURN_DEGREES, coverScale, cutTurn, nightClip } from "../motion/shuriken-geometry.ts";
+import { type TravellingFrame, travellingFrame } from "../motion/travelling-frame.ts";
 
 /* The night arrives as a card around the question and grows to the screen in the first half screen of the hold. */
 const CARD = { width: 1200, height: 400 };
@@ -22,6 +31,10 @@ const PARAGRAPH_BELOW_PX = 24;
 /* The answer's lines rise out of their masks from `sm`; the plates stand around the question from `lg`. */
 const BY_LINE = "(min-width: 40rem)";
 const AROUND = "(min-width: 64rem)";
+/* How far the travelling frame stands off a plate; the brackets of the line that lands stand off its words on
+   their sides and run its full height. */
+const PLATE_PAD = 8;
+const ANSWER_PAD = { inline: 20, block: 0 };
 
 /* Writes inline styles on a part of the scene: the course paints them every frame, no stylesheet could. */
 function paint(element: HTMLElement, styles: Record<string, string>) {
@@ -31,11 +44,13 @@ function paint(element: HTMLElement, styles: Record<string, string>) {
 }
 
 interface Parts {
+  stage: HTMLElement;
   night: HTMLElement;
   content: HTMLElement;
   plates: HTMLElement[];
   lines: HTMLElement[];
   paragraphs: HTMLElement[];
+  frame: HTMLElement | null;
 }
 
 interface Measures {
@@ -55,12 +70,61 @@ function partsOf(stage: HTMLElement): Parts | undefined {
     return undefined;
   }
   return {
+    stage,
     night,
     content,
     plates: [...stage.querySelectorAll<HTMLElement>("[data-question-plate]")],
     lines: [...stage.querySelectorAll<HTMLElement>("[data-statement-line]")],
     paragraphs: [...stage.querySelectorAll<HTMLElement>("[data-statement-paragraph]")],
+    frame: stage.querySelector<HTMLElement>("[data-question-frame]"),
   };
+}
+
+/* The box of an element's words rather than of its block: a centred line is narrower than its paragraph, and its
+   masks are taller than its glyphs. The union of its text's own boxes. */
+function wordsOf(element: HTMLElement): DOMRect {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  let [left, top, right, bottom] = [Infinity, Infinity, -Infinity, -Infinity];
+  for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
+    range.selectNodeContents(node);
+    for (const rect of range.getClientRects()) {
+      [left, top] = [Math.min(left, rect.left), Math.min(top, rect.top)];
+      [right, bottom] = [Math.max(right, rect.right), Math.max(bottom, rect.bottom)];
+    }
+  }
+  return left === Infinity
+    ? element.getBoundingClientRect()
+    : new DOMRect(left, top, right - left, bottom - top);
+}
+
+function targetOf(designated: Designated, { plates, paragraphs }: Parts) {
+  if (designated.kind === "answer") {
+    return { element: paragraphs.at(-1), key: "answer" };
+  }
+  return { element: plates[designated.index], key: `plate-${String(designated.index)}` };
+}
+
+/* Moves the travelling frame to what the course designates: each plate on the night, then large brackets around
+   the line that lands on the paper; hidden in between. */
+function designate(frame: TravellingFrame, parts: Parts, screens: number) {
+  const designated = designatedAt(screens, parts.lines.length);
+  const target = designated === undefined ? undefined : targetOf(designated, parts);
+  if (designated === undefined || target?.element === undefined) {
+    frame.hide();
+    return;
+  }
+  const origin = parts.stage.getBoundingClientRect();
+  if (designated.kind === "answer") {
+    frame.show(target.key, frameAround(wordsOf(target.element), origin, ANSWER_PAD), {
+      tone: "paper",
+      shape: "bracket",
+    });
+    return;
+  }
+  frame.show(target.key, frameAround(target.element.getBoundingClientRect(), origin, PLATE_PAD), {
+    tone: "night",
+  });
 }
 
 /* Fits the question and its plates to the screen, then measures each plate's way in from its place (its own offsets
@@ -139,14 +203,17 @@ function paintAnswer({ lines, paragraphs }: Parts, screens: number, byLine: bool
 }
 
 /* The question's course over `hold` screens of a held stage: the night opens around the question, the plates arrive
-   around it, the shuriken cuts the night away and the answer rises on the paper beneath. Returns the painter for a
-   point of the hold, in screens; it measures again whenever the stage changes size. */
+   around it (the travelling frame designates each in turn), the shuriken cuts the night away and the answer rises on
+   the paper beneath (large brackets land around its last line). Returns the painter for a point of the hold, in
+   screens; it measures again whenever the stage changes size. */
 export function questionCourse(stage: HTMLElement): ((held: number) => void) | undefined {
   const parts = partsOf(stage);
   if (parts === undefined) {
     return undefined;
   }
   let measures = measure(parts);
+  const travelling =
+    parts.frame === null ? undefined : travellingFrame(stage, parts.frame, "data-question-ghost");
   return (held: number) => {
     if (
       parts.night.clientWidth !== measures.width ||
@@ -167,5 +234,9 @@ export function questionCourse(stage: HTMLElement): ((held: number) => void) | u
       });
     });
     paintAnswer(parts, screens, measures.byLine);
+    /* Last, so the frame measures every part where this point of the course puts it. */
+    if (travelling !== undefined) {
+      designate(travelling, parts, screens);
+    }
   };
 }

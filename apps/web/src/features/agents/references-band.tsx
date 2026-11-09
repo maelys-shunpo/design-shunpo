@@ -1,4 +1,3 @@
-import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
@@ -14,7 +13,6 @@ export function ReferencesBand() {
       <PageGrid rows="xl" align="center">
         <GridArea columns={{ lg: { start: 1, span: 6 } }}>
           <Stack gap="xl">
-            <Eyebrow>Références</Eyebrow>
             <Headline level={2} size="title">
               Ils nous ont confié des projets
             </Headline>

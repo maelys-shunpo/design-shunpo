@@ -22,10 +22,10 @@ afterEach(async () => {
 });
 
 const plates = [
-  { number: "01", title: "Ressaisies", text: "Un devis, une facture." },
-  { number: "02", title: "Recherches", text: "Mails, Drive." },
-  { number: "03", title: "Absences", text: "Tout ralentit." },
-  { number: "04", title: "Pilotage", text: "Trop tard." },
+  { title: "Ressaisies", text: "Un devis, une facture." },
+  { title: "Recherches", text: "Mails, Drive." },
+  { title: "Absences", text: "Tout ralentit." },
+  { title: "Pilotage", text: "Trop tard." },
 ] as const;
 
 function scene() {

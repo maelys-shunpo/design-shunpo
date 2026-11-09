@@ -131,7 +131,7 @@ Poster and two still plates captured from the scene, AVIF (96, 32 and 41 KB). 0 
 
 ## Page: agents
 
-Direction « Agents ». A product site for an agency that builds AI agents, at the level of intercom.com. The proof is interfaces at work, laid on photographed surfaces (plaster, linen, travertine, black paper) like objects on a table. The headline speaks low (grey words) and lands on what matters (a black word, a serif word). Warm paper #F6F5F1, ink #0E0E0C, one signal orange #FF4F1A for markers (small text goes through `--accent-ink`), a cobalt for states. Geist light with tight tracking, Instrument Serif italic for one word, Geist Mono for labels behind a colour square. A lower-case « shunpo » wordmark beside a signal square.
+Direction « Agents ». A product site for an agency that builds AI agents, at the level of intercom.com. The proof is interfaces at work, laid on photographed surfaces (plaster, linen, travertine, black paper) like objects on a table. The headline speaks low (grey words) and lands on what matters (a black word, a serif word). Warm paper #F6F5F1, ink #0E0E0C, one signal orange #FF4F1A for markers (small text goes through `--accent-ink`), a cobalt for states. Geist light with tight tracking, Instrument Serif italic for one word. The official SHUNPO wordmark (« shunpo » in lower case and its signal square, the first try, gave way to it).
 
 ### Components (chosen on 6 November 2026)
 
@@ -148,7 +148,10 @@ Measured on the references: Intercom 40 px buttons with 4 px corners, HorizonX a
 - **Field.** The height of the button beside it, on the page ground, a hairline that darkens on hover and focus.
 - **Chips.** 32 px choices (a suggestion to pick, pressed when picked) and 24 px quiet references (a cited source, a tag), both pills.
 - **Statuses.** 24 px pills, a 8 px dot and a tinted ground per meaning: done and in progress in Tenku, waiting on a person in Kurenai, new in Fushimi, neutral in Shiro.
-- **Labels.** Geist Mono capitals behind the shuriken glyph, which rides the first line when a label wraps; centred above a centred title.
+- **Labels (9 November 2026).** No eyebrow by default: a title opens its section alone. A label stays only when it says what the title does not (« Agents IA sur mesure » above the hero promise, « Trois agents en service » beside the agents' title), in Instrument Sans 500, sentence case, muted ink, with no symbol, no capitals, no monospace and no number. The shuriken glyph in mono capitals read as the generic ✦ « AI » sparkle and went, with the labels that repeated their title or the bar (Références twice, Connectez vos outils, Avis clients, Essayer, Questions). Monospace stays inside the interfaces, as product material.
+- **The shuriken.** Always in its pebble, never under 24 px (`Shuriken` has no bare glyph any more): a sign, never a bullet. It stands for the agent (the hub of the tools, the agent's avatar and journal in the mockups), cuts the night away in the question scene, and waits in a busy button.
+- **The frame (9 November 2026).** Two corners, never four: one at the top start, one at the bottom end, 14 px legs, 1.5 px Fushimi (`agents-frame`). It designates and never decorates: hidden at rest, it jumps into place, 240 ms on the shift ease, at once under reduced motion. On the bar's links (hover and focus, a step outside the word), on the current phase of the method (and the one under the pointer), on a client case (hover and focus, a step inside the poster, in the poster's own ink).
+- **Numbers.** Only where order matters: the phases of the method. The four pains have no order and no number.
 - **Interfaces keep their own corners**: they are product material, laid on the page.
 
 ### Title hierarchy (6 November 2026)
@@ -184,33 +187,33 @@ Tested before adoption on a centred hero, a symmetric two-column section and an 
 
 The eight colours of the SHUNPO charter, each with one role. Values live in `theme.css` (`--color-agents-*` and the `agents` block).
 
-| Colour        | Hex     | Role                                                                                                                               |
-| ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Kome          | #F3F0E9 | Page ground                                                                                                                        |
-| Shiro         | #E5DFD3 | Muted sections, hairlines, neutral chips                                                                                           |
-| Fuji Night    | #1E2629 | Text, title ink, primary buttons, dark sections; thinned to half on Kome for grey title words                                      |
-| Ink Shadow    | #474747 | Secondary text                                                                                                                     |
-| Hikari Frost  | #BDC8CC | Secondary text and rings on Fuji Night                                                                                             |
-| Fushimi Glow  | #B94532 | The main call, « Réserver un diagnostic », in the hero and the closing: the one red of the screen. Labels' shuriken default to ink |
-| Blue Tenku    | #2B718C | Information, links, focus, « done » and « in progress » statuses (#1F637D for small text)                                          |
-| Kurenai Blush | #B05F60 | What waits on a person (#8E4547 for small text, a blush tint behind it)                                                            |
+| Colour        | Hex     | Role                                                                                                                       |
+| ------------- | ------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Kome          | #F3F0E9 | Page ground                                                                                                                |
+| Shiro         | #E5DFD3 | Muted sections, hairlines, neutral chips                                                                                   |
+| Fuji Night    | #1E2629 | Text, title ink, primary buttons, dark sections; thinned to half on Kome for grey title words                              |
+| Ink Shadow    | #474747 | Secondary text                                                                                                             |
+| Hikari Frost  | #BDC8CC | Secondary text and rings on Fuji Night                                                                                     |
+| Fushimi Glow  | #B94532 | The main call, « Réserver un diagnostic », in the hero and the closing: the one red of the screen. The frame's two corners |
+| Blue Tenku    | #2B718C | Information, links, focus, « done » and « in progress » statuses (#1F637D for small text)                                  |
+| Kurenai Blush | #B05F60 | What waits on a person (#8E4547 for small text, a blush tint behind it)                                                    |
 
 Interfaces stay pure white: they are product material laid on the page, not page colour. Text on Fushimi and Tenku is Kome, never Fuji Night (2.9:1).
 
 ### Typography (chosen on 6 November 2026)
 
-Newsreader Medium for every title, Instrument Sans for text and interfaces, Geist Mono for labels and data. Chosen over Instrument Serif + Instrument Sans, Bricolage + Instrument Sans, Geist + Geist Mono and Piazzolla + Geist, after tests on the live page and in large asymmetric compositions (`.context/typo/`): a press serif that reads as a serious partner, set very large with grey and ink words; a neutral sans that keeps the interfaces crisp. No italic in any title: emphasis is ink against grey, never a slanted word.
+Newsreader Medium for every title, Instrument Sans for text, labels and interfaces, Geist Mono for data inside the interfaces. Chosen over Instrument Serif + Instrument Sans, Bricolage + Instrument Sans, Geist + Geist Mono and Piazzolla + Geist, after tests on the live page and in large asymmetric compositions (`.context/typo/`): a press serif that reads as a serious partner, set very large with grey and ink words; a neutral sans that keeps the interfaces crisp. No italic in any title: emphasis is ink against grey, never a slanted word.
 
-| Step   | Use                                                              | Size (390 px → 1,600 px) | Line height | Tracking |
-| ------ | ---------------------------------------------------------------- | ------------------------ | ----------- | -------- |
-| 8xl    | Poster, manifesto line                                           | 68 → 216 px              | 0.90        | −0.040em |
-| 7xl    | Hero                                                             | 56 → 176 px              | 0.92        | −0.035em |
-| 6xl    | Section opener                                                   | 48 → 136 px              | 0.95        | −0.030em |
-| 5xl    | Section title                                                    | 40 → 88 px               | 1.00        | −0.025em |
-| 4xl    | Sub-section, card title                                          | 32 → 56 px               | 1.05        | −0.020em |
-| 3xl    | Step title, lead heading                                         | 26 → 36 px               | 1.15        | −0.015em |
-| Text   | Instrument Sans 400, 16 to 20 px, 1.55                           |                          |             |          |
-| Labels | Geist Mono 400, 12 px, capitals, +0.08em, behind a colour square |                          |             |          |
+| Step   | Use                                                             | Size (390 px → 1,600 px) | Line height | Tracking |
+| ------ | --------------------------------------------------------------- | ------------------------ | ----------- | -------- |
+| 8xl    | Poster, manifesto line                                          | 68 → 216 px              | 0.90        | −0.040em |
+| 7xl    | Hero                                                            | 56 → 176 px              | 0.92        | −0.035em |
+| 6xl    | Section opener                                                  | 48 → 136 px              | 0.95        | −0.030em |
+| 5xl    | Section title                                                   | 40 → 88 px               | 1.00        | −0.025em |
+| 4xl    | Sub-section, card title                                         | 32 → 56 px               | 1.05        | −0.020em |
+| 3xl    | Step title, lead heading                                        | 26 → 36 px               | 1.15        | −0.015em |
+| Text   | Instrument Sans 400, 16 to 20 px, 1.55                          |                          |             |          |
+| Labels | Instrument Sans 500, 14 px, sentence case, muted ink, no symbol |                          |             |          |
 
 - Do: dense, credible mockups (names, times, statuses, confidence, cited sources); a person at the sensitive moment; one orange per screen.
 - Don't: orbs, decorative gradients, generic icon cards, invented result figures (the mockups' amounts are illustrative and fictitious).
@@ -231,7 +234,7 @@ Newsreader Medium for every title, Instrument Sans for text and interfaces, Geis
 
 ### Storyboard
 
-1. **The question in the night** (`QuestionScene`, as on the home page), held three screens: Fuji Night arrives as a card around « Votre entreprise grandit et vos outils ne suivent plus ? » and grows to the screen in half a screen; the four pains arrive around it as plates, one every 0.14 screen; the SHUNPO shuriken cuts the night away, turning 135° as it grows until no night is left; the answer's lines rise out of their masks on the paper, « Pas vous en faire perdre. » landing in semibold. The question and its plates fit the window clear of the floating nav. Reduced motion: the question and its plates on a night band, then the answer under the shuriken.
+1. **The question in the night** (`QuestionScene`, as on the home page), held three screens: Fuji Night arrives as a card around « Votre entreprise grandit et vos outils ne suivent plus ? » and grows to the screen in half a screen; the four pains arrive around it as plates, one every 0.14 screen; the SHUNPO shuriken cuts the night away, turning 135° as it grows until no night is left; the answer's lines rise out of their masks on the paper, « Pas vous en faire perdre. » landing in the same weight as the rest. The question and its plates fit the window clear of the floating nav. Reduced motion: the question and its plates on a night band, then the answer under the shuriken. One two-corner frame travels through the scene (9 November 2026, Shunpo Shift): it takes each plate as it arrives, in Kome on the night, jumping in 240 ms on the shift curve and leaving three ghosts that fade in 200 ms; it lets go while the shuriken cuts; then it lands on « Pas vous en faire perdre. » as large Fushimi brackets (3 px, 24 px arms) whose uprights run the full height of the phrase, 20 px off its words. Reduced motion: no frame.
 2. **Three agents in auto-advancing tabs** (nine seconds each): support (Shopify, carrier, Gmail, cited sources), sales (enriched HubSpot record, typed follow-up, Calendly), steering (Sheets, Airtable, QuickBooks, Monday summary).
 3. **Tools wired to one agent** (`ConnectionHub`), a beat every 2.7 seconds: the SHUNPO shuriken in a white disc at the centre, six tools of the morning on the near orbit and six more of the stack on the far one (only the near one on phones), dotted orbits and hairline threads. Each beat the disc ripples, a Fushimi pulse runs down one thread, the tool takes a Fushimi edge, and the line under the hub says what the agent did there (the morning's activity, Gmail to Notion). Held off screen and under the pointer or focus; still on its first line under reduced motion.
 4. **Method, the home page's wheel** (`MethodWheel`), held three screens from tablets under the floating nav. « Chaque projet commence par une Immersion » stands alone on the paper for a quarter screen, then rises 48 px and fades over 0.4 screen; a tenth of a screen into its exit a sumi brush stroke (the home page's brush, painted once per stage size) comes down a wide arc from the top start corner, and when its drop falls Immersion is named. The scroll then moves the ink dots along the arc from phase to phase, each one holding a moment and landing softly, the current dot twice as large. The current phase, on the left of the dot: its label, its title, its text and its three deliverables are uncovered line after line (150 ms out, 800 ms in, 60 ms apart), and the deliverables tick one by one (grey with an empty circle, then ink with a check) through three quarters of its time on screen. On the right its board fades in over the previous one on the shared stone photograph, with its kanji (見, 築, 進, Shippori Mincho falling back to the system mincho) rising pale on the paper behind the board's top start corner. The last phase holds complete for a quarter screen, then the chapô and « Réserver un diagnostic » follow, unheld. Phones and reduced motion scroll freely: the question, then each phase complete with its board, no stroke, no kanji on phones.

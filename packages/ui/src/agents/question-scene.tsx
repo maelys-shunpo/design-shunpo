@@ -17,7 +17,7 @@ interface QuestionSceneProps {
   question: ReactElement;
   /* What lies behind the question: two plates above it, two below. */
   plates: QuestionPlates;
-  /* The answer on the paper beneath, as paragraphs of lines; the last one lands in semibold. */
+  /* The answer on the paper beneath, as paragraphs of lines; large brackets land around the last one. */
   answer: ReadonlyArray<readonly string[]>;
   /* The answer's heading level, one below the question's. */
   answerLevel?: "h3" | undefined;
@@ -25,7 +25,9 @@ interface QuestionSceneProps {
 
 /* A question asked in the night, then answered on paper. Held on screen, Fuji Night arrives as a card around the
    question and grows to the screen, the plates arrive around it one after the other, then the SHUNPO shuriken cuts the
-   night away (it turns 135° and grows until no night is left) and the answer's lines rise on the paper beneath.
+   night away (it turns 135° and grows until no night is left) and the answer's lines rise on the paper beneath. One
+   two-corner frame jumps from plate to plate as each arrives, lets go during the cut, then lands as large brackets
+   around the answer's last line.
    Reduced motion: the question and its plates on a Fuji Night band, then the answer under the shuriken. */
 export function QuestionScene({ question, plates, answer, answerLevel }: QuestionSceneProps) {
   const stage = useRef<HTMLDivElement>(null);
@@ -49,6 +51,12 @@ export function QuestionScene({ question, plates, answer, answerLevel }: Questio
     <ScrollScene choreography={walk} length="long">
       <div ref={stage} data-slot="question-scene" className="relative w-full motion-safe:h-svh">
         <QuestionNight question={question} plates={plates} />
+        {/* The scene's one two-corner frame, placed by the course on what it designates. */}
+        <span
+          data-question-frame=""
+          aria-hidden="true"
+          className="agents-frame-travel hidden motion-safe:block"
+        />
         <div className="grid place-items-center py-24 motion-safe:absolute motion-safe:inset-0 motion-safe:py-0">
           <Container>
             <div className="flex flex-col items-center gap-8 md:gap-10">

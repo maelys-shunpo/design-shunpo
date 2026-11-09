@@ -8,7 +8,7 @@ const statementVariants = cva(
 );
 
 interface StatementLinesProps {
-  /* The statement as paragraphs of lines, set as written; the last paragraph lands in semibold. */
+  /* The statement as paragraphs of lines, set as written, all in the same weight. */
   paragraphs: ReadonlyArray<readonly string[]>;
   /* A heading when the statement answers a heading above it; its paragraphs are then spans. */
   as?: "div" | "h2" | "h3";
@@ -29,10 +29,7 @@ export function StatementLines({
       {paragraphs.map((lines, place) => (
         <Fragment key={lines.join(" ")}>
           {place > 0 ? " " : null}
-          <Paragraph
-            data-statement-paragraph=""
-            className="block text-balance last:font-semibold sm:flex sm:flex-col"
-          >
+          <Paragraph data-statement-paragraph="" className="block text-balance sm:flex sm:flex-col">
             {lines.map((line, index) => (
               <Fragment key={line}>
                 {index > 0 ? " " : null}

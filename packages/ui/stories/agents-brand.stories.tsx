@@ -18,7 +18,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The « Agents » direction's voice: a lowercase wordmark beside a signal square, mono eyebrows, light headlines whose context words stay grey (HeadlinePart), ink actions (AgentsAction) and a bar that floats as a pill once the visitor scrolls (AgentsNav, NavAnchor).",
+          "The « Agents » direction's voice: the official SHUNPO wordmark, a plain label above a title only when it says something the title does not, light headlines whose context words stay grey (HeadlinePart), ink actions (AgentsAction) and a bar that floats as a pill once the visitor scrolls (AgentsNav, NavAnchor).",
       },
     },
   },
@@ -33,13 +33,7 @@ export const Marks: Story = {
     <Stack gap="lg">
       <Wordmark />
       <Wordmark size="lg" />
-      <Inline gap="lg">
-        <Eyebrow>Signal</Eyebrow>
-        <Eyebrow tone="cobalt">Cobalt</Eyebrow>
-        <Eyebrow tone="ink" as="span">
-          Encre
-        </Eyebrow>
-      </Inline>
+      <Eyebrow>Agents IA sur mesure</Eyebrow>
     </Stack>
   ),
   play: async ({ canvas }) => {

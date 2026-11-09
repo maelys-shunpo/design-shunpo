@@ -148,3 +148,25 @@ export function cutScale(progress: number, { width, height, cover }: Screen): nu
 export function answerRise(screens: number, line: number): number {
   return easeOut(clamp((screens - (ANSWER.start + ANSWER.step * line)) / ANSWER.length));
 }
+
+export type Designated = { kind: "plate"; index: number } | { kind: "answer" };
+
+/* The travelling frame takes a plate once it is most of the way in (its title readable), lets go as the
+   shuriken starts to cut, and lands on the answer's last line once it has risen. */
+const DESIGNATE_PLATE_AFTER = 0.13;
+
+/* What the travelling frame designates after `screens`, for an answer of `lines` lines: each plate in turn,
+   nothing while the night is cut away, then the line that lands. */
+export function designatedAt(screens: number, lines: number): Designated | undefined {
+  if (screens >= ANSWER.start + ANSWER.step * (lines - 1) + ANSWER.length) {
+    return { kind: "answer" };
+  }
+  if (screens >= CUT.start) {
+    return undefined;
+  }
+  const index = Math.floor((screens - DESIGNATE_PLATE_AFTER) / PLATE_STEP);
+  if (index < 0) {
+    return undefined;
+  }
+  return { kind: "plate", index: Math.min(index, PLATE_COUNT - 1) };
+}

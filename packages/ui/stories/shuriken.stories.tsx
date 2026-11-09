@@ -27,4 +27,5 @@ export const Badges: Story = {
   },
 };
 
-export const Glyph: Story = { args: { tone: "glyph", size: "sm" } };
+/* The smallest it goes: 24 px, still in its pebble (beside the agent's name in an interface). */
+export const Smallest: Story = { args: { tone: "signal", size: "sm" } };

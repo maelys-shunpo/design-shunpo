@@ -1,5 +1,4 @@
 import { ConnectionHub } from "@repo/ui/agents/connection-hub";
-import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
 import { Shuriken } from "@repo/ui/brand/shuriken";
 import { GridArea } from "@repo/ui/layout/grid-area";
@@ -17,7 +16,6 @@ export function ToolsSection() {
       <PageGrid rows="xl">
         <GridArea columns={{ md: 6, lg: 8 }}>
           <Stack gap="xl" align="center">
-            <Eyebrow align="center">Connectez vos outils</Eyebrow>
             <Headline level={2} size="title" align="center">
               Vos agents travaillent dans les outils que vous avez déjà
             </Headline>

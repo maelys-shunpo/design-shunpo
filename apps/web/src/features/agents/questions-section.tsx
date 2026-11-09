@@ -1,4 +1,3 @@
-import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { FaqItem } from "@repo/ui/agents/faq-item";
 import { Headline } from "@repo/ui/agents/headline";
 import { GridArea } from "@repo/ui/layout/grid-area";
@@ -15,7 +14,6 @@ export function QuestionsSection() {
       <PageGrid rows="lg">
         <GridArea columns={{ lg: { start: 1, span: 5 } }}>
           <Stack gap="lg">
-            <Eyebrow tone="ink">Questions</Eyebrow>
             <Headline level={2} size="heading">
               Ce qu’on nous demande avant de commencer.
             </Headline>

@@ -23,21 +23,18 @@ const meta = {
     question: <h2 className="text-center font-display text-5xl">Vos outils ne suivent plus ?</h2>,
     plates: [
       {
-        number: "01",
         title: "Vous ressaisissez les mêmes données",
         text: "Un devis, une facture, un Excel.",
       },
       {
-        number: "02",
         title: "Vous cherchez la bonne information",
         text: "Mails, WhatsApp, Drive.",
       },
       {
-        number: "03",
         title: "Tout repose sur une personne",
         text: "Quand elle est absente, tout ralentit.",
       },
-      { number: "04", title: "Vous pilotez à l’aveugle", text: "Le problème a déjà coûté." },
+      { title: "Vous pilotez à l’aveugle", text: "Le problème a déjà coûté." },
     ],
     answer: [
       ["Vos outils devraient", "vous faire gagner du temps."],
@@ -62,11 +59,7 @@ export const Parts: Story = {
   render: () => (
     <div className="flex flex-col gap-8 p-8">
       <div className="bg-background p-8 scheme-dark">
-        <NightPlate
-          number="01"
-          title="Vous ressaisissez les mêmes données"
-          text="Un devis, une facture."
-        />
+        <NightPlate title="Vous ressaisissez les mêmes données" text="Un devis, une facture." />
       </div>
       <StatementLines
         paragraphs={[
