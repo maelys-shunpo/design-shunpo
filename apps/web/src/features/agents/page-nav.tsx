@@ -29,7 +29,7 @@ export function PageNav() {
       ))}
       action={
         <AgentsAction href={contactUrl} size="md">
-          Réserver un diagnostic
+          Parlons de votre projet
         </AgentsAction>
       }
     />

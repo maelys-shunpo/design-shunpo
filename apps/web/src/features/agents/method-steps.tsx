@@ -1,4 +1,4 @@
-import type { AgentTab } from "@repo/ui/agents/agent-tabs";
+import type { WheelPhase } from "@repo/ui/agents/wheel-step";
 import Image from "next/image";
 
 import office from "./images/office-stone.webp";
@@ -9,37 +9,38 @@ export const agentsMethodBackdrop = (
     src={office}
     alt=""
     fill
-    sizes="(min-width: 100rem) 67rem, (min-width: 48rem) 67vw, 100vw"
+    sizes="(min-width: 100rem) 40rem, (min-width: 64rem) 40vw, (min-width: 48rem) 50vw, 100vw"
   />
 );
 
-/* The three phases of a SHUNPO project, as on the home page: one invoice flow carried from phase to phase. */
-export const agentsMethod: AgentTab[] = [
+/* The three phases of a SHUNPO project, as on the home page (its kanji too): one invoice flow carried from phase to
+   phase. */
+export const agentsMethod: WheelPhase[] = [
   {
     id: "immersion",
-    kicker: "5 jours auprès de vos équipes",
+    label: "5 jours auprès de vos équipes",
     title: "Immersion",
-    description:
-      "On suit votre équipe pour comprendre où le travail ralentit et choisir avec vous le premier flux à automatiser.",
-    details: ["Carte des processus", "Heures perdues estimées", "Feuille de route priorisée"],
+    kanji: "見",
+    text: "On suit votre équipe pour comprendre où le travail ralentit et choisir avec vous le premier flux à automatiser.",
+    deliverables: ["Carte des processus", "Heures perdues estimées", "Feuille de route priorisée"],
     panel: <AuditBoard />,
   },
   {
     id: "construction",
-    kicker: "Brique par brique",
+    label: "Brique par brique",
     title: "Construction",
-    description:
-      "On construit un premier flux et on le teste avec votre équipe, du cas courant à la facture d’un fournisseur inconnu.",
-    details: ["Interface de suivi", "Outils connectés", "Agents configurés"],
+    kanji: "築",
+    text: "On construit un premier flux et on le teste avec votre équipe, du cas courant à la facture d’un fournisseur inconnu.",
+    deliverables: ["Interface de suivi", "Outils connectés", "Agents configurés"],
     panel: <BuildBoard />,
   },
   {
     id: "evolution",
-    kicker: "Après la mise en service",
+    label: "Après la mise en service",
     title: "Évolution",
-    description:
-      "On regarde avec votre équipe ce qui se passe au quotidien. Un seuil à revoir ou un nouveau besoin devient la prochaine amélioration.",
-    details: ["Suivi des usages", "Maintenance des connexions", "Nouveaux flux"],
+    kanji: "進",
+    text: "On regarde avec votre équipe ce qui se passe au quotidien. Un seuil à revoir ou un nouveau besoin devient la prochaine amélioration.",
+    deliverables: ["Suivi des usages", "Maintenance des connexions", "Nouveaux flux"],
     panel: <AdoptBoard />,
   },
 ];

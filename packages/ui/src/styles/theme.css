@@ -123,19 +123,6 @@
   --ease-shift: cubic-bezier(0.8, 0, 0.1, 1);
   --ease-press: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  --animate-agents-phase-slide: agents-phase-slide 300ms var(--ease-emphasized) both;
-
-  @keyframes agents-phase-slide {
-    from {
-      opacity: 0;
-      translate: 0 var(--spacing-2);
-    }
-    to {
-      opacity: 1;
-      translate: 0 0;
-    }
-  }
-
   --animate-spin: spin 0.9s linear infinite;
 
   @keyframes spin {
@@ -752,9 +739,68 @@
   }
 }
 
-/* The thread of the method, from under one phase's dot (a 40 px row in a 12 px padded step) to the top of the next. */
-@utility agents-thread-segment {
-  inset-inline-start: var(--spacing-3);
-  inset-block: calc(var(--spacing-3) + var(--spacing-8)) calc(-1 * var(--spacing-5));
-  translate: -50% 0;
+/* The method wheel (`MethodWheel`), held under the floating nav from tablets up with motion: the question alone, then an
+   ink stroke down a wide arc whose dots carry the reader from phase to phase (the home page's wheel). Every rule below
+   applies only while held; phones and reduced motion read the phases one under the other, complete. */
+@utility agents-wheel-title {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    opacity: var(--wheel-title-opacity, 1);
+    translate: 0 var(--wheel-title-rise, 0px);
+  }
+}
+
+/* A part of a phase's copy, hidden from its top edge until its phase is current, then uncovered line after line
+   (`--wheel-line`, its order) 40 ms after the leaving phase went in 150 ms. */
+@utility agents-wheel-line {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    clip-path: inset(0% 0% 100% 0%);
+    transition: clip-path 150ms var(--ease-standard);
+
+    [data-wheel-active] & {
+      clip-path: inset(calc(var(--spacing-1) * -1));
+      transition: clip-path 800ms var(--ease-emphasized) calc(40ms + var(--wheel-line, 0) * 60ms);
+    }
+  }
+}
+
+/* A phase's kanji, pale and large behind its board: it stands at the board's top start corner and shows on the paper
+   beside and above it. It rises from its base as the phase comes in. */
+@utility agents-wheel-kanji {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  font-size: clamp(16rem, 2rem + 26vw, 30rem);
+  line-height: 1;
+  translate: -42% -24%;
+
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    clip-path: inset(100% 0% 0% 0%);
+    transition: clip-path 150ms var(--ease-standard);
+
+    [data-wheel-active] & {
+      clip-path: inset(-10% 0% 0% 0%);
+      transition: clip-path 800ms var(--ease-emphasized) 40ms;
+    }
+  }
+}
+
+/* A phase's board on the photograph: the coming one fades in over the leaving one, which holds until it is covered, so
+   only the interface changes on the shared photograph. Boards sit above every kanji, the current one on top. */
+@utility agents-wheel-panel {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 300ms var(--ease-standard) 300ms,
+      visibility 0s linear 600ms;
+
+    [data-wheel-active] & {
+      z-index: 20;
+      opacity: 1;
+      visibility: visible;
+      transition:
+        opacity 300ms var(--ease-standard),
+        visibility 0s;
+    }
+  }
 }
