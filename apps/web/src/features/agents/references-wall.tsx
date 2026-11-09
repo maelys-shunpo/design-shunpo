@@ -11,7 +11,7 @@ const laps = [34, 40, 30] as const;
 /* The clients' logos in three columns drifting in turn up and down, like the wall of tools. */
 export function ReferencesWall() {
   return (
-    <ToolColumns>
+    <ToolColumns lean="tilted">
       {referenceLogoColumns.map((column, index) => (
         <Marquee
           key={column[0].name}
