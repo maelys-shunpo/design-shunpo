@@ -220,7 +220,8 @@ Newsreader Medium for every title, Instrument Sans for text and interfaces, Geis
 
 | Boundary                   | Treatment                                                                 |
 | -------------------------- | ------------------------------------------------------------------------- |
-| Hero to references         | Clean cut; the copy beside three drifting columns of clients              |
+| Hero to problem            | Clean cut; the night arrives as a card around the question                |
+| Problem to references      | Clean cut; the copy beside three drifting columns of clients              |
 | References to agents       | Clean cut; the panel changes by a fade of live pieces                     |
 | Agents to tools            | Muted ground, clean cut; the copy centred over the hub                    |
 | Tools to method            | Cut; the method holds while the scroll walks its thread                   |
@@ -230,7 +231,7 @@ Newsreader Medium for every title, Instrument Sans for text and interfaces, Geis
 
 ### Storyboard
 
-1. **Hero console, « Agent factures »** (live, a ten-second loop held four seconds): invoices arrive, the document is framed while read, fields are extracted with confidence, Odoo is called, a person approves above 2,000 €, a #compta toast confirms.
+1. **The question in the night** (`QuestionScene`, as on the home page), held three screens: Fuji Night arrives as a card around « Votre entreprise grandit et vos outils ne suivent plus ? » and grows to the screen in half a screen; the four pains arrive around it as plates, one every 0.14 screen; the SHUNPO shuriken cuts the night away, turning 135° as it grows until no night is left; the answer's lines rise out of their masks on the paper, « Pas vous en faire perdre. » landing in semibold. The question and its plates fit the window clear of the floating nav. Reduced motion: the question and its plates on a night band, then the answer under the shuriken.
 2. **Three agents in auto-advancing tabs** (nine seconds each): support (Shopify, carrier, Gmail, cited sources), sales (enriched HubSpot record, typed follow-up, Calendly), steering (Sheets, Airtable, QuickBooks, Monday summary).
 3. **Tools wired to one agent** (`ConnectionHub`), a beat every 2.7 seconds: the SHUNPO shuriken in a white disc at the centre, six tools of the morning on the near orbit and six more of the stack on the far one (only the near one on phones), dotted orbits and hairline threads. Each beat the disc ripples, a Fushimi pulse runs down one thread, the tool takes a Fushimi edge, and the line under the hub says what the agent did there (the morning's activity, Gmail to Notion). Held off screen and under the pointer or focus; still on its first line under reduced motion.
 4. **Method, a thread of steps**, held three screens from tablets under the floating nav, one third per phase. The phases stand as an agent's plan on the left: a passed phase is ticked and folded, the current one opens with its fact, its words and three deliverables that tick one by one through the first three quarters of its third while the Fushimi thread draws down to the next dot, the next ones wait in grey. The stage beside cross-fades to the phase's invoice board on the same photograph. The boards share one photograph, so only the interface cross-fades. A phase picked while the walk plays scrolls the walk to it, complete. Phones and reduced motion scroll freely: the plan reads complete, a phase opens on a tap and its title stays under the finger.

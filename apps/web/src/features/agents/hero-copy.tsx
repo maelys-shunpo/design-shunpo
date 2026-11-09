@@ -23,7 +23,7 @@ export function HeroCopy() {
         <AgentsAction href={contactUrl} size="lg" variant="signal" arrow>
           Réserver un diagnostic
         </AgentsAction>
-        <AgentsAction href="#exemple" size="lg" variant="outline">
+        <AgentsAction href="#agents" size="lg" variant="outline">
           Voir un agent au travail
         </AgentsAction>
       </Inline>

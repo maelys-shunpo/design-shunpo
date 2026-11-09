@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect } from "storybook/test";
+import { expect, waitFor } from "storybook/test";
 
 import { TestimonialCascade } from "../src/agents/testimonial-cascade.tsx";
 import { Testimonial } from "../src/agents/testimonial.tsx";
@@ -53,6 +53,9 @@ export const Cascade: Story = {
   ),
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole("button", { name: "Avis 3" }));
-    await expect(canvas.getByText("Corentin Lambert")).toBeVisible();
+    /* The pair rises into place. */
+    await waitFor(async () => {
+      await expect(canvas.getByText("Corentin Lambert")).toBeVisible();
+    });
   },
 };
