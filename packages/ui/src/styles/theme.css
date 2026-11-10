@@ -913,7 +913,7 @@
 }
 
 /* The method wheel (`MethodWheel`), held under the floating nav from tablets up with motion: the question alone, then an
-   ink stroke down a wide arc whose dots carry the reader from phase to phase (the home page's wheel). Every rule below
+   ink stroke down a wide arc and on down the page, the ink and the phases rising with the scroll (the home page's wheel). Every rule below
    applies only while held; phones and reduced motion read the phases one under the other, complete. */
 @utility agents-wheel-title {
   @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
@@ -922,42 +922,47 @@
   }
 }
 
-/* A part of a phase's copy, hidden from its top edge until its phase is current, then uncovered line after line
-   (`--wheel-line`, its order) 40 ms after the leaving phase went in 150 ms. */
-@utility agents-wheel-line {
+/* A phase's copy, held: as tall as the tallest phase's (measured by the wheel), its text from the top, so the label and
+   the title stay on the same line from phase to phase. */
+@utility agents-wheel-copy {
   @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
-    clip-path: inset(0% 0% 100% 0%);
-    transition: clip-path 150ms var(--ease-standard);
-
-    [data-wheel-active] & {
-      clip-path: inset(calc(var(--spacing-1) * -1));
-      transition: clip-path 800ms var(--ease-emphasized) calc(40ms + var(--wheel-line, 0) * 60ms);
-    }
+    min-height: var(--wheel-copy-block, auto);
   }
 }
 
-/* A phase's kanji, pale and large behind its board: it stands at the board's top start corner and shows on the paper
-   beside and above it. It rises from its base as the phase comes in. */
+/* A phase's copy and kanji, held: they slide like a page with the ink (`--wheel-shift`) and fade away from their rest
+   (`--wheel-presence`), set by the wheel's course; the kanji at its own pace (`--wheel-parallax`). */
+@utility agents-wheel-slide {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    opacity: var(--wheel-slide-opacity, var(--wheel-presence, 0));
+    transform: translateY(calc(var(--wheel-shift, 0px) * var(--wheel-parallax, 1)));
+  }
+}
+
+/* A phase's kanji, pale and large behind its still: it stands at the still's top start corner and shows on the paper
+   beside and above it; held, it moves with its phase (`agents-wheel-slide`). */
 @utility agents-wheel-kanji {
+  /* Behind its copy, it slides slower (six tenths of the page's pace) and fades faster (the cube of its copy's
+     presence), so two kanji never stack into one glyph mid-way. */
+  --wheel-parallax: 0.6;
+  --wheel-slide-opacity: calc(
+    var(--wheel-presence, 0) * var(--wheel-presence, 0) * var(--wheel-presence, 0)
+  );
   inset-block-start: 0;
   inset-inline-start: 0;
   font-size: var(--text-kanji);
   line-height: 1;
-  translate: -42% -24%;
+  /* Over the still's start edge, never over the copy: inside the still's columns on tablets, a third out on desktops,
+     where the gutter is wide enough. */
+  translate: -12% -24%;
 
-  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
-    clip-path: inset(100% 0% 0% 0%);
-    transition: clip-path 150ms var(--ease-standard);
-
-    [data-wheel-active] & {
-      clip-path: inset(-10% 0% 0% 0%);
-      transition: clip-path 800ms var(--ease-emphasized) 40ms;
-    }
+  @media (min-width: 64rem) {
+    translate: -30% -24%;
   }
 }
 
-/* A phase's board on the photograph: the coming one fades in over the leaving one, which holds until it is covered, so
-   only the interface changes on the shared photograph. Boards sit above every kanji, the current one on top. */
+/* A phase's still: the coming one fades in over the leaving one, which holds until it is covered. Stills sit above
+   every kanji, the current one on top. Once the wheel's film draws, it takes their place. */
 @utility agents-wheel-panel {
   @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
     z-index: 10;
@@ -975,5 +980,36 @@
         opacity 300ms var(--ease-standard),
         visibility 0s;
     }
+
+    /* Under the film, kept until its 300 ms fade has covered it: the paper never shows empty. */
+    [data-film-ready] & {
+      visibility: hidden;
+      transition: visibility 0s linear 300ms;
+    }
+  }
+}
+
+/* The wheel's paper film, over the stills: shown once its frame is drawn and a phase is named, so it comes in with the
+   first phase and leaves the question alone on the paper. */
+@utility agents-wheel-film {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 300ms var(--ease-standard),
+    visibility 0s linear 300ms;
+
+  [data-film-ready]:has([data-wheel-active]) & {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 300ms var(--ease-standard),
+      visibility 0s;
+  }
+
+  & > canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 }

@@ -1,9 +1,9 @@
 import type { Point } from "./brush-path.ts";
 
-/* The method wheel (the client's artifact, 26/10): a wide circle whose rightmost point is the current dot,
-   beside the step it names. An ink stroke comes down the arc from the top of the screen to the dot; then
-   the dots move along the arc from one step to the next. Angles are in degrees, 0 at the dot, negative
-   above it. */
+/* The method wheel (the client's artifact, 26/10): a wide circle whose rightmost point is the rest point,
+   beside the step it names. An ink stroke comes down the arc from the top of the screen to the rest point,
+   then runs on down the page (`wheel-trail.ts`). Angles are in degrees, 0 at the rest point, negative above
+   it. */
 
 export interface WheelGeometry {
   radius: number;
@@ -27,8 +27,8 @@ const HIGHEST_ENTRY = -72;
 /* Share of the scroll over which the first dot comes down; share of each step's course the dot holds at
    either end; how far along its way the dot is when the next step takes the name (it is landing). */
 export const INTRO = 0.22;
-const HOLD = 0.12;
-const LANDING = 0.85;
+const HOLD = 0.2;
+export const LANDING = 0.85;
 /* How far down the first dot has come when Immersion is named: it is settling on its place. */
 const FIRST_LANDING = 0.97;
 const BRUSH_SAMPLES = 90;

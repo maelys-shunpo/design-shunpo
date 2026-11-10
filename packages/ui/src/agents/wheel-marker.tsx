@@ -9,10 +9,11 @@ const markerVariants = cva(
   "group pointer-events-none absolute top-0 left-0 hidden size-0 md:motion-safe:block",
 );
 
-/* A drop of sumi: an imperfect round of ink, never a circle, its rim a little denser. The current phase's grows twice as
-   large, the passed ones fade, together (200 ms). */
+/* A drop of sumi: an imperfect round of ink, never a circle, its rim a little denser. Each one lands as the brush
+   reaches its place (`data-landed`), wider than the stroke so it reads on the ink; the current one is half as large
+   again, and the passed ones stay on the ink as it rises (200 ms). */
 const dropVariants = cva(
-  "absolute size-4 -translate-1/2 bg-foreground transition group-data-active:scale-200 group-data-passed:opacity-0",
+  "absolute size-4 -translate-1/2 scale-0 bg-foreground transition group-data-landed:scale-200 group-data-landed:group-data-active:scale-300",
 );
 
 /* A few blots, drawn once: neighbouring dots never share a shape. */
@@ -23,8 +24,9 @@ interface WheelMarkerDotProps extends Omit<HTMLAttributes<HTMLSpanElement>, "chi
   index?: number;
 }
 
-/* One dot of the method wheel (internal to `MethodWheel`): placed on the arc by the wheel's course, which marks it
-   `data-active` when its phase is the current one and `data-passed` once its phase is behind. */
+/* One drop of the method's stroke (internal to `MethodWheel`): placed on the ink by the wheel's course, which marks it
+   `data-landed` once the brush has reached it, `data-active` when its phase is the current one and `data-passed` once
+   its phase is behind. */
 export function WheelMarkerDot({ index = 0, className, ...props }: WheelMarkerDotProps) {
   const blot = BLOTS[index % BLOTS.length];
   return (

@@ -33,3 +33,4 @@ Every technical decision in this repository (technologies, skills, MCP servers, 
 | 0027 | [Production tooling](0027-production-tooling.md)                                                           |
 | 0028 | [Autonomous mode](0028-autonomous-mode.md)                                                                 |
 | 0029 | [Motion design direction skill](0029-motion-design-direction-skill.md)                                     |
+| 0030 | [A scroll-scrubbed alpha frame sequence on a 2D canvas](0030-alpha-frame-film-on-a-2d-canvas.md)           |

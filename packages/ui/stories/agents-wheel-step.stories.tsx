@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
 import { WheelStep } from "../src/agents/wheel-step.tsx";
-import { inAgents, PLATE } from "./support/agents-direction.tsx";
+import { inAgents } from "./support/agents-direction.tsx";
 
 const meta = {
   title: "Agents/WheelStep",
@@ -13,12 +13,11 @@ const meta = {
     docs: {
       description: {
         component:
-          "One phase of the method wheel, internal to `MethodWheel`: its label, title and text, its deliverables (ticked here, as phones and reduced motion read them; held, the wheel ticks them one by one), its board on the photograph and, from tablets up, its kanji pale behind the board.",
+          "One phase of the method wheel, internal to `MethodWheel`: its label, title and text, its deliverables (ticked here, as phones and reduced motion read them; held, the wheel ticks them one by one), its still cut out on the paper and, from tablets up, its kanji pale behind it.",
       },
     },
   },
   args: {
-    backdrop: <img src={PLATE} alt="" />,
     phase: {
       id: "immersion",
       label: "5 jours auprès de vos équipes",

@@ -3,7 +3,7 @@ import { expect } from "storybook/test";
 
 import { Headline } from "../src/agents/headline.tsx";
 import { MethodWheel } from "../src/agents/method-wheel.tsx";
-import { inAgents, PLATE } from "./support/agents-direction.tsx";
+import { inAgents } from "./support/agents-direction.tsx";
 
 const meta = {
   title: "Agents/MethodWheel",
@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The method as the home page's wheel. Held under the floating nav from tablets up for three screens: the question stands alone, then rises and fades while a sumi stroke comes down a wide arc; when its drop falls the first phase is named and the scroll moves the dots from phase to phase. The current phase's words come in line after line in the two-corner frame, its deliverables tick one by one, its board fades in on the photograph with its kanji rising behind it. Phones and reduced motion: the question, then every phase complete with its board.",
+          "The method as the home page's wheel. Held under the floating nav from tablets up for three screens: the question stands alone, then rises and fades while a sumi stroke comes down a wide arc; when its drop lands the first phase is named, then the same stroke runs on down the page and the page follows its tip: the ink, its drops and the phases rise with the scroll, each drop landing as the stroke reaches it, each copy sliding up like a page and crossing the next in a fade. The current phase's deliverables tick one by one, those of a phase still to come stay unticked, its still shows with its kanji behind it; with a film, the paper folds from one phase's still into the next as the ink moves on. Phones and reduced motion: the question, then every phase complete with its still.",
       },
     },
   },
@@ -24,7 +24,6 @@ const meta = {
         Chaque projet commence par une Immersion
       </Headline>
     ),
-    backdrop: <img src={PLATE} alt="" />,
     phases: [
       {
         id: "immersion",

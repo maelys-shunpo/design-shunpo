@@ -7,10 +7,11 @@ import { Stack } from "@repo/ui/layout/stack";
 import { Text } from "@repo/ui/typography/text";
 
 import { MethodActions } from "./method-actions";
-import { agentsMethod, agentsMethodBackdrop } from "./method-steps";
+import { agentsMethodFilm } from "./method-film";
+import { agentsMethod } from "./method-steps";
 
-/* The method as the home page's wheel: the question alone, then the ink stroke and its dots carry one invoice flow
-   through 見 築 進. What the Immersion leaves behind and the call to book it follow, once the wheel lets go. */
+/* The method as the home page's wheel: the question alone, then the ink stroke and its dots carry the paper from the
+   handshake to the bridge to the bonsai, through 見 築 進. What the Immersion leaves behind and the call to book it follow, once the wheel lets go. */
 export function MethodSection() {
   return (
     <Section id="methode" spacing="regular">
@@ -22,7 +23,7 @@ export function MethodSection() {
             </Headline>
           }
           phases={agentsMethod}
-          backdrop={agentsMethodBackdrop}
+          film={agentsMethodFilm}
         />
         <PageGrid>
           <GridArea columns={{ md: { start: 2, span: 6 }, lg: { start: 3, span: 6 } }}>

@@ -3,7 +3,9 @@ import { cva } from "class-variance-authority";
 import { cn } from "../lib/cn.ts";
 import { WheelMarkerDot } from "./wheel-marker.tsx";
 
-const FULL = { x: 0, y: 0, width: "100%", height: "100%" } as const;
+/* The stroke reaches above and left of the stage, and below it as far as it runs on: its masks and paint cover well
+   beyond. */
+const FULL = { x: "-100%", y: "-100%", width: "300%", height: "300%" } as const;
 
 const inkVariants = cva(
   "pointer-events-none absolute inset-0 hidden size-full overflow-visible md:motion-safe:block",
@@ -18,7 +20,7 @@ interface WheelInkProps {
 
 /* The stroke along the wheel and its dots (internal to `MethodWheel`), drawn by the wheel's course from tablets up with
    motion. The stroke is one sumi brush stroke (`paintBrushStroke`), rasterised once into `data-wheel-ink`; the course
-   reveals it along its centre line (`data-wheel-brush`), as the brush travels down the arc. */
+   reveals it along its centre line (`data-wheel-brush`), as the brush travels down the arc and on down the page. */
 export function WheelInk({ ink, dots, className }: WheelInkProps) {
   return (
     <>
