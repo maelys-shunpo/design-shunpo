@@ -34,6 +34,8 @@ export const InAHeadline: Story = {
     await expect(canvas.getByRole("heading", { level: 2 })).toHaveAccessibleName(
       "Notre méthode : chaque projet commence par une Immersion",
     );
-    await expect(canvasElement.querySelectorAll("[data-slot=ink-word] [data-ink-bracket]")).toHaveLength(2);
+    await expect(
+      canvasElement.querySelectorAll("[data-slot=ink-word] [data-ink-bracket]"),
+    ).toHaveLength(2);
   },
 };

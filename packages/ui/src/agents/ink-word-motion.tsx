@@ -16,8 +16,10 @@ const WELL_INSIDE: IntersectionObserverInit = { rootMargin: "0px 0px -33% 0px" }
    are traced from their top leg down to their foot as it reaches the end. */
 const INK_START = 0.8;
 const INK_FOR = 0.94;
-const BRACKETS_START = 1.44;
+const BRACKETS_AFTER_INK = 0.64;
 const BRACKETS_FOR = 0.52;
+/* A headline already in view keeps its lines as read: only the word is written again, after a short breath. */
+const REWRITE_START = 0.2;
 
 type EffectCleanup = (() => void) | undefined;
 
@@ -26,6 +28,37 @@ interface Entrance {
   target: HTMLElement;
   build: () => gsap.core.Animation;
   revert: () => void;
+}
+
+/* Adds to `timeline`, from `start`: the ink writes the word from its first letter to its last, and the brackets are
+   traced from their top leg down to their foot as it reaches the end. */
+function writeWord(
+  timeline: gsap.core.Timeline,
+  word: HTMLElement,
+  start: number,
+): gsap.core.Timeline {
+  word.toggleAttribute("data-writing", true);
+  return timeline
+    .eventCallback("onComplete", () => {
+      word.toggleAttribute("data-writing", false);
+    })
+    .fromTo(
+      word,
+      { "--ink-sweep": 1 },
+      { "--ink-sweep": 0, duration: INK_FOR, ease: "power2.inOut" },
+      start,
+    )
+    .fromTo(
+      word.querySelectorAll("[data-ink-bracket]"),
+      { clipPath: "inset(0% 0% 100% 0%)" },
+      {
+        clipPath: "inset(0% 0% 0% 0%)",
+        duration: BRACKETS_FOR,
+        ease: ease.inOut,
+        clearProps: "clipPath",
+      },
+      start + BRACKETS_AFTER_INK,
+    );
 }
 
 /* Splits the headline into masked lines, then finds the word again: splitting rebuilds the headline's nodes. */
@@ -46,41 +79,19 @@ function writeEntrance(root: HTMLElement): Entrance | undefined {
     }
   }
   const word = headline.querySelector<HTMLElement>("[data-slot=ink-word]") ?? root;
-  const brackets = word.querySelectorAll("[data-ink-bracket]");
   return {
     target: headline,
     build: () => {
-      word.dataset["writing"] = "";
-      return gsap
-        .timeline({
-          onComplete: () => {
-            delete word.dataset["writing"];
-          },
-        })
+      const lines = gsap
+        .timeline()
         .from(split.lines, {
           yPercent: 105,
           duration: duration.slow,
           ease: ease.emphasized,
           stagger: stagger.base,
         })
-        .set(split.masks, { overflow: "visible" })
-        .fromTo(
-          word,
-          { "--ink-sweep": 1 },
-          { "--ink-sweep": 0, duration: INK_FOR, ease: "power2.inOut" },
-          INK_START,
-        )
-        .fromTo(
-          brackets,
-          { clipPath: "inset(0% 0% 100% 0%)" },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: BRACKETS_FOR,
-            ease: ease.inOut,
-            clearProps: "clipPath",
-          },
-          BRACKETS_START,
-        );
+        .set(split.masks, { overflow: "visible" });
+      return writeWord(lines, word, INK_START);
     },
     revert: () => {
       split.revert();
@@ -102,8 +113,16 @@ export function InkWordMotion({ root }: { root: HTMLElement | null }): null {
       if (!mounted) {
         return;
       }
-      /* A headline already in view stays as painted: it is never split. */
-      const entrance = inWindow(target) ? undefined : writeEntrance(target);
+      /* The one exception to `enterUnseen`: a headline already in view keeps its lines as read, but its word is
+         written again, since the word is the point of the headline. */
+      if (inWindow(target)) {
+        const rewrite = writeWord(gsap.timeline(), target, REWRITE_START);
+        stop = () => {
+          rewrite.progress(1).kill();
+        };
+        return;
+      }
+      const entrance = writeEntrance(target);
       if (entrance === undefined) {
         return;
       }

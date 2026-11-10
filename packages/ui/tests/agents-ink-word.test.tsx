@@ -101,12 +101,14 @@ describe("InkWord", () => {
     expect(bracketReach(screen.container).below).toBeLessThan(0.2);
   });
 
-  it("leaves a word already in view as painted", async () => {
+  it("rewrites a word already in view and retraces its brackets, its lines left as read", async () => {
     const screen = await render(question(false));
     releaseIdleCallbacks();
-    await pause(SETTLE_MS * 2);
+    await expect.poll(() => sweepOf(screen.container), ENTRANCE).not.toBe("");
+    expect(Number(sweepOf(screen.container))).toBeGreaterThan(0);
 
-    expect(sweepOf(screen.container)).toBe("");
+    await expect.poll(() => sweepOf(screen.container), ENTRANCE).toBe("0");
+    await expect.poll(() => bracketsDrawn(screen.container), ENTRANCE).toEqual([true, true]);
     expect(maskedLines(screen.container)).toBe(0);
   });
 

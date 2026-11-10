@@ -28,7 +28,8 @@ interface InkWordProps {
 
 /* The word a headline is about, set in ink between square brackets in Fushimi. Painted complete; once the page is idle,
    if the headline has not been seen yet, its lines rise as it comes well inside the window, then the ink writes the
-   word from its first letter to its last and the brackets are traced as it reaches the end (`InkWordMotion`). Reduced
+   word from its first letter to its last and the brackets are traced as it reaches the end (`InkWordMotion`). A
+   headline already in view keeps its lines as read, but its word is written again and its brackets retraced. Reduced
    motion keeps it painted. */
 export function InkWord({ children, className }: InkWordProps) {
   const [root, setRoot] = useState<HTMLSpanElement | null>(null);
