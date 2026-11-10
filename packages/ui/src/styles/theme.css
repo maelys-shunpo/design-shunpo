@@ -765,6 +765,53 @@
   --agents-frame-color: currentColor;
 }
 
+/* The word a headline is about (`InkWord`), held between square brackets « [ » « ] » in Fushimi: room on either
+   side for the brackets. Its box is one em tall around the letters, so the brackets hold the word, not the line. */
+@utility agents-ink-word {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  padding-inline: 0.3em;
+  line-height: 1;
+}
+
+/* While the ink writes the word (`data-writing` on the word): a soft front, feathered like ink gaining the paper,
+   from the first letter to the last as `--ink-sweep` goes from 1 to 0. */
+@utility agents-ink-word-text {
+  [data-writing] > & {
+    mask-image: linear-gradient(to right, black 0%, black 45%, transparent 55%, transparent 100%);
+    mask-size: 220% 100%;
+    mask-repeat: no-repeat;
+    mask-position: calc(var(--ink-sweep, 0) * 100%) 0;
+  }
+}
+
+/* One bracket: a 3 px Fushimi stroke whatever the word's size, its legs a quarter of an em, a little above the
+   capitals and a little below the baseline. */
+@utility agents-ink-bracket {
+  --ink-stroke: 3px;
+  position: absolute;
+  inset-block: -0.02em 0.04em;
+  inline-size: 0.26em;
+  color: var(--color-agents-signal);
+
+  &[data-side="start"] {
+    inset-inline-start: 0;
+    background:
+      linear-gradient(currentColor, currentColor) left top / var(--ink-stroke) 100% no-repeat,
+      linear-gradient(currentColor, currentColor) left top / 100% var(--ink-stroke) no-repeat,
+      linear-gradient(currentColor, currentColor) left bottom / 100% var(--ink-stroke) no-repeat;
+  }
+
+  &[data-side="end"] {
+    inset-inline-end: 0;
+    background:
+      linear-gradient(currentColor, currentColor) right top / var(--ink-stroke) 100% no-repeat,
+      linear-gradient(currentColor, currentColor) right top / 100% var(--ink-stroke) no-repeat,
+      linear-gradient(currentColor, currentColor) right bottom / 100% var(--ink-stroke) no-repeat;
+  }
+}
+
 /* One frame that travels (the question scene's), the same two corners placed by the scene on what it designates
    (`translate`, `width`, `height` set from script), jumping there in 240 ms on the shift curve. Hidden until shown
    (`data-shown`); `data-instant` places it without the jump. Fushimi on paper, Kome on the night

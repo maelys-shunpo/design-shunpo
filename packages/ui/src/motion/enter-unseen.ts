@@ -1,4 +1,4 @@
-function inWindow(target: Element): boolean {
+export function inWindow(target: Element): boolean {
   const { top, bottom } = target.getBoundingClientRect();
   return top < window.innerHeight && bottom > 0;
 }
@@ -7,6 +7,9 @@ function inWindow(target: Element): boolean {
 export function enterUnseen(
   target: Element | null,
   buildEntrance: () => gsap.core.Animation,
+  /* Where in the window the entrance starts: by default as soon as the content shows; a negative bottom margin waits
+     until it is well inside. */
+  watch?: IntersectionObserverInit,
 ): (() => void) | undefined {
   if (target === null || inWindow(target)) {
     return undefined;
@@ -17,7 +20,7 @@ export function enterUnseen(
       observer.disconnect();
       entrance.play();
     }
-  });
+  }, watch);
   observer.observe(target);
   return () => {
     observer.disconnect();

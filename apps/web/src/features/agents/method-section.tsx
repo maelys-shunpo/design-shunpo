@@ -1,4 +1,3 @@
-import { Headline } from "@repo/ui/agents/headline";
 import { MethodWheel } from "@repo/ui/agents/method-wheel";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
@@ -8,6 +7,7 @@ import { Text } from "@repo/ui/typography/text";
 
 import { MethodActions } from "./method-actions";
 import { agentsMethodFilm } from "./method-film";
+import { MethodQuestion } from "./method-question";
 import { agentsMethod } from "./method-steps";
 
 /* The method as the home page's wheel: the question alone, then the ink stroke and its dots carry the paper from the
@@ -16,15 +16,7 @@ export function MethodSection() {
   return (
     <Section id="methode" spacing="regular">
       <Stack gap="xl">
-        <MethodWheel
-          title={
-            <Headline level={2} size="title" align="center">
-              Chaque projet commence par une Immersion
-            </Headline>
-          }
-          phases={agentsMethod}
-          film={agentsMethodFilm}
-        />
+        <MethodWheel title={<MethodQuestion />} phases={agentsMethod} film={agentsMethodFilm} />
         <PageGrid>
           <GridArea columns={{ md: { start: 2, span: 6 }, lg: { start: 3, span: 6 } }}>
             <Stack gap="lg" align="start">
