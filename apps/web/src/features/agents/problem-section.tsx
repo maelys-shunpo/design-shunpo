@@ -11,7 +11,7 @@ export function ProblemSection() {
     <Section id="probleme" spacing="flush" aria-labelledby="probleme-titre">
       <QuestionScene
         question={
-          <Headline level={2} size="title" align="center" id="probleme-titre">
+          <Headline level={2} size="title" align="center" id="probleme-titre" entrance="lines">
             {problemQuestion}
           </Headline>
         }

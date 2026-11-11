@@ -17,7 +17,7 @@ export function CasesSection() {
       <PageGrid rows="xl">
         <GridArea columns={{ md: 8, lg: 10 }}>
           <Stack gap="lg" align="center">
-            <Headline level={2} size="title" align="center">
+            <Headline level={2} size="title" align="center" entrance="lines">
               Des projets livrés et utilisés au quotidien
             </Headline>
           </Stack>

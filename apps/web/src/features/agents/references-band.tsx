@@ -13,7 +13,7 @@ export function ReferencesBand() {
       <PageGrid rows="xl" align="center">
         <GridArea columns={{ lg: { start: 1, span: 6 } }}>
           <Stack gap="xl">
-            <Headline level={2} size="title">
+            <Headline level={2} size="title" entrance="lines">
               Ils nous ont confié des projets
             </Headline>
           </Stack>

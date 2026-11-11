@@ -9,7 +9,7 @@ import { ratings, trustpilotUrl } from "../shunpo/testimonials";
 export function TestimonialsCopy() {
   return (
     <Stack gap="lg" align="start">
-      <Headline level={2} size="title">
+      <Headline level={2} size="title" entrance="lines">
         Ce que nos clients en disent
       </Headline>
       <Text size="lg" tone="muted" measure="prose">

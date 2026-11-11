@@ -14,7 +14,7 @@ export function QuestionsSection() {
       <PageGrid rows="lg">
         <GridArea columns={{ lg: { start: 1, span: 5 } }}>
           <Stack gap="lg">
-            <Headline level={2} size="heading">
+            <Headline level={2} size="heading" entrance="lines">
               Ce qu’on nous demande avant de commencer.
             </Headline>
           </Stack>

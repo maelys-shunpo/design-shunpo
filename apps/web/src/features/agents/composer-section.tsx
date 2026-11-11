@@ -15,7 +15,7 @@ export function ComposerSection() {
       <PageGrid rows="lg">
         <GridArea columns={{ md: 8, lg: 8 }}>
           <Stack gap="lg" align="center">
-            <Headline level={2} size="heading" align="center">
+            <Headline level={2} size="heading" align="center" entrance="lines">
               Quelle tâche voulez-vous ne plus faire ?
             </Headline>
             <Text size="lg" tone="muted" align="center" measure="prose">
