@@ -74,9 +74,19 @@ export const HeadlineEntrance: Story = {
         name: "Vos agents travaillent dans les outils que vous avez déjà",
       }),
     ).toBeVisible();
-    await expect(
-      canvasElement.querySelectorAll("[data-slot=headline-entrance]"),
-    ).toHaveLength(1);
+    await expect(canvasElement.querySelectorAll("[data-slot=headline-entrance]")).toHaveLength(1);
+  },
+};
+
+export const HeadlineThrow: Story = {
+  render: () => (
+    <Headline level={1} align="center" entrance="throw">
+      Agents IA sur mesure.
+    </Headline>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    await expect(canvas.getByRole("heading", { name: "Agents IA sur mesure." })).toBeVisible();
+    await expect(canvasElement.querySelectorAll("[data-slot=headline-entrance]")).toHaveLength(1);
   },
 };
 

@@ -6,6 +6,7 @@ import { registerCustomEases } from "../motion/custom-eases.ts";
 import { enterUnseen, inWindow } from "../motion/enter-unseen.ts";
 import type { HeadlineEntranceKind } from "./headline-entrance.tsx";
 import { type Entrance, lettersEntrance, linesEntrance } from "./headline-entrances.ts";
+import { throwEntrance } from "./headline-throw.ts";
 
 registerCustomEases();
 
@@ -13,11 +14,11 @@ const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 /* The headline plays once a third of the way up from the window's foot, so the reader sees it whole. */
 const WELL_INSIDE: IntersectionObserverInit = { rootMargin: "0px 0px -33% 0px" };
 
-/* One builder per entrance kind; `throw` takes its own builder in a later task. */
+/* One builder per entrance kind. */
 const ENTRANCES: Record<HeadlineEntranceKind, (headline: HTMLElement) => Entrance> = {
   lines: linesEntrance,
   letters: lettersEntrance,
-  throw: linesEntrance,
+  throw: throwEntrance,
 };
 
 type EffectCleanup = (() => void) | undefined;
