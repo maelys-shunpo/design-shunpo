@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { registerCustomEases } from "../motion/custom-eases.ts";
 import { enterUnseen, inWindow } from "../motion/enter-unseen.ts";
 import type { HeadlineEntranceKind } from "./headline-entrance.tsx";
-import { type Entrance, linesEntrance } from "./headline-entrances.ts";
+import { type Entrance, lettersEntrance, linesEntrance } from "./headline-entrances.ts";
 
 registerCustomEases();
 
@@ -13,10 +13,10 @@ const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 /* The headline plays once a third of the way up from the window's foot, so the reader sees it whole. */
 const WELL_INSIDE: IntersectionObserverInit = { rootMargin: "0px 0px -33% 0px" };
 
-/* One builder per entrance kind; `letters` and `throw` take their own builders in later tasks. */
+/* One builder per entrance kind; `throw` takes its own builder in a later task. */
 const ENTRANCES: Record<HeadlineEntranceKind, (headline: HTMLElement) => Entrance> = {
   lines: linesEntrance,
-  letters: linesEntrance,
+  letters: lettersEntrance,
   throw: linesEntrance,
 };
 

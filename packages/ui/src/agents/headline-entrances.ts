@@ -53,3 +53,47 @@ export function linesEntrance(headline: HTMLElement): Entrance {
     },
   };
 }
+
+/* The closing call's entrance (the spec's values): split into words then letters, each letter behind its own mask, so
+   a word is never cut at a line's end; every letter rises from behind its edge, 0.018 s after the one before. */
+const LETTER_FOR = 0.7;
+const LETTER_STAGGER = 0.018;
+
+export function lettersEntrance(headline: HTMLElement): Entrance {
+  const split = SplitText.create(headline, {
+    type: "lines,words,chars",
+    mask: "chars",
+    reduceWhiteSpace: false,
+  });
+  for (const letter of split.chars) {
+    if (letter instanceof HTMLElement) {
+      letter.dataset["entranceLetter"] = "";
+    }
+  }
+  for (const line of split.lines) {
+    if (line instanceof HTMLElement) {
+      line.dataset["entranceLine"] = "";
+    }
+  }
+  let timeline: gsap.core.Timeline | undefined;
+  return {
+    build: () => {
+      timeline = gsap.timeline().fromTo(
+        split.chars,
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: LETTER_FOR,
+          ease: ease.emphasized,
+          stagger: LETTER_STAGGER,
+          force3D: false,
+        },
+      );
+      return timeline;
+    },
+    revert: () => {
+      timeline?.kill();
+      split.revert();
+    },
+  };
+}

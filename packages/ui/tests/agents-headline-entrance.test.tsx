@@ -89,6 +89,29 @@ function anchorDisplayOf(container: HTMLElement): string {
   return getComputedStyle(anchor).display;
 }
 
+function lettersSplit(container: HTMLElement): HTMLElement[] {
+  return [...container.querySelectorAll<HTMLElement>("[data-entrance-letter]")];
+}
+
+function lettersLanded(container: HTMLElement): boolean {
+  const letters = lettersSplit(container);
+  return (
+    letters.length > 0 &&
+    letters.every((letter) => new DOMMatrix(getComputedStyle(letter).transform).m42 === 0)
+  );
+}
+
+/* Split by words then letters, a word is never cut: every line's text ends on a whole word of the call. */
+function wordsWholeOnTheirLine(container: HTMLElement): boolean {
+  const words = "Commençons par une tâche qui vous prend du temps".split(" ");
+  const lines = [...container.querySelectorAll<HTMLElement>("[data-entrance-line]")];
+  const rows = lines.length > 0 ? lines : [headlineOf(container)];
+  return rows.every((row) => {
+    const text = (row.textContent ?? "").trim();
+    return text === "" || words.some((word) => text.endsWith(word));
+  });
+}
+
 describe("Headline entrance: lines", () => {
   it("leaves the headline as painted until idle", async () => {
     const screen = await render(section(true));
@@ -136,6 +159,29 @@ describe("Headline entrance: lines", () => {
 
     await screen.unmount();
     expect(document.querySelectorAll("[data-entrance-line]")).toHaveLength(0);
+  });
+
+  it("raises the call letter by letter from behind each letter's edge", async () => {
+    const screen = await render(
+      <Direction name="agents">
+        <div style={{ height: "160vh" }} />
+        <Headline level={2} align="center" entrance="letters">
+          Commençons par une tâche qui vous prend du temps
+        </Headline>
+        <div style={{ height: "160vh" }} />
+      </Direction>,
+    );
+    releaseIdleCallbacks();
+    await expect.poll(() => lettersSplit(screen.container).length, ENTRANCE).toBeGreaterThan(0);
+    expect(wordsWholeOnTheirLine(screen.container)).toBe(true);
+
+    headlineOf(screen.container).scrollIntoView({ block: "center" });
+    await expect.poll(() => lettersLanded(screen.container), ENTRANCE).toBe(true);
+    await expect
+      .element(
+        screen.getByRole("heading", { name: "Commençons par une tâche qui vous prend du temps" }),
+      )
+      .toBeInTheDocument();
   });
 
   it("keeps the hidden anchor out of the layout", async () => {

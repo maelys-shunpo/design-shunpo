@@ -8,7 +8,7 @@ import { contactUrl } from "../shunpo/content";
 export function ClosingCopy() {
   return (
     <Stack gap="xl" align="center">
-      <Headline level={2} size="display" align="center">
+      <Headline level={2} size="display" align="center" entrance="letters">
         Commençons par une tâche qui vous prend du temps
       </Headline>
       <Text size="lg" align="center" measure="prose">
