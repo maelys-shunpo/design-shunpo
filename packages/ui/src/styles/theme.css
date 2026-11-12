@@ -775,17 +775,6 @@
   line-height: 1;
 }
 
-/* While the ink writes the word (`data-writing` on the word): a soft front, feathered like ink gaining the paper,
-   from the first letter to the last as `--ink-sweep` goes from 1 to 0. */
-@utility agents-ink-word-text {
-  [data-writing] > & {
-    mask-image: linear-gradient(to right, black 0%, black 45%, transparent 55%, transparent 100%);
-    mask-size: 220% 100%;
-    mask-repeat: no-repeat;
-    mask-position: calc(var(--ink-sweep, 0) * 100%) 0;
-  }
-}
-
 /* One bracket: a 3 px Fushimi stroke whatever the word's size, its legs a quarter of an em, a little above the
    capitals and a little below the baseline. */
 @utility agents-ink-bracket {

@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The word a headline is about, in ink between square brackets « [ » « ] » in Fushimi (3 px, legs a quarter of an em). Painted complete; when its headline has not been seen yet, its lines rise as it comes a third of the way into the window, then the ink writes the word from its first letter to its last and the brackets are traced as it reaches the end (about 2 s). Reduced motion keeps it painted.",
+          "The word a headline is about, between square brackets « [ » « ] » in Fushimi (3 px, legs a quarter of an em). Painted complete; its headline's lines rise as it comes a third of the way into the window, then the word comes into focus letter by letter and the brackets close on it from outside (about 1.9 s). A headline already in view replays whole. Reduced motion keeps it painted.",
       },
     },
   },

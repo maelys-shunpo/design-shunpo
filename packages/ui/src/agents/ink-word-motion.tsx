@@ -4,97 +4,96 @@ import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useEffect } from "react";
 
+import { registerCustomEases } from "../motion/custom-eases.ts";
 import { enterUnseen, inWindow } from "../motion/enter-unseen.ts";
-import { duration, ease, stagger } from "../motion/tokens.ts";
+import { ease } from "../motion/tokens.ts";
+import { linesEntrance } from "./headline-entrances.ts";
 
 gsap.registerPlugin(SplitText);
+registerCustomEases();
 
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 /* The headline plays once a third of the way up from the window's foot, so the reader sees it whole. */
 const WELL_INSIDE: IntersectionObserverInit = { rootMargin: "0px 0px -33% 0px" };
-/* The sequence, in seconds: the lines rise, then once the last has landed the ink writes the word, and the brackets
-   are traced from their top leg down to their foot as it reaches the end. */
-const INK_START = 0.8;
-const INK_FOR = 0.94;
-const BRACKETS_AFTER_INK = 0.64;
-const BRACKETS_FOR = 0.52;
-/* A headline already in view keeps its lines as read: only the word is written again, after a short breath. */
-const REWRITE_START = 0.2;
+/* The sequence, in seconds: the lines rise; once « commence par une » has landed the word comes into focus letter by
+   letter, and the brackets close on it from outside as the focus pull ends. */
+const FOCUS_AT = 0.75;
+const FOCUS_FOR = 0.8;
+const FOCUS_STAGGER = 0.045;
+const BRACKETS_AT = 1.3;
+const BRACKETS_FOR = 0.55;
+/* How far outside the word each bracket starts, in em. */
+const BRACKETS_FROM = 0.35;
 
 type EffectCleanup = (() => void) | undefined;
 
-interface Entrance {
+interface FocusEntrance {
   /* What the window watches: the headline, which splitting keeps (the word's own node may be rebuilt). */
   target: HTMLElement;
-  build: () => gsap.core.Animation;
+  build: () => gsap.core.Timeline;
   revert: () => void;
 }
 
-/* Adds to `timeline`, from `start`: the ink writes the word from its first letter to its last, and the brackets are
-   traced from their top leg down to their foot as it reaches the end. */
-function writeWord(
-  timeline: gsap.core.Timeline,
-  word: HTMLElement,
-  start: number,
-): gsap.core.Timeline {
-  word.toggleAttribute("data-writing", true);
-  return timeline
-    .eventCallback("onComplete", () => {
-      word.toggleAttribute("data-writing", false);
-    })
-    .fromTo(
-      word,
-      { "--ink-sweep": 1 },
-      { "--ink-sweep": 0, duration: INK_FOR, ease: "power2.inOut" },
-      start,
-    )
-    .fromTo(
-      word.querySelectorAll("[data-ink-bracket]"),
-      { clipPath: "inset(0% 0% 100% 0%)" },
-      {
-        clipPath: "inset(0% 0% 0% 0%)",
-        duration: BRACKETS_FOR,
-        ease: ease.inOut,
-        clearProps: "clipPath",
-      },
-      start + BRACKETS_AFTER_INK,
-    );
-}
-
-/* Splits the headline into masked lines, then finds the word again: splitting rebuilds the headline's nodes. */
-function writeEntrance(root: HTMLElement): Entrance | undefined {
+/* Splits the headline into lines, then finds the word again (splitting rebuilds the headline's nodes) and splits it
+   into letters. The letters and brackets start hidden the moment the entrance exists, so the word's place is reserved
+   and nothing flashes before the timeline's from states take over. */
+function focusEntrance(root: HTMLElement): FocusEntrance | undefined {
   const headline = root.closest<HTMLElement>("[data-slot=headline]") ?? root.parentElement;
   if (headline === null) {
     return undefined;
   }
-  /* Whitespace kept as written: collapsing it would turn the narrow no-break space before « : » into a breaking one. */
-  const split = SplitText.create(headline, {
-    type: "lines",
-    mask: "lines",
+  const lines = linesEntrance(headline);
+  const word = headline.querySelector<HTMLElement>("[data-slot=ink-word]") ?? root;
+  /* The lines split may clone the word's text span across a boundary and leave an empty clone: split every span that
+     still carries text. */
+  const texts = [...word.querySelectorAll<HTMLElement>("[data-ink-text]")].filter(
+    (span) => (span.textContent ?? "") !== "",
+  );
+  const letters = SplitText.create(texts.length > 0 ? texts : word, {
+    type: "chars",
     reduceWhiteSpace: false,
   });
-  for (const line of split.lines) {
-    if (line instanceof HTMLElement) {
-      line.dataset["inkLine"] = "";
+  for (const letter of letters.chars) {
+    if (letter instanceof HTMLElement) {
+      letter.dataset["focusLetter"] = "";
     }
   }
-  const word = headline.querySelector<HTMLElement>("[data-slot=ink-word]") ?? root;
+  const [start, end] = [...word.querySelectorAll<HTMLElement>("[data-ink-bracket]")];
+  const brackets = [start, end].filter((bracket) => bracket !== undefined);
+  const reach = Number(getComputedStyle(word).fontSize.replace("px", "")) * BRACKETS_FROM;
+  gsap.set(letters.chars, { opacity: 0 });
+  gsap.set(brackets, { opacity: 0 });
   return {
     target: headline,
     build: () => {
-      const lines = gsap
-        .timeline()
-        .from(split.lines, {
-          yPercent: 105,
-          duration: duration.slow,
+      const timeline = lines.build().fromTo(
+        letters.chars,
+        { opacity: 0, filter: "blur(14px)", scale: 1.08 },
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          scale: 1,
+          duration: FOCUS_FOR,
           ease: ease.emphasized,
-          stagger: stagger.base,
-        })
-        .set(split.masks, { overflow: "visible" });
-      return writeWord(lines, word, INK_START);
+          stagger: FOCUS_STAGGER,
+          force3D: false,
+          clearProps: "filter",
+        },
+        FOCUS_AT,
+      );
+      brackets.forEach((bracket, side) => {
+        timeline.fromTo(
+          bracket,
+          { x: side === 0 ? -reach : reach, opacity: 0 },
+          { x: 0, opacity: 1, duration: BRACKETS_FOR, ease: ease.fluid, force3D: false },
+          BRACKETS_AT,
+        );
+      });
+      return timeline;
     },
     revert: () => {
-      split.revert();
+      lines.revert();
+      letters.revert();
     },
   };
 }
@@ -113,20 +112,20 @@ export function InkWordMotion({ root }: { root: HTMLElement | null }): null {
       if (!mounted) {
         return;
       }
-      /* The one exception to `enterUnseen`: a headline already in view keeps its lines as read, but its word is
-         written again, since the word is the point of the headline. */
-      if (inWindow(target)) {
-        const rewrite = writeWord(gsap.timeline(), target, REWRITE_START);
-        stop = () => {
-          rewrite.progress(1).kill();
-        };
-        return;
-      }
-      const entrance = writeEntrance(target);
+      const entrance = focusEntrance(target);
       if (entrance === undefined) {
         return;
       }
       revert = entrance.revert;
+      /* The one exception to `enterUnseen`: this headline replays whole even when already in view, since the word
+         coming into focus is the point of the headline. */
+      if (inWindow(entrance.target)) {
+        const replay = entrance.build();
+        stop = () => {
+          replay.kill();
+        };
+        return;
+      }
       stop = enterUnseen(entrance.target, entrance.build, WELL_INSIDE);
     }
     void prepare(root);

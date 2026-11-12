@@ -36,19 +36,40 @@ function question(below: boolean) {
   );
 }
 
-/* How much of the word the ink has still to write: 1 before it starts, 0 once written, "" when painted as is. */
-function sweepOf(container: HTMLElement): string {
-  const word = container.querySelector<HTMLElement>("[data-slot=ink-word]");
-  return word?.style.getPropertyValue("--ink-sweep") ?? "";
+function lettersOf(container: HTMLElement): HTMLElement[] {
+  return [...container.querySelectorAll<HTMLElement>("[data-focus-letter]")];
 }
 
-/* A bracket is drawn once nothing of it is clipped away; it is traced from its top leg down to its foot. */
-function bracketsDrawn(container: HTMLElement): boolean[] {
-  return bracketsOf(container).map((bracket) => getComputedStyle(bracket).clipPath === "none");
+function letterOpacities(container: HTMLElement): number[] {
+  return lettersOf(container).map((letter) => Number(getComputedStyle(letter).opacity));
+}
+
+/* The word is in focus once every letter is fully shown with no blur left. */
+function wordInFocus(container: HTMLElement): boolean {
+  const letters = lettersOf(container);
+  return (
+    letters.length > 0 &&
+    letters.every((letter) => {
+      const style = getComputedStyle(letter);
+      return Number(style.opacity) === 1 && style.filter === "none";
+    })
+  );
 }
 
 function bracketsOf(container: HTMLElement): HTMLElement[] {
   return [...container.querySelectorAll<HTMLElement>("[data-slot=ink-word] [data-ink-bracket]")];
+}
+
+/* A bracket is closed on the word once fully shown and back at its resting place. */
+function bracketsClosed(container: HTMLElement): boolean {
+  const brackets = bracketsOf(container);
+  return (
+    brackets.length === 2 &&
+    brackets.every((bracket) => {
+      const style = getComputedStyle(bracket);
+      return Number(style.opacity) === 1 && new DOMMatrix(style.transform).m41 === 0;
+    })
+  );
 }
 
 /* The brackets' box against the word's letters: from just above the capitals to just below the baseline. */
@@ -64,21 +85,16 @@ function bracketReach(container: HTMLElement): { above: number; below: number } 
   return { above: (letters.top - box.top) / size, below: (box.bottom - letters.bottom) / size };
 }
 
-/* Brings the headline to the window's foot (its top 24 px inside) or to its centre. */
-function scrollHeadlineTo(container: HTMLElement, place: "foot" | "centre"): void {
-  const headline = container.querySelector<HTMLElement>("[data-slot=headline]");
-  if (headline === null) {
-    return;
-  }
-  if (place === "centre") {
-    headline.scrollIntoView({ block: "center" });
-    return;
-  }
-  window.scrollBy(0, headline.getBoundingClientRect().top - window.innerHeight + 24);
+function linesOf(container: HTMLElement): HTMLElement[] {
+  return [...container.querySelectorAll<HTMLElement>("[data-entrance-line]")];
 }
 
-function maskedLines(container: HTMLElement): number {
-  return container.querySelectorAll("[data-slot=headline] [data-ink-line]").length;
+function headlineOf(container: HTMLElement): HTMLElement {
+  const headline = container.querySelector<HTMLElement>("[data-slot=headline]");
+  if (headline === null) {
+    throw new Error("no headline");
+  }
+  return headline;
 }
 
 describe("InkWord", () => {
@@ -88,59 +104,53 @@ describe("InkWord", () => {
     await expect
       .element(
         screen.getByRole("heading", {
-          name: "Notre méthode\u202F: chaque projet commence par une Immersion",
+          name: "Notre méthode : chaque projet commence par une Immersion",
         }),
       )
       .toBeVisible();
     const brackets = bracketsOf(screen.container);
     expect(brackets).toHaveLength(2);
     expect(brackets.every((bracket) => bracket.getAttribute("aria-hidden") === "true")).toBe(true);
-    expect(bracketsDrawn(screen.container)).toEqual([true, true]);
+    expect(bracketsClosed(screen.container)).toBe(true);
     /* They hold the word, not the line: never more than a fifth of an em past its letters. */
     expect(bracketReach(screen.container).above).toBeLessThan(0.2);
     expect(bracketReach(screen.container).below).toBeLessThan(0.2);
   });
 
-  it("rewrites a word already in view and retraces its brackets, its lines left as read", async () => {
-    const screen = await render(question(false));
-    releaseIdleCallbacks();
-    await expect.poll(() => sweepOf(screen.container), ENTRANCE).not.toBe("");
-    expect(Number(sweepOf(screen.container))).toBeGreaterThan(0);
-
-    await expect.poll(() => sweepOf(screen.container), ENTRANCE).toBe("0");
-    await expect.poll(() => bracketsDrawn(screen.container), ENTRANCE).toEqual([true, true]);
-    expect(maskedLines(screen.container)).toBe(0);
-  });
-
-  it("raises its headline's lines, then writes the word and draws its brackets, once well inside the window", async () => {
+  it("raises its headline's lines, then brings the word into focus letter by letter and closes the brackets on it, once well inside the window", async () => {
     const screen = await render(question(true));
     releaseIdleCallbacks();
-    await expect.poll(() => sweepOf(screen.container), ENTRANCE).toBe("1");
-    expect(maskedLines(screen.container)).toBeGreaterThan(0);
+    await expect.poll(() => linesOf(screen.container).length, ENTRANCE).toBeGreaterThan(0);
+    expect(lettersOf(screen.container)).toHaveLength(9);
+    expect(Math.max(...letterOpacities(screen.container))).toBe(0);
     /* Split into lines, the headline keeps its narrow no-break space: « : » never starts a line. */
-    expect(screen.container.querySelector("[data-slot=headline]")?.textContent).toContain(
-      "méthode\u202F:",
-    );
-    expect(bracketsDrawn(screen.container)).toEqual([false, false]);
+    expect(headlineOf(screen.container).textContent).toContain("méthode :");
 
-    /* Just inside the window's foot: not yet. */
-    scrollHeadlineTo(screen.container, "foot");
-    await pause(SETTLE_MS * 2);
-    expect(sweepOf(screen.container)).toBe("1");
-
-    scrollHeadlineTo(screen.container, "centre");
-    await expect.poll(() => sweepOf(screen.container), ENTRANCE).toBe("0");
-    await expect.poll(() => bracketsDrawn(screen.container), ENTRANCE).toEqual([true, true]);
+    headlineOf(screen.container).scrollIntoView({ block: "center" });
+    await expect.poll(() => wordInFocus(screen.container), ENTRANCE).toBe(true);
+    await expect.poll(() => bracketsClosed(screen.container), ENTRANCE).toBe(true);
   });
 
-  it("writes nothing under reduced motion: the word and its brackets stay painted", async () => {
+  it("replays the whole headline already in view", async () => {
+    const screen = await render(question(false));
+    releaseIdleCallbacks();
+    await expect.poll(() => linesOf(screen.container).length, ENTRANCE).toBeGreaterThan(0);
+    await expect
+      .poll(() => Math.min(...letterOpacities(screen.container)), ENTRANCE)
+      .toBeLessThan(1);
+
+    await expect.poll(() => wordInFocus(screen.container), ENTRANCE).toBe(true);
+    await expect.poll(() => bracketsClosed(screen.container), ENTRANCE).toBe(true);
+  });
+
+  it("brings nothing into focus under reduced motion", async () => {
     await preferReducedMotion();
     const screen = await render(question(true));
     releaseIdleCallbacks();
     await pause(SETTLE_MS * 2);
 
-    expect(sweepOf(screen.container)).toBe("");
-    expect(maskedLines(screen.container)).toBe(0);
-    expect(bracketsDrawn(screen.container)).toEqual([true, true]);
+    expect(lettersOf(screen.container)).toHaveLength(0);
+    expect(linesOf(screen.container)).toHaveLength(0);
+    expect(bracketsClosed(screen.container)).toBe(true);
   });
 });

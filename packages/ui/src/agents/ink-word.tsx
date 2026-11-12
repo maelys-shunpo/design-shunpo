@@ -26,16 +26,15 @@ interface InkWordProps {
   className?: string;
 }
 
-/* The word a headline is about, set in ink between square brackets in Fushimi. Painted complete; once the page is idle,
-   if the headline has not been seen yet, its lines rise as it comes well inside the window, then the ink writes the
-   word from its first letter to its last and the brackets are traced as it reaches the end (`InkWordMotion`). A
-   headline already in view keeps its lines as read, but its word is written again and its brackets retraced. Reduced
-   motion keeps it painted. */
+/* The word a headline is about, set between square brackets in Fushimi. Painted complete; once the page is idle, its
+   headline's lines rise as it comes well inside the window, then the word comes into focus letter by letter and the
+   brackets close on it from outside (`InkWordMotion`). A headline already in view plays the same entrance at once.
+   Reduced motion keeps it painted. */
 export function InkWord({ children, className }: InkWordProps) {
   const [root, setRoot] = useState<HTMLSpanElement | null>(null);
   return (
     <span ref={setRoot} data-slot="ink-word" className={cn(inkWordVariants(), className)}>
-      <span className="agents-ink-word-text">{children}</span>
+      <span data-ink-text>{children}</span>
       <Bracket side="start" />
       <Bracket side="end" />
       <AfterIdle>
