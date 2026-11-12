@@ -474,12 +474,144 @@
       "approvedBy": "user",
       "date": "2026-11-09",
       "page": "agents"
+    },
+    {
+      "file": "packages/ui/src/styles/agents-washi.webp",
+      "master": "assets/source/agents/paper-washi/crumpled-beige-paper-texture.jpg",
+      "slot": "paper texture",
+      "source": "stock",
+      "origin": {
+        "tool": "stock_download",
+        "stockId": 426436391,
+        "title": "Crumpled Beige Paper Texture",
+        "url": "https://www.magnific.com/free-photo/crumpled-beige-paper-texture_426436391.htm",
+        "author": "muhammad.abdullah",
+        "aiGenerated": false
+      },
+      "edits": [
+        "resize 1920 px, greyscale",
+        "high-pass (Gaussian sigma 44 px): the folds' light and shade only, the photo's colour and lighting removed",
+        "seamless: blended towards the edges with a copy shifted by half a tile",
+        "scaled to a standard deviation of 3.05 grey levels at its 960 px display width, the intensity of the approved test",
+        "offset so that hard light over Kome and Shiro keeps every channel's mean within half a grey level",
+        "webp q86 (74 KB)"
+      ],
+      "license": {
+        "type": "magnific-stock",
+        "plan": "premium",
+        "attributionRequired": false
+      },
+      "credits": 40,
+      "approvedBy": "user (« La 4 », washi; « met la texture seulement sur ma section agent ia »)",
+      "date": "2026-11-10",
+      "page": "agents"
+    },
+    {
+      "file": "packages/ui/src/styles/agents-froisse.webp",
+      "master": "assets/source/agents/paper-shader/froisse.png",
+      "slot": "paper texture (composer)",
+      "source": "generated",
+      "origin": {
+        "tool": "paper.design shaders (offline render)",
+        "version": "@paper-design/shaders 0.0.82",
+        "license": "Apache-2.0",
+        "note": "rendered once in a headless browser into a grey relief (white paper, black shade), masters and scripts in assets/source/agents/paper-shader, no runtime dependency"
+      },
+      "edits": [
+        "resize 1200 px, greyscale",
+        "seamless (half-tile blend towards the edges)",
+        "global light ramp removed (best-fitting plane)",
+        "scaled to a standard deviation of about 3 grey levels at display width",
+        "offset so hard light keeps the ground's mean within half a grey level",
+        "webp"
+      ],
+      "license": {
+        "type": "apache-2.0",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (« parfait applique ca », après la répartition montrée dans le compagnon)",
+      "date": "2026-11-12",
+      "page": "agents"
+    },
+    {
+      "file": "packages/ui/src/styles/agents-plie.webp",
+      "master": "assets/source/agents/paper-shader/plie.png",
+      "slot": "paper texture (questions)",
+      "source": "generated",
+      "origin": {
+        "tool": "paper.design shaders (offline render)",
+        "version": "@paper-design/shaders 0.0.82",
+        "license": "Apache-2.0",
+        "note": "rendered once in a headless browser into a grey relief (white paper, black shade), masters and scripts in assets/source/agents/paper-shader, no runtime dependency"
+      },
+      "edits": [
+        "resize 1600 px, greyscale",
+        "global light ramp removed (best-fitting plane)",
+        "scaled to a standard deviation of about 3 grey levels at display width",
+        "offset so hard light keeps the ground's mean within half a grey level",
+        "webp"
+      ],
+      "license": {
+        "type": "apache-2.0",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (« parfait applique ca », après la répartition montrée dans le compagnon)",
+      "date": "2026-11-12",
+      "page": "agents"
+    },
+    {
+      "file": "packages/ui/src/styles/agents-fibres.webp",
+      "master": "assets/source/agents/paper-shader/fibres.png",
+      "slot": "paper texture (testimonials, client tiles)",
+      "source": "generated",
+      "origin": {
+        "tool": "paper.design shaders (offline render)",
+        "version": "@paper-design/shaders 0.0.82",
+        "license": "Apache-2.0",
+        "note": "rendered once in a headless browser into a grey relief (white paper, black shade), masters and scripts in assets/source/agents/paper-shader, no runtime dependency"
+      },
+      "edits": [
+        "resize 990 px, greyscale",
+        "seamless (half-tile blend towards the edges)",
+        "global light ramp removed (best-fitting plane)",
+        "scaled to a standard deviation of about 3 grey levels at display width",
+        "offset so hard light keeps the ground's mean within half a grey level",
+        "webp"
+      ],
+      "license": {
+        "type": "apache-2.0",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (« parfait applique ca », après la répartition montrée dans le compagnon)",
+      "date": "2026-11-12",
+      "page": "agents"
+    },
+    {
+      "file": "packages/ui/src/styles/agents-grain.webp",
+      "slot": "film grain (dark islands)",
+      "source": "generated",
+      "origin": {
+        "tool": "node script",
+        "note": "128 px mid-grey noise (sum of three uniforms, seeded), mean centred on 128, lossless webp; no master, the script is the recipe (DESIGN.md « Une texture par rôle »)"
+      },
+      "edits": [],
+      "license": {
+        "type": "project-generated",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (« parfait applique ca »)",
+      "date": "2026-11-12",
+      "page": "agents"
     }
   ],
   "pages": {
     "agents": {
       "cap": 5500,
-      "spent": 5435,
+      "spent": 5475,
       "note": "8 images generated (4 prompts × 2 variants, 75 credits each); 5 shipped, 3 kept as unused masters. Cap raised from 5000 to 5500 by Maëlys on 2026-11-09 for the method film's arrival clips.",
       "entries": [
         {
@@ -745,6 +877,14 @@
           "credits": 325,
           "basis": "simulate_cost",
           "date": "2026-11-09"
+        },
+        {
+          "tool": "stock_download",
+          "slot": "paper-washi",
+          "stockId": 426436391,
+          "credits": 40,
+          "basis": "stock creditCost",
+          "date": "2026-11-10"
         }
       ]
     }

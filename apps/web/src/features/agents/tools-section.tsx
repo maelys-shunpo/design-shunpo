@@ -12,7 +12,7 @@ import { hubMessages, nearTools, farTools } from "./tools";
 /* The copy centred over one illustration: the agent in the middle, every tool wired to it. */
 export function ToolsSection() {
   return (
-    <Section id="outils" spacing="breath" tone="muted">
+    <Section id="outils" spacing="breath" tone="muted" paper="washi">
       <PageGrid rows="xl">
         <GridArea columns={{ md: 6, lg: 8 }}>
           <Stack gap="xl" align="center">

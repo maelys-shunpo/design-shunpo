@@ -183,6 +183,9 @@
   --color-agents-info-tint: #e7eff2;
   --color-agents-signal-tint: #f5e4df;
   --color-agents-line: #e5dfd3;
+  /* A client's paper tile (`ReferenceTile material="paper"`): white at 60 % on Kome, made opaque so a grain under it
+     never shows through the drifting tiles. */
+  --color-agents-paper-light: #faf9f6;
   /* A headline's secondary words: Ink Shadow on light grounds, Hikari Frost on dark ones (set per scheme below). */
   --color-agents-dim: var(--agents-dim);
   /* A window resting on a photographed surface: a contact shadow and a long soft one, in Fuji Night. */
@@ -646,6 +649,115 @@
   }
 }
 
+/* Washi (`Section paper="washi"`): a crumpled washi photographed, reduced to the light and shade of its folds (a grey
+   around the middle, seamless, 1920 px for a 60rem tile) and laid over the section's own colour in hard light, so the
+   folds darken and catch the light while the mean stays the ground's colour within half a grey level, on Kome as on
+   Shiro. Dark islands, cards, windows and pictures on it stay smooth. */
+@utility agents-washi {
+  background-image: url("./agents-washi.webp");
+  background-size: 60rem 33.625rem;
+  background-blend-mode: hard-light;
+}
+
+/* The other papers of the direction, rendered once from the open paper.design paper shader (Apache-2.0,
+   assets/source/agents/paper-shader) into grey reliefs and laid over the ground like the washi: hard light around mid
+   grey, so each ground keeps its own colour within half a grey level. One texture per role (DESIGN.md,
+   « Une texture par rôle »). */
+
+/* Crumpled paper (`Section paper="froisse"`): a fine grain and large soft crumples, on the composer's Shiro. */
+@utility agents-froisse {
+  background-image: url("./agents-froisse.webp");
+  background-size: 90rem 90rem;
+  background-blend-mode: hard-light;
+}
+
+/* One large sheet unfolded (`Section paper="plie"`): soft diagonal folds on the page's Kome, behind the questions.
+   It paints the page's own ground, which the folds need under their blend. */
+@utility agents-plie {
+  background-color: var(--color-background);
+  background-image: url("./agents-plie.webp");
+  background-size: 90rem 60rem;
+  background-blend-mode: hard-light;
+}
+
+/* Fibrous washi for what clients sign (`Testimonial`, `ReferenceTile material="paper"`): fine fibres and a light
+   crumple on the sheet's own paper-light, rich up close, quiet from afar. */
+@utility agents-paper-fibres {
+  background-image: url("./agents-fibres.webp");
+  background-size: 41.25rem 41.25rem;
+  background-blend-mode: hard-light;
+}
+
+/* A card whose cut sheet is a leaf of that washi (`Testimonial`): the fibres ride the sheet `agents-card-cut` draws
+   (`::after`), its Shiro hairline and bias cut unchanged. Declared after `agents-card-cut`, whose shorthand it refines. */
+@utility agents-card-paper {
+  &::after {
+    background-color: var(--color-agents-paper-light);
+    background-image: url("./agents-fibres.webp");
+    background-size: 41.25rem 41.25rem;
+    background-blend-mode: hard-light;
+  }
+}
+
+/* Film grain on a dark island (`Section paper="grain"`, the problem's night): a lossless mid-grey noise tile laid over
+   the night in overlay, under the content, one CSS pixel a grain. With motion it flickers at a film's pace, stepping
+   through eight offsets of the same tile; under reduced motion it holds still, a quiet texture. Decorative: it carries
+   no information and never covers the type's own ground. */
+@utility agents-grain {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("./agents-grain.webp");
+    background-size: 8rem 8rem;
+    image-rendering: pixelated;
+    mix-blend-mode: overlay;
+    opacity: 0.3;
+    animation: agents-grain 800ms step-end infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
+  }
+}
+
+@keyframes agents-grain {
+  0% {
+    background-position: 0 0;
+  }
+  12.5% {
+    background-position: 2.5rem -4.5rem;
+  }
+  25% {
+    background-position: -3.5rem 1.5rem;
+  }
+  37.5% {
+    background-position: 5.5rem 3.5rem;
+  }
+  50% {
+    background-position: -1.5rem -2.5rem;
+  }
+  62.5% {
+    background-position: 4.5rem -6.5rem;
+  }
+  75% {
+    background-position: -5.5rem 5.5rem;
+  }
+  87.5% {
+    background-position: 1.5rem 6.5rem;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
 /* A sheet of paper with its top right corner cut on the bias (`ReferenceTile material="paper"`): the sheet clipped
    along the cut, its Shiro hairline drawn by `::before` along the same edge (1 px in: legs shorter by (2 − √2)·1). */
 @utility agents-paper-cut {
@@ -677,6 +789,48 @@
       calc(100% - 1px) calc(1px + var(--agents-cut) - 0.59px),
       calc(100% - 1px - var(--agents-cut) + 0.59px) 1px,
       1px 1px
+    );
+  }
+}
+
+/* A card with its top right corner cut on the bias, like the actions (`Testimonial`): its Shiro hairline (`::before`)
+   and its sheet 1 px inside it (`::after`, legs longer by (2 − √2)·1) are drawn through the cut, behind the content.
+   The shadow is a drop shadow, which follows the cut where a box shadow would be clipped away. */
+@utility agents-card-cut {
+  --agents-cut: var(--spacing-5);
+  position: relative;
+  isolation: isolate;
+  filter: drop-shadow(0 1px 1px rgb(30 38 41 / 0.06)) drop-shadow(0 10px 12px rgb(30 38 41 / 0.07));
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  &::before {
+    inset: 0;
+    background: var(--color-agents-line);
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut)) 0,
+      100% var(--agents-cut),
+      100% 100%,
+      0 100%
+    );
+  }
+
+  &::after {
+    inset: 1px;
+    background: var(--color-surface);
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut) + 0.59px) 0,
+      100% calc(var(--agents-cut) - 0.59px),
+      100% 100%,
+      0 100%
     );
   }
 }

@@ -7,6 +7,11 @@ import { routes } from "./support/routes.ts";
 
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
+/* A paper grain is a picture: axe leaves the contrast of every text on it unchecked. Checked against the paper's own
+   colour instead, which the grain keeps on average (DESIGN.md, « Washi paper »). */
+const PLAIN_PAPER =
+  ".agents-washi, .agents-washi [data-slot='section'].bg-muted, .agents-washi [data-wheel-paper] { background-image: none !important; }";
+
 for (const colorScheme of ["light", "dark"] as const) {
   test.describe(`${colorScheme} scheme`, () => {
     test.use({ colorScheme, contextOptions: { reducedMotion: "reduce" } });
@@ -18,6 +23,7 @@ for (const colorScheme of ["light", "dark"] as const) {
         });
 
         test("meets WCAG 2.2 AA", async ({ page }) => {
+          await page.addStyleTag({ content: PLAIN_PAPER });
           const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
           expect(results.violations).toEqual([]);
         });

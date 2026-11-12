@@ -9,7 +9,7 @@ const tileVariants = cva("flex w-full min-w-0 flex-col justify-center gap-1 px-4
        top right corner cut on the bias, like the actions; no shadow. */
     material: {
       card: "rounded-surface border border-agents-line bg-surface shadow-agents-card",
-      paper: "agents-paper-cut relative bg-surface/60",
+      paper: "agents-paper-cut relative bg-agents-paper-light agents-paper-fibres",
     },
     /* wall: as tall as five eighths of its width, so four tiles in a drifting column always outrun its window. */
     size: {

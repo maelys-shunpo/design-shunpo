@@ -11,7 +11,7 @@ import { fallback, scenarios } from "./composer-scenarios";
 /* Centred: the question on 8 columns, the composer on the same 8. */
 export function ComposerSection() {
   return (
-    <Section id="essayer" spacing="regular" tone="muted">
+    <Section id="essayer" spacing="regular" tone="muted" paper="froisse">
       <PageGrid rows="lg">
         <GridArea columns={{ md: 8, lg: 8 }}>
           <Stack gap="lg" align="center">

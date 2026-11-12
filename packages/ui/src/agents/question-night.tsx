@@ -32,7 +32,7 @@ export function QuestionNight({ question, plates }: QuestionNightProps) {
   return (
     <div
       data-question-night=""
-      className="bg-background py-24 scheme-dark motion-safe:absolute motion-safe:inset-0 motion-safe:z-10 motion-safe:flex motion-safe:flex-col motion-safe:justify-center motion-safe:py-0"
+      className="agents-grain bg-background py-24 scheme-dark motion-safe:absolute motion-safe:inset-0 motion-safe:z-10 motion-safe:flex motion-safe:flex-col motion-safe:justify-center motion-safe:py-0"
     >
       <Container size="wide">
         <div

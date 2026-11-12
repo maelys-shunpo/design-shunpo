@@ -10,7 +10,7 @@ import { objections } from "../shunpo/content";
 /* Asymmetric: the title on five columns, the answers from the seventh, one empty column between. */
 export function QuestionsSection() {
   return (
-    <Section id="questions" spacing="regular">
+    <Section id="questions" spacing="regular" paper="plie">
       <PageGrid rows="lg">
         <GridArea columns={{ lg: { start: 1, span: 5 } }}>
           <Stack gap="lg">

@@ -34,3 +34,7 @@ export const DarkScheme: Story = { args: { scheme: "dark" } };
 export const ExtraLarge: Story = { args: { spacing: "xl" } };
 export const Sheet: Story = { args: { tone: "sheet" } };
 export const FieldScheme: Story = { args: { scheme: "field" } };
+export const Washi: Story = { args: { tone: "muted", paper: "washi" } };
+export const Froisse: Story = { args: { tone: "muted", paper: "froisse" } };
+export const Plie: Story = { args: { paper: "plie" } };
+export const Grain: Story = { args: { scheme: "dark", paper: "grain" } };

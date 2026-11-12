@@ -23,6 +23,15 @@ const sectionVariants = cva("text-foreground", {
       muted: "bg-muted",
       sheet: "bg-surface",
     },
+    /* The folds, crumples or grain of a paper over the section's own colour, which they keep on average. `grain` is a
+       film grain for dark islands, under the content, still under reduced motion. */
+    paper: {
+      plain: "",
+      washi: "agents-washi",
+      froisse: "agents-froisse",
+      plie: "agents-plie",
+      grain: "agents-grain",
+    },
     scheme: {
       inherit: "",
       light: "bg-background scheme-light",
@@ -30,7 +39,7 @@ const sectionVariants = cva("text-foreground", {
       field: "bg-background scheme-field",
     },
   },
-  defaultVariants: { spacing: "md", tone: "default", scheme: "inherit" },
+  defaultVariants: { spacing: "md", tone: "default", paper: "plain", scheme: "inherit" },
 });
 
 type SectionElement = "section" | "header" | "footer" | "aside";
@@ -55,6 +64,7 @@ export function Section({
   as: Element = "section",
   spacing,
   tone,
+  paper,
   scheme,
   className,
   ...props
@@ -63,7 +73,7 @@ export function Section({
     <Element
       data-slot="section"
       data-scheme={shownScheme({ scheme, tone })}
-      className={cn(sectionVariants({ spacing, tone, scheme }), className)}
+      className={cn(sectionVariants({ spacing, tone, paper, scheme }), className)}
       {...props}
     />
   );
