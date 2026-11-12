@@ -40,24 +40,6 @@ describe("Section labels", () => {
     expect(screen.container.textContent).not.toMatch(/\d/u);
   });
 
-  it("set a case's project in the text face, not in monospace capitals", async () => {
-    const screen = await render(
-      <CaseCard
-        href="#tf1"
-        client="TF1"
-        project="Application de jeu"
-        stake="Un prime time"
-        action="Lire le cas client"
-      />,
-    );
-    const project = screen.getByText("Application de jeu").element();
-
-    expect(getComputedStyle(project).textTransform).toBe("none");
-    expect(getComputedStyle(project).fontFamily.toLowerCase()).not.toContain("mono");
-  });
-});
-
-describe("The two-corner frame", () => {
   it("stays out of sight until a link is designated", async () => {
     const screen = await render(<NavAnchor href="#methode">Méthode</NavAnchor>);
     const link = screen.getByRole("link", { name: "Méthode" }).element();
@@ -93,8 +75,11 @@ describe("The two-corner frame", () => {
       <CaseCard
         href="#tf1"
         client="TF1"
-        project="Application de jeu"
-        stake="Un prime time"
+        tint="tenku"
+        mission="Une application de jeu."
+        figure="1,4"
+        unit="M"
+        figureLabel="de téléspectateurs"
         action="Lire le cas client"
       />,
     );

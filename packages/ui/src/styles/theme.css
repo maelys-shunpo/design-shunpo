@@ -183,6 +183,8 @@
   --color-agents-info-tint: #e7eff2;
   --color-agents-signal-tint: #f5e4df;
   --color-agents-line: #e5dfd3;
+  /* Kurenai Blush as the ground of a reference card (#B05F60), Kome on it at 4.5:1. */
+  --color-agents-blush: #b05f60;
   /* A client's paper tile (`ReferenceTile material="paper"`): white at 60 % on Kome, made opaque so a grain under it
      never shows through the drifting tiles. */
   --color-agents-paper-light: #faf9f6;
@@ -901,6 +903,364 @@
     &::after {
       transition: none;
     }
+  }
+}
+
+/* A frame that shows on keyboard focus only: the pointer's hover leaves its corners hidden (a card whose corner folds
+   under the pointer already answers it). */
+@utility agents-frame-focus {
+  --agents-frame-color: var(--color-agents-paper);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:focus-visible)::before {
+      opacity: 0;
+      translate: calc(var(--spacing-1) * -1) calc(var(--spacing-1) * -1);
+    }
+
+    &:hover:not(:focus-visible)::after {
+      opacity: 0;
+      translate: var(--spacing-1) var(--spacing-1);
+    }
+  }
+}
+
+/* A reference card on the wall: 3:4, wide enough for its key figure on one line. */
+@utility agents-wall-card {
+  inline-size: clamp(14rem, 24vw, 22rem);
+}
+
+/* A slot of the references wall: from tablets up, with motion, the cards stand on an arc (the print in the middle
+   one step higher, `--spacing-6`). While the wall waits to be seen (`data-arrival="waiting"`) they stand on a
+   curve, turned towards the visitor, and settle onto the arc in 1.3 s once it is in view, the ones at the sides a
+   beat after the middle: a curve that settles, read flat. */
+@utility agents-wall-slot {
+  @media (min-width: 48rem) {
+    transition: transform 1300ms var(--ease-emphasized);
+
+    &:nth-child(2) {
+      transform: translateY(calc(var(--spacing-6) * -1));
+    }
+
+    &:nth-child(odd) {
+      transition-delay: 90ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      [data-arrival="waiting"] > &:nth-child(1) {
+        transform: perspective(62.5rem) rotateY(18deg);
+      }
+
+      [data-arrival="waiting"] > &:nth-child(2) {
+        transform: perspective(62.5rem) translateY(0);
+      }
+
+      [data-arrival="waiting"] > &:nth-child(3) {
+        transform: perspective(62.5rem) rotateY(-18deg);
+      }
+    }
+  }
+}
+
+/* The three tints of a reference card, one per client: Kurenai Blush, Blue Tenku and Shiro. The words take Kome on
+   the first two, ink on Shiro (the logo follows). */
+@utility agents-case-kurenai {
+  --agents-case-foot: color-mix(in srgb, var(--agents-case-tint) 78%, black);
+  --agents-case-tint: var(--color-agents-blush);
+  --agents-case-logo-invert: 1;
+  color: var(--color-agents-paper);
+}
+
+@utility agents-case-tenku {
+  --agents-case-foot: color-mix(in srgb, var(--agents-case-tint) 78%, black);
+  --agents-case-tint: var(--color-agents-info);
+  --agents-case-logo-invert: 1;
+  color: var(--color-agents-paper);
+}
+
+@utility agents-case-shiro {
+  --agents-case-foot: var(--agents-case-tint);
+  --agents-case-tint: var(--color-agents-line);
+  --agents-case-logo-invert: 0;
+  color: var(--color-agents-ink);
+}
+
+/* The folded sheet of a reference card, in its tint. */
+@utility agents-case-sheet {
+  background: var(--agents-case-tint);
+}
+
+/* The client's logo in one ink: Kome on the dark tints, ink on Shiro. */
+@utility agents-case-logo {
+  & img {
+    filter: brightness(0) invert(var(--agents-case-logo-invert, 1));
+  }
+}
+
+/* The delivered product as the card's ground: grey, soft, laid in luminosity under the tint so only its light and
+   shapes show, never its small print. It comes slowly closer under the pointer and on keyboard focus. */
+@utility agents-case-ground {
+  position: absolute;
+  inset: 0;
+
+  & img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: saturate(0) blur(1px);
+    mix-blend-mode: luminosity;
+    opacity: 0.55;
+    transition:
+      scale 1100ms var(--ease-emphasized),
+      opacity 600ms var(--ease-emphasized);
+  }
+
+  [data-slot="case-card"]:focus-visible & img {
+    scale: 1.07;
+    opacity: 0.55;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-slot="case-card"]:hover & img {
+      scale: 1.07;
+      opacity: 0.55;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & img {
+      transition: none;
+    }
+  }
+}
+
+/* The tint, thick under the logo and at the foot where the words stand, thinning in between to let the product show;
+   under the pointer and on focus it climbs, so the mission has a plain ground. */
+@utility agents-case-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, var(--agents-case-tint) 0%, transparent 32%),
+    linear-gradient(
+      to top,
+      var(--agents-case-foot, var(--agents-case-tint)) 0%,
+      var(--agents-case-foot, var(--agents-case-tint)) 22%,
+      var(--agents-case-tint) 46%,
+      transparent 60%
+    );
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: linear-gradient(
+      to top,
+      var(--agents-case-foot, var(--agents-case-tint)) 0%,
+      var(--agents-case-foot, var(--agents-case-tint)) 24%,
+      var(--agents-case-tint) 46%,
+      transparent 78%
+    );
+    transition: opacity 600ms var(--ease-emphasized);
+  }
+
+  [data-slot="case-card"]:focus-visible &::after {
+    opacity: 1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-slot="case-card"]:hover &::after {
+      opacity: 1;
+    }
+  }
+}
+
+/* What stands at the card's foot at rest: the key figure and what it measures. Under the pointer and on focus they
+   rise out of the way, blurring, to leave the mission (`agents-case-word`). */
+@utility agents-case-stat {
+  transition:
+    opacity 450ms var(--ease-emphasized) 120ms,
+    translate 700ms var(--ease-emphasized) 120ms,
+    filter 450ms var(--ease-emphasized) 120ms;
+
+  [data-slot="case-card"]:focus-visible & {
+    opacity: 0;
+    translate: 0 calc(var(--spacing-2) * -1);
+    filter: blur(3px);
+    transition-duration: 280ms, 400ms, 280ms;
+    transition-delay: 0s;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-slot="case-card"]:hover & {
+      opacity: 0;
+      translate: 0 calc(var(--spacing-2) * -1);
+      filter: blur(3px);
+      transition-duration: 280ms, 400ms, 280ms;
+      transition-delay: 0s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 150ms linear;
+
+    [data-slot="case-card"]:focus-visible & {
+      translate: none;
+      filter: none;
+    }
+  }
+}
+
+/* What a figure measures: two lines tall on every card, so the figures of cards whose labels run one line and two
+   stand on the same baseline. */
+@utility agents-case-label {
+  min-block-size: 2lh;
+}
+
+/* One word of the mission, set by `--agents-word` (its rank): waiting below its line, blurred, it rises and comes
+   into focus under the pointer or on focus, 22 ms after the word before. Touch screens, with no hover, keep the
+   figure. */
+@utility agents-case-word {
+  display: inline-block;
+  opacity: 0;
+  translate: 0 0.55em;
+  filter: blur(5px);
+  transition:
+    opacity 250ms linear,
+    translate 300ms linear,
+    filter 250ms linear;
+
+  [data-slot="case-card"]:focus-visible & {
+    opacity: 1;
+    translate: none;
+    filter: none;
+    transition:
+      opacity 550ms var(--ease-emphasized),
+      translate 750ms var(--ease-emphasized),
+      filter 550ms var(--ease-emphasized);
+    transition-delay: calc(100ms + var(--agents-word, 0) * 22ms);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-slot="case-card"]:hover & {
+      opacity: 1;
+      translate: none;
+      filter: none;
+      transition:
+        opacity 550ms var(--ease-emphasized),
+        translate 750ms var(--ease-emphasized),
+        filter 550ms var(--ease-emphasized);
+      transition-delay: calc(100ms + var(--agents-word, 0) * 22ms);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    translate: none;
+    filter: none;
+    transition: opacity 150ms linear;
+    transition-delay: 0s;
+
+    [data-slot="case-card"]:focus-visible &,
+    [data-slot="case-card"]:hover & {
+      transition-delay: 0s;
+    }
+  }
+}
+
+/* The folded corner (« Le pli »): a card's top right corner folded down onto its face, the back of the paper
+   showing (`agents-fold-flap`, in a lighter tone of the card's tint, its shadow on the card) where the corner is gone
+   (`agents-fold-paper`). A small fold at rest (`--spacing-4`); under the pointer and on keyboard focus it opens to
+   `--spacing-10` in 700 ms while the arrow (`agents-fold-arrow`) comes into the open corner. */
+@property --agents-fold {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@utility agents-fold {
+  --agents-fold: var(--spacing-4);
+  transition: --agents-fold 700ms var(--ease-emphasized);
+
+  &:focus-visible {
+    --agents-fold: var(--spacing-10);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --agents-fold: var(--spacing-10);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: --agents-fold 150ms linear;
+  }
+}
+
+@utility agents-fold-paper {
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--agents-fold)) 0,
+    100% var(--agents-fold),
+    100% 100%,
+    0 100%
+  );
+}
+
+@utility agents-fold-flap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  inline-size: var(--agents-fold);
+  block-size: var(--agents-fold);
+  pointer-events: none;
+  filter: drop-shadow(-2px 3px 3px rgb(0 0 0 / 0.38));
+
+  & > * {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 0, 0 100%, 100% 100%);
+    background: linear-gradient(
+      to bottom left,
+      transparent 49%,
+      color-mix(in srgb, var(--agents-case-tint, var(--color-agents-line)) 30%, white) 50%,
+      color-mix(in srgb, var(--agents-case-tint, var(--color-agents-line)) 60%, white) 100%
+    );
+  }
+}
+
+@utility agents-fold-arrow {
+  position: absolute;
+  top: var(--spacing-1);
+  right: var(--spacing-1);
+  inline-size: var(--spacing-4);
+  block-size: var(--spacing-4);
+  color: var(--color-agents-paper);
+  pointer-events: none;
+  opacity: 0;
+  translate: calc(var(--spacing-1) * -1) var(--spacing-1);
+  transition:
+    opacity 400ms var(--ease-emphasized),
+    translate 600ms var(--ease-emphasized);
+
+  :focus-visible > & {
+    opacity: 1;
+    translate: none;
+    transition-delay: 150ms;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :hover > & {
+      opacity: 1;
+      translate: none;
+      transition-delay: 150ms;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    translate: none;
+    transition: opacity 150ms linear;
   }
 }
 

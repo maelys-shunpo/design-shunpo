@@ -11,7 +11,7 @@ const GLYPHS_AT = 0.1;
 const GLYPH_FOR = 0.6;
 const GLYPH_STAGGER = 0.08;
 
-const WHEEL_STYLE = "position:relative;display:inline-block;overflow:hidden;height:1em";
+const WHEEL_STYLE = "position:relative;display:inline-block;overflow:clip;height:1em";
 const COLUMN_STYLE =
   "position:absolute;inset-inline:0;top:0;display:flex;flex-direction:column;align-items:center";
 

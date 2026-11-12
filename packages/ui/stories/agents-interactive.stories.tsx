@@ -3,7 +3,7 @@ import { expect } from "storybook/test";
 
 import { AgentTabs } from "../src/agents/agent-tabs.tsx";
 import { CaseCard } from "../src/agents/case-card.tsx";
-import { CaseRing } from "../src/agents/case-ring.tsx";
+import { CaseWall } from "../src/agents/case-wall.tsx";
 import type { ComposerScenario } from "../src/agents/composer-plan.tsx";
 import { FaqItem } from "../src/agents/faq-item.tsx";
 import { TaskComposer } from "../src/agents/task-composer.tsx";
@@ -30,7 +30,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "AgentTabs walks the agents with a progress bar and stops under the pointer. CaseRing bends the reference posters (CaseCard) on a curved wall that turns with the scroll. TaskComposer lets the visitor name a task and answers with a scripted plan. FaqItem is a native disclosure.",
+          "AgentTabs walks the agents with a progress bar and stops under the pointer. CaseWall is the references wall: three cards (CaseCard, each with its key figure, tinted per client) on an arc that settles once as it comes into view; the pointer folds a card's corner and swaps its figure for its mission. TaskComposer lets the visitor name a task and answers with a scripted plan. FaqItem is a native disclosure.",
       },
     },
   },
@@ -65,60 +65,60 @@ export const Tabs: Story = {
   },
 };
 
+const PIXEL = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
+
+const caseCards = [
+  <CaseCard
+    key="a"
+    href="#a"
+    client="TF1"
+    tint="kurenai"
+    figure="1,4"
+    unit="M"
+    figureLabel="de téléspectateurs ont joué avec l’application"
+    mission="L’application de jeu d’une émission en prime time, conçue pour tenir un trafic massif en direct."
+    image={<img src={PIXEL} alt="" />}
+    action="Lire le cas client"
+  />,
+  <CaseCard
+    key="b"
+    href="#b"
+    client="Altaroc"
+    tint="tenku"
+    figure="1,6"
+    unit="Md€"
+    figureLabel="d’actifs suivis sur la plateforme"
+    mission="Une plateforme d’investissement qui manie des données sensibles avec une exigence de fiabilité."
+    image={<img src={PIXEL} alt="" />}
+    action="Lire le cas client"
+  />,
+  <CaseCard
+    key="c"
+    href="#c"
+    client="lemlist"
+    tint="shiro"
+    figure="5"
+    unit="M$"
+    figureLabel="de revenus récurrents par an"
+    mission="Une plateforme d’affiliation qui combine outils web et automatisations."
+    image={<img src={PIXEL} alt="" />}
+    action="Lire le cas client"
+  />,
+];
+
 export const Cases: Story = {
   render: () => (
-    <CaseRing
-      label="Projets"
-      items={[
-        <CaseCard
-          key="a"
-          href="#a"
-          client="TF1"
-          project="Application"
-          stake="Montée en charge"
-          action="Lire"
-          tone="ink"
-        />,
-        <CaseCard
-          key="b"
-          href="#b"
-          client="Altaroc"
-          project="Plateforme"
-          stake="Fiabilité"
-          action="Lire"
-          tone="signal"
-        />,
-        <CaseCard
-          key="c"
-          href="#c"
-          client="lemlist"
-          project="Affiliation"
-          stake="Automatisations"
-          action="Lire"
-        />,
-        <CaseCard
-          key="d"
-          href="#d"
-          client="Vicat"
-          project="Web"
-          stake="SEO"
-          action="Lire"
-          tone="cobalt"
-        />,
-        <CaseCard
-          key="e"
-          href="#e"
-          client="Ops Clean"
-          project="E-commerce"
-          stake="Infrastructure"
-          action="Lire"
-          tone="sand"
-        />,
-      ]}
+    <CaseWall
+      label="Projets publiés"
+      title={<h2>Ce qu’ont gagné nos clients</h2>}
+      items={caseCards}
+      action={<a href="#tous">Voir tous les projets</a>}
     />
   ),
-  play: async ({ canvas }) => {
-    await expect(canvas.getAllByRole("link")).toHaveLength(5);
+  play: async ({ canvas, userEvent }) => {
+    await expect(canvas.getAllByRole("link", { name: /Lire le cas client/u })).toHaveLength(3);
+    await userEvent.tab();
+    await expect(canvas.getByRole("link", { name: /Voir tous les projets/u })).toBeVisible();
   },
 };
 

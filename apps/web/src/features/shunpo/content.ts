@@ -157,6 +157,8 @@ export interface Reference {
   name: string;
   project: string;
   stake: string;
+  /* What the mission was, in one sentence built only from the project and its stake. */
+  mission: string;
   href: string;
 }
 
@@ -167,6 +169,8 @@ export const references: Reference[] = [
     name: "TF1",
     project: "Application de jeu d’une émission en prime time",
     stake: "Trafic massif et montée en charge en direct",
+    mission:
+      "L’application de jeu d’une émission en prime time, conçue pour tenir un trafic massif en direct.",
     href: "https://shunpo.fr/cas-clients/tf1-application-grand-quiz",
   },
   {
@@ -174,6 +178,8 @@ export const references: Reference[] = [
     name: "Altaroc",
     project: "Plateforme d’investissement",
     stake: "Données sensibles et exigence de fiabilité",
+    mission:
+      "Une plateforme d’investissement qui manie des données sensibles avec une exigence de fiabilité.",
     href: "https://shunpo.fr/cas-clients/altaroc",
   },
   {
@@ -181,6 +187,7 @@ export const references: Reference[] = [
     name: "lemlist",
     project: "Plateforme d’affiliation",
     stake: "Outils web et automatisations combinés",
+    mission: "Une plateforme d’affiliation qui combine outils web et automatisations.",
     href: "https://shunpo.fr/cas-clients/agence-webflow-lemlist-developpement",
   },
   {
@@ -188,6 +195,7 @@ export const references: Reference[] = [
     name: "1817 · Groupe Vicat",
     project: "Expérience web",
     stake: "Visibilité et performance SEO",
+    mission: "Une expérience web conçue pour gagner en visibilité et en performance SEO.",
     href: "https://shunpo.fr/cas-clients/vicat",
   },
   {
@@ -195,6 +203,7 @@ export const references: Reference[] = [
     name: "Ops Clean",
     project: "Infrastructure e-commerce",
     stake: "Évolution de la marque en ligne",
+    mission: "Une infrastructure e-commerce qui fait évoluer la marque en ligne.",
     href: "https://shunpo.fr/cas-clients/ops-clean",
   },
 ];

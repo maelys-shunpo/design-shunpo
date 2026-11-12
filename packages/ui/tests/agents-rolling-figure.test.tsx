@@ -23,21 +23,24 @@ afterEach(async () => {
   await allowMotion();
 });
 
-function figure(options: { below?: boolean; voice?: string; figure?: string }) {
+function figure(options: { below?: boolean; figure?: string; wall?: boolean }) {
+  const wall = options.wall === true ? { "data-arrival": "arrived" } : {};
   return (
     <Direction name="agents">
       {options.below === false ? null : <div style={{ height: "160vh" }} />}
-      <div
-        data-slot="case-card"
-        style={
-          options.voice === undefined ? undefined : { ["--ring-voice" as string]: options.voice }
-        }
-      >
+      <div {...wall}>
         <RollingFigure figure={options.figure ?? "+1,4"} unit="M" />
       </div>
       <div style={{ height: "160vh" }} />
     </Direction>
   );
+}
+
+/* Scrolls so the figure stands low in the window (three quarters down), past the wall's line and short of the page's
+   usual one (a third up from the foot). */
+function standLow(container: HTMLElement): void {
+  const top = rootOf(container).getBoundingClientRect().top + window.scrollY;
+  window.scrollTo(0, top - window.innerHeight * 0.75);
 }
 
 function wheelsOf(container: HTMLElement): HTMLElement[] {
@@ -83,17 +86,20 @@ function firstWheelLead(container: HTMLElement): number {
   return first - second;
 }
 
-function allAtRest(container: HTMLElement): boolean {
-  const wheels = wheelsOf(container);
-  return wheels.length > 0 && wheels.every((wheel) => Math.abs(runShareOf(wheel)) < 0.001);
+/* The top of the first line of text an element holds (a wheel's sizer, a glyph), whatever the box around it. */
+function textTopOf(element: Element): number {
+  const range = document.createRange();
+  range.selectNodeContents(element.firstChild ?? element);
+  return range.getBoundingClientRect().top;
 }
 
-function cardOf(container: HTMLElement): HTMLElement {
-  const card = container.querySelector<HTMLElement>("[data-slot=case-card]");
-  if (card === null) {
-    throw new Error("no card");
-  }
-  return card;
+/* How far the first digit's text stands from the line of the figure's first other sign, in pixels. */
+function wheelTopOffset(container: HTMLElement): number {
+  const wheel = container.querySelector("[data-figure-wheel]");
+  const sign = container.querySelector("[data-figure-glyph]");
+  return wheel === null || sign === null
+    ? Number.NaN
+    : Math.abs(textTopOf(wheel) - textTopOf(sign));
 }
 
 function rootOf(container: HTMLElement): HTMLElement {
@@ -126,18 +132,34 @@ describe("RollingFigure", () => {
     await expect.poll(() => allStopped(screen.container), ENTRANCE).toBe(true);
   });
 
-  it("rolls again each time its card comes to the front of the wall", async () => {
-    const screen = await render(figure({ below: false, voice: "0" }));
+  it("rolls a figure standing low on the references wall as soon as it shows", async () => {
+    const screen = await render(figure({ wall: true }));
     releaseIdleCallbacks();
     await expect.poll(() => wheelsOf(screen.container).length, ENTRANCE).toBe(2);
 
-    cardOf(screen.container).style.setProperty("--ring-voice", "1");
-    await expect.poll(() => allStopped(screen.container), ENTRANCE).toBe(true);
+    standLow(screen.container);
 
-    cardOf(screen.container).style.setProperty("--ring-voice", "0");
-    await expect.poll(() => allAtRest(screen.container), ENTRANCE).toBe(true);
-    cardOf(screen.container).style.setProperty("--ring-voice", "1");
     await expect.poll(() => allStopped(screen.container), ENTRANCE).toBe(true);
+  });
+
+  it("leaves a figure standing low outside a wall to the page's usual line", async () => {
+    const screen = await render(figure({}));
+    releaseIdleCallbacks();
+    await expect.poll(() => wheelsOf(screen.container).length, ENTRANCE).toBe(2);
+
+    standLow(screen.container);
+
+    await pause(SETTLE_MS);
+    expect(allStopped(screen.container)).toBe(false);
+  });
+
+  it("keeps its digits on the line of its other signs once they are wheels", async () => {
+    const screen = await render(figure({}));
+    releaseIdleCallbacks();
+    await expect.poll(() => wheelsOf(screen.container).length, ENTRANCE).toBe(2);
+    rootOf(screen.container).scrollIntoView({ block: "center" });
+
+    await expect.poll(() => wheelTopOffset(screen.container), ENTRANCE).toBeLessThan(1);
   });
 
   it("shows a figure with no digit as it is", async () => {

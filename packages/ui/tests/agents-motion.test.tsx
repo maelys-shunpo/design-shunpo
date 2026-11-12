@@ -3,8 +3,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 
-import { CaseCard } from "../src/agents/case-card.tsx";
-import { CaseRing } from "../src/agents/case-ring.tsx";
 import { Marquee } from "../src/agents/marquee.tsx";
 import { holdIdleCallbacks } from "./support/idle-callbacks.ts";
 import { pause, SETTLE_MS } from "./support/pause.ts";
@@ -28,10 +26,6 @@ afterEach(async () => {
 function transformOf(container: HTMLElement, selector: string): string {
   return container.querySelector<HTMLElement>(selector)?.style.transform ?? "";
 }
-
-const cards = ["a", "b", "c", "d", "e"].map((id) => (
-  <CaseCard key={id} href={`#${id}`} client={id} project="Projet" stake="Enjeu" action="Lire" />
-));
 
 describe("Agents motion", () => {
   it("drifts a marquee once idle, and keeps it still under reduced motion", async () => {
@@ -80,13 +74,5 @@ describe("Agents motion", () => {
     expect(
       screen.container.querySelector<HTMLElement>("[data-slot=marquee] > div")?.style.transform,
     ).toBe("");
-  });
-
-  it("bends the reference cards on a curve on wide screens", async () => {
-    const screen = await render(<CaseRing label="Projets" items={cards} />);
-    releaseIdleCallbacks();
-    await expect
-      .poll(() => transformOf(screen.container, "[data-ring-card]"), { timeout: 5000 })
-      .toContain("rotateY");
   });
 });

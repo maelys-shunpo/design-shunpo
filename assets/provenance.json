@@ -606,6 +606,121 @@
       "approvedBy": "user (« parfait applique ca »)",
       "date": "2026-11-12",
       "page": "agents"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/cases-tf1.webp",
+      "master": "assets/source/agents/cases/cases-tf1.jpg",
+      "page": "agents",
+      "slot": "references wall card ground",
+      "source": "client",
+      "origin": {
+        "owner": "SHUNPO, case study of TF1",
+        "licenceNote": "The delivered product as SHUNPO publishes it on its own case study (https://shunpo.fr/cas-clients/tf1-application-grand-quiz): the page's og:image, media.shunpo.fr 692abfb4f3ad2a8641c56074-interface-replay-streaming-tf1-le-g-48b88186ef7ee584, 1200 px JPEG."
+      },
+      "edits": [
+        "crop 564×752 at 444,0 (3:4, the product's telling detail, the card's ground under its tint)",
+        "resize 480×640",
+        "webp q72"
+      ],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-10)",
+      "date": "2026-11-10"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/cases-altaroc.webp",
+      "master": "assets/source/agents/cases/cases-altaroc.jpg",
+      "page": "agents",
+      "slot": "references wall card ground",
+      "source": "client",
+      "origin": {
+        "owner": "SHUNPO, case study of Altaroc",
+        "licenceNote": "The delivered product as SHUNPO publishes it on its own case study (https://shunpo.fr/cas-clients/altaroc): the page's og:image, media.shunpo.fr 6929e395f3b7e19d9a549ff9-interface-plateforme-investissement-18a462857908b673, 1200 px JPEG."
+      },
+      "edits": [
+        "crop 377×502 at 593,156 (3:4, the product's telling detail, the card's ground under its tint)",
+        "resize 480×640",
+        "webp q72"
+      ],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-10)",
+      "date": "2026-11-10"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/cases-lemlist.webp",
+      "master": "assets/source/agents/cases/cases-lemlist.jpg",
+      "page": "agents",
+      "slot": "references wall card ground",
+      "source": "client",
+      "origin": {
+        "owner": "SHUNPO, case study of lemlist",
+        "licenceNote": "The delivered product as SHUNPO publishes it on its own case study (https://shunpo.fr/cas-clients/agence-webflow-lemlist-developpement): the page's og:image, media.shunpo.fr 6928d485201c4b37ca22c804-responsive-design-desktop-landing-p-9d2e0b026735b28f, 1200 px JPEG."
+      },
+      "edits": [
+        "crop 219×292 at 616,444 (3:4, the product's telling detail, the card's ground under its tint)",
+        "resize 480×640",
+        "webp q72"
+      ],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-10)",
+      "date": "2026-11-10"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/cases-vicat.webp",
+      "master": "assets/source/agents/cases/cases-vicat.jpg",
+      "page": "agents",
+      "slot": "references wall card ground",
+      "source": "client",
+      "origin": {
+        "owner": "SHUNPO, case study of 1817 · Groupe Vicat",
+        "licenceNote": "The delivered product as SHUNPO publishes it on its own case study (https://shunpo.fr/cas-clients/vicat): the page's og:image, media.shunpo.fr 692ae31e2b059b38839d23d0-design-landing-page-site-agence-181-5d10004ee0d87994, 1200 px JPEG."
+      },
+      "edits": [
+        "crop 418×558 at 610,88 (3:4, the product's telling detail, the card's ground under its tint)",
+        "resize 480×640",
+        "webp q72"
+      ],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-10)",
+      "date": "2026-11-10"
+    },
+    {
+      "file": "apps/web/src/features/agents/images/cases-ops-clean.webp",
+      "master": "assets/source/agents/cases/cases-ops-clean.jpg",
+      "page": "agents",
+      "slot": "references wall card ground",
+      "source": "client",
+      "origin": {
+        "owner": "SHUNPO, case study of Ops Clean",
+        "licenceNote": "The delivered product as SHUNPO publishes it on its own case study (https://shunpo.fr/cas-clients/ops-clean): the page's og:image, media.shunpo.fr opsclean-site-shopify-apres-refonte-qui-veut-etre-mon-associ-0e0bb96afe815314, 1200 px JPEG."
+      },
+      "edits": [
+        "crop 288×384 at 565,228 (3:4, the product's telling detail, the card's ground under its tint)",
+        "resize 480×640",
+        "webp q72"
+      ],
+      "license": {
+        "type": "client-trademark",
+        "attributionRequired": false
+      },
+      "credits": 0,
+      "approvedBy": "user (Agents page, 2026-11-10)",
+      "date": "2026-11-10"
     }
   ],
   "pages": {

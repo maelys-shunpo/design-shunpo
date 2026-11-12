@@ -11,7 +11,9 @@ const LazyRollingFigureMotion = lazy(async () => {
   return { default: RollingFigureMotion };
 });
 
-const rollingFigureVariants = cva("font-display leading-none font-heading whitespace-nowrap");
+const rollingFigureVariants = cva(
+  "font-display leading-none font-medium whitespace-nowrap lining-nums tabular-nums",
+);
 
 const figureVariants = cva("", {
   variants: { size: { md: "text-3xl", lg: "text-4xl" } },
@@ -41,7 +43,7 @@ export function RollingFigure({ figure, unit, size, className }: RollingFigurePr
       <span className="sr-only">{`${figure} ${unit}`}</span>
       <span aria-hidden="true" ref={setFace}>
         <span className={figureVariants({ size })}>{figure}</span>
-        {" "}
+        <span className={figureVariants({ size })}>{"\u00A0"}</span>
         <span className={unitVariants({ size })}>{unit}</span>
       </span>
       <AfterIdle>

@@ -231,19 +231,24 @@ Newsreader Medium for every title, Instrument Sans for text, labels and interfac
 - Do: dense, credible mockups (names, times, statuses, confidence, cited sources); a person at the sensitive moment; one orange per screen.
 - Don't: orbs, decorative gradients, generic icon cards, invented result figures (the mockups' amounts are illustrative and fictitious).
 - References: intercom.com (interfaces on photographs, tabs with progress, wall of tools), horizonx.so (curved 3D wall, floating pill nav), refero.design (editorial serif).
+- The references wall, rebuilt as three tinted cards on an arc (12 November 2026, Maëlys, after a senior critique and a Stripe reference: the Customers mosaic). What went: the curved wall, its drift, its pause control, the voice that let one print speak at a time, the paper sheets with a project line and a film strip. Why: the sheets were an identical template, the proof (the product) was the smallest thing on them, a 120 px void sat in the middle, and the clients' own results (Altaroc's assets, lemlist's revenue, Ops Clean's turnover) read as SHUNPO's. What stays: the cut on the bias (never rounded) and a folded corner (« Le pli »). The section's title is Maëlys's, « Ce qu'ont gagné nos clients »; its risk is noted here: above an amount that is the client's own activity, it reads as a gain SHUNPO brought, which the brand brief forbids (« ne jamais attribuer à SHUNPO les performances commerciales d'un client »), and « Ce qui tourne chez nos clients » or « Nos clients, en chiffres » would keep her intention without it.
+  - Three cards, 3:4: TF1 in Kurenai Blush, Altaroc in Blue Tenku, lemlist in Shiro (chosen over Hikari Frost, #E5DFD3 against #BDC8CC: the lighter, warmer ground; the dark Ink Shadow it replaced was too heavy next to the other two). The delivered product is the ground, grey and soft in luminosity under the tint (a 3:4 crop of each master, not the 2:1 bands, which went to 352 px wide when stretched), the logo at the head, the key figure and what it measures at the foot. Vicat and Ops Clean are behind « Voir tous les projets » (`AgentsAction`, outline, towards shunpo.fr/cas-clients).
+  - The fold, small at rest on all three (`--spacing-4`) and opening to `--spacing-10` under the pointer and on keyboard focus (700 ms on the emphasized ease): the back of the paper lit in a lighter tone of the tint with its shadow, the arrow stepping into the open corner 150 ms later. Under the pointer and on focus the figure rises out, blurring (280 ms), and the mission, one sentence built only from the project and its stake in `content.ts`, rises word by word out of a blur, 22 ms between two words, 20 px in the serif. On touch screens there is no hover: the figure stays.
+  - Motion, once: the cards arrive on a curve (turned 18°, `perspective(62.5rem)`) and settle onto an arc in 1.3 s as the wall comes into view, the middle one a step (`--spacing-6`) higher, the sides 90 ms after it; the figures roll once with it; nothing moves again. Maëlys: no automatic chain (« pas très UX »), the visitor drives or nothing moves; a figure that rolls again each time its card is reached reads as a bug. Phones: a stacked list, the small fold on each card. Reduced motion: the arc painted at once, figures painted, fades only.
+  - Known: the two cards at the sides of an arc would be deformed by a curve held at rest (their text in perspective), so the curve is only the entry, and the arc keeps a trace of it flat. The grounds are 480×640 crops of 1,200 px masters and are blurred; real photographs of the products in situation would replace them (Magnific, Maëlys's go for the credits).
 
 ### Transitions
 
-| Boundary                   | Treatment                                                                 |
-| -------------------------- | ------------------------------------------------------------------------- |
-| Hero to problem            | Clean cut; the night arrives as a card around the question                |
-| Problem to references      | Clean cut; the title beside three drifting columns of client logos        |
-| References to agents       | Clean cut; the panel changes by a fade of live pieces                     |
-| Agents to tools            | Muted ground, clean cut; the copy centred over the hub                    |
-| Tools to method            | Cut; the question alone, then an ink stroke walks the three phases        |
-| Method to references       | Cut; the curved wall turns with the scroll (direct scrub)                 |
-| References to client words | Clean cut; the title beside signed quotes stepping down, no network badge |
-| Composer, FAQ, final call  | Clean cuts; the final call is a dark island                               |
+| Boundary                   | Treatment                                                                                |
+| -------------------------- | ---------------------------------------------------------------------------------------- |
+| Hero to problem            | Clean cut; the night arrives as a card around the question                               |
+| Problem to references      | Clean cut; the title beside three drifting columns of client logos                       |
+| References to agents       | Clean cut; the panel changes by a fade of live pieces                                    |
+| Agents to tools            | Muted ground, clean cut; the copy centred over the hub                                   |
+| Tools to method            | Cut; the question alone, then an ink stroke walks the three phases                       |
+| Method to references       | Cut; three cards that arrive on a curve and settle on an arc as the wall comes into view |
+| References to client words | Clean cut; the title beside signed quotes stepping down, no network badge                |
+| Composer, FAQ, final call  | Clean cuts; the final call is a dark island                                              |
 
 ### Storyboard
 
