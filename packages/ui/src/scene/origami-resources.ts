@@ -20,10 +20,13 @@ export function createWorldOn(canvas: HTMLCanvasElement, tier: QualityTier): Ori
   );
 }
 
-/* A soft light box, prefiltered once: matte paper takes the room's light from every side. */
+/* A soft light box, prefiltered once: matte paper takes the room's light from every side. The room itself is only the
+   source of the prefiltered map: its geometries and materials go back to the GPU as soon as it is read. */
 export function createStudio(renderer: WebGLRenderer): WebGLRenderTarget {
   const generator = new PMREMGenerator(renderer);
-  const target = generator.fromScene(new RoomEnvironment(), 0.06);
+  const room = new RoomEnvironment();
+  const target = generator.fromScene(room, 0.06);
+  room.dispose();
   generator.dispose();
   return target;
 }

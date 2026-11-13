@@ -64,7 +64,9 @@ interface ScrollSceneProps {
   /* Shown instead of the scene under reduced motion: every stage of the story as a still plate. */
   still?: ReactNode;
   choreography: (timeline: gsap.core.Timeline) => void;
-  length?: keyof typeof sceneLength;
+  /* How many windows of scroll the stage is held for: a named length, or a number of screens for a scene whose own
+     course sets it (the question scene holds exactly as long as its course runs). */
+  length?: keyof typeof sceneLength | number;
   minWidth?: SceneBreakpoint;
   /* direct for a world that smooths itself (a spring): a scrub on top would leave it behind its copy. */
   scrub?: SceneScrub;
@@ -86,6 +88,9 @@ export function ScrollScene({
   onSeek,
 }: ScrollSceneProps) {
   const track = useRef<HTMLDivElement>(null);
+  const screens = typeof length === "number" ? length : sceneLength[length];
+  const whole = Math.floor(screens);
+  const rest = screens - whole;
 
   return (
     <div ref={track} data-slot="scroll-scene">
@@ -99,9 +104,16 @@ export function ScrollScene({
           </>
         )}
       </div>
-      {Array.from({ length: sceneLength[length] }, (_, screen) => (
+      {Array.from({ length: whole }, (_, screen) => (
         <div key={screen} className={holdVariants({ minWidth })} />
       ))}
+      {rest > 0 ? (
+        /* The part of a window left over, in the same small-viewport unit as the full ones. */
+        <div
+          className={holdVariants({ minWidth })}
+          style={{ height: `${String(rest * 100)}svh` }}
+        />
+      ) : null}
       <AfterIdle>
         <LazyScrollSceneTimeline
           track={track}

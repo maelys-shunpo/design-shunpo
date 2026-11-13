@@ -70,6 +70,21 @@ interface Playing {
   onReady: (ready: boolean) => void;
 }
 
+/* The two frames each phase needs: its pose, and where a loop or its entrance starts. Decoded to bitmaps as they load. */
+function loadFrames(film: Film, onChange: () => void): FilmFrames<ImageBitmap> {
+  return createFilmFrames({
+    urls: film.frames,
+    keys: film.rests.flatMap((rest) => [
+      rest.pose,
+      rest.loop?.from ?? rest.pose,
+      rest.entrance?.from ?? rest.pose,
+    ]),
+    fetchFrame,
+    decode: (blob) => createImageBitmap(blob),
+    onChange,
+  });
+}
+
 /* Watches the box: `near` once it comes within a screen of the window (frames start loading), `inWindow` while it is
    in the window (the loops play). */
 function watch(box: HTMLElement, near: () => void, inWindow: (seen: boolean) => void) {
@@ -110,6 +125,9 @@ function play({ box, film, course, paused, onReady }: Playing): () => void {
     course: { travel: 0, active: -1 },
     frame: 0,
   };
+  /* The canvas is fitted to its box once, then only when a resize marks it: reading `clientWidth`/`clientHeight` on
+     every scroll frame forced a layout between the paper's writes, so the scrub drew and measured in the same frame. */
+  let needsFit = true;
   function draw() {
     cancelAnimationFrame(state.frame);
     state.frame = 0;
@@ -118,7 +136,10 @@ function play({ box, film, course, paused, onReady }: Playing): () => void {
     }
     const layers = loops.layers(state.course);
     state.store.seek(layers.at(-1)?.position ?? 0);
-    fitCanvas(canvas);
+    if (needsFit) {
+      fitCanvas(canvas);
+      needsFit = false;
+    }
     onReady(paint(context, state.store, layers));
   }
   function schedule() {
@@ -130,22 +151,15 @@ function play({ box, film, course, paused, onReady }: Playing): () => void {
   const unwatch = watch(
     box,
     () => {
-      state.store = createFilmFrames({
-        urls: film.frames,
-        keys: film.rests.flatMap((rest) => [
-          rest.pose,
-          rest.loop?.from ?? rest.pose,
-          rest.entrance?.from ?? rest.pose,
-        ]),
-        fetchFrame,
-        decode: (blob) => createImageBitmap(blob),
-        onChange: schedule,
-      });
+      state.store = loadFrames(film, schedule);
       schedule();
     },
     loops.see,
   );
-  const resize = new ResizeObserver(schedule);
+  const resize = new ResizeObserver(() => {
+    needsFit = true;
+    schedule();
+  });
   resize.observe(canvas);
   /* The wheel's course runs inside GSAP's frame: the paper is drawn in that same frame, in step with the dots. */
   const stop = course.listen((value) => {

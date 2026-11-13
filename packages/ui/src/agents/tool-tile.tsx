@@ -11,7 +11,7 @@ export function ToolTile({ icon, name }: ToolTileProps) {
   return (
     <div
       data-slot="tool-tile"
-      className="flex h-16 w-full items-center justify-center gap-3 rounded-surface border border-agents-line bg-surface px-4 shadow-agents-card sm:justify-start"
+      className="agents-sheet flex h-16 w-full items-center justify-center gap-3 px-4 agents-sheet-lift sm:justify-start"
     >
       <svg aria-hidden viewBox="0 0 24 24" className="size-6 shrink-0" fill={`#${icon.hex}`}>
         <path d={icon.path} />

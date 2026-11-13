@@ -26,10 +26,10 @@ export function ToolCall({
     <div
       data-slot="tool-call"
       {...liveAttributes({ live, liveKind })}
-      className="flex flex-col gap-2 rounded-lg border border-agents-line bg-surface p-3"
+      className="flex flex-col gap-2 border-b border-agents-line bg-surface p-3"
     >
       <div className="flex items-center gap-2">
-        <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-md bg-muted">
+        <span aria-hidden className="grid size-6 shrink-0 place-items-center bg-muted">
           {icon === undefined ? (
             <span className="size-2 bg-agents-ink" />
           ) : (

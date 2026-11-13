@@ -11,20 +11,21 @@ interface ToastNoteProps extends LiveStep {
   className?: string | undefined;
 }
 
-/* A notification another tool shows once the agent is done: « Slack · #compta ». */
+/* A notification another tool shows once the agent is done: « Slack · #compta ». A note handed to you, so its cut
+   corner is folded in. */
 export function ToastNote({ icon, app, message, time, live, liveKind, className }: ToastNoteProps) {
   return (
     <div
       data-slot="toast-note"
       {...liveAttributes({ live, liveKind })}
       className={cn(
-        "flex items-start gap-3 rounded-xl border border-agents-line bg-surface p-3 text-agents-ink shadow-agents-float",
+        "agents-sheet flex items-start gap-3 agents-sheet-fold p-3 text-agents-ink agents-sheet-float agents-sheet-sm",
         className,
       )}
     >
       <span
         aria-hidden
-        className="grid size-8 shrink-0 place-items-center rounded-lg bg-agents-ink text-agents-paper"
+        className="grid size-8 shrink-0 place-items-center bg-agents-ink text-agents-paper"
       >
         {icon === undefined ? (
           <span className="size-2 bg-agents-signal" />

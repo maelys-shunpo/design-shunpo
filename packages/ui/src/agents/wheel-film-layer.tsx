@@ -55,7 +55,7 @@ export function WheelFilmLayer({ film, course, onReady }: WheelFilmLayerProps) {
               variant="ghost"
               size="icon"
               aria-label={isPaused ? film.labels.play : film.labels.pause}
-              className="pointer-events-auto absolute inset-e-4 bottom-4 z-10 size-10 rounded-full border border-rule bg-background text-foreground hover:bg-muted"
+              className="pointer-events-auto absolute inset-e-4 bottom-4 z-10 size-10 rounded-full border border-rule bg-surface text-foreground hover:bg-muted"
               onClick={() => {
                 paused.set(!isPaused);
                 setPaused(!isPaused);

@@ -1,20 +1,15 @@
 import type { ReactElement } from "react";
 
 import { Container } from "../layout/container.tsx";
-import { NightPlate } from "./night-plate.tsx";
+import { NightPlate, type PlateIcon } from "./night-plate.tsx";
 
-/* The question in the middle; two plates above it, two below. Stacked and staggered until `lg`, then around it in
-   two rows, the upper plates resting on the question, the lower ones hanging from it. */
-const QUESTION_SLOT =
-  "col-span-12 row-start-3 py-2 text-balance lg:col-span-10 lg:col-start-2 lg:row-start-2 lg:py-0";
-const PLATE_SLOTS = [
-  "col-span-10 col-start-1 row-start-1 md:col-span-8 lg:col-span-4 lg:col-start-3 lg:self-end",
-  "col-span-9 col-start-4 row-start-2 md:col-span-8 md:col-start-5 lg:col-span-4 lg:col-start-8 lg:row-start-1 lg:self-end xl:col-span-3",
-  "col-span-9 col-start-1 row-start-4 md:col-span-8 lg:col-span-4 lg:col-start-1 lg:row-start-3 lg:self-start xl:col-span-3 xl:col-start-2",
-  "col-span-10 col-start-3 row-start-5 md:col-span-8 md:col-start-5 lg:col-span-4 lg:col-start-8 lg:row-start-3 lg:self-start",
-] as const;
+/* The question on top and its four plates in a row under it, all one width so their titles break alike: stacked on a
+   phone, two by two on a tablet, four abreast from `lg`. */
+const PLATE_ROW =
+  "grid grid-cols-1 gap-y-3 md:grid-cols-2 md:gap-x-4 md:gap-y-6 lg:grid-cols-4 lg:gap-x-10";
 
 export interface QuestionPlate {
+  icon: PlateIcon;
   title: string;
   text: string;
 }
@@ -26,8 +21,8 @@ interface QuestionNightProps {
   plates: QuestionPlates;
 }
 
-/* The night of a `QuestionScene`: a Fuji Night island holding the question and its plates. With motion it covers the
-   stage and the scene cuts it away; otherwise it is a band above the answer. */
+/* The night of a `QuestionScene`: a Fuji Night island holding the question and, under it, its plates. With motion it
+   covers the stage and the scene cuts it away; otherwise it is a band above the answer. */
 export function QuestionNight({ question, plates }: QuestionNightProps) {
   return (
     <div
@@ -35,16 +30,17 @@ export function QuestionNight({ question, plates }: QuestionNightProps) {
       className="agents-grain bg-background py-24 scheme-dark motion-safe:absolute motion-safe:inset-0 motion-safe:z-10 motion-safe:flex motion-safe:flex-col motion-safe:justify-center motion-safe:py-0"
     >
       <Container size="wide">
-        <div
-          data-question-content=""
-          className="grid grid-cols-12 gap-x-4 gap-y-3 lg:gap-x-10 lg:gap-y-20"
-        >
-          <div className={QUESTION_SLOT}>{question}</div>
-          {plates.map((plate, index) => (
-            <div key={plate.title} data-question-plate="" className={PLATE_SLOTS[index]}>
-              <NightPlate {...plate} />
-            </div>
-          ))}
+        <div data-question-content="" className="flex flex-col gap-8 md:gap-12 lg:gap-16">
+          <div data-question-text="" className="text-balance">
+            {question}
+          </div>
+          <div className={PLATE_ROW}>
+            {plates.map((plate) => (
+              <div key={plate.title} data-question-plate="">
+                <NightPlate {...plate} />
+              </div>
+            ))}
+          </div>
         </div>
       </Container>
     </div>

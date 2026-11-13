@@ -13,10 +13,10 @@ afterEach(async () => {
 });
 
 const plates = [
-  { number: "01", title: "Un", text: "Premier." },
-  { number: "02", title: "Deux", text: "Deuxième." },
-  { number: "03", title: "Trois", text: "Troisième." },
-  { number: "04", title: "Quatre", text: "Quatrième." },
+  { icon: "time", title: "Un", text: "Premier." },
+  { icon: "departure", title: "Deux", text: "Deuxième." },
+  { icon: "hidden", title: "Trois", text: "Troisième." },
+  { icon: "restart", title: "Quatre", text: "Quatrième." },
 ] as const;
 
 /* A stage as the scene draws it with motion: the night over the answer, both filling it. */
@@ -31,13 +31,16 @@ function stage() {
   );
 }
 
-/* The same stage with the scene's travelling frame. */
+/* The same stage with the scene's travelling frame and a keyword in the answer's last line. */
 function framedStage() {
   return (
     <div data-testid="stage" className="relative h-svh w-full">
       <QuestionNight question={<h2>Question ?</h2>} plates={plates} />
       <div className="absolute inset-0 grid place-items-center">
-        <StatementLines paragraphs={[["Une ligne", "une autre."], ["La dernière."]]} />
+        <StatementLines
+          paragraphs={[["Une ligne", "une autre."], ["La dernière."]]}
+          keyword="dernière"
+        />
       </div>
       <span data-question-frame="" className="agents-frame-travel" />
     </div>
@@ -72,19 +75,21 @@ function inStage(container: HTMLElement, rect: DOMRect | undefined) {
   };
 }
 
-/* The box of an element's words: the union of its text's own boxes. */
-function wordsOf(target: Element | null): DOMRect {
-  const walker = document.createTreeWalker(target ?? document.body, NodeFilter.SHOW_TEXT);
-  const range = document.createRange();
-  let [left, top, right, bottom] = [Infinity, Infinity, -Infinity, -Infinity];
-  for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
-    range.selectNodeContents(node);
-    for (const rect of range.getClientRects()) {
-      [left, top] = [Math.min(left, rect.left), Math.min(top, rect.top)];
-      [right, bottom] = [Math.max(right, rect.right), Math.max(bottom, rect.bottom)];
-    }
-  }
-  return new DOMRect(left, top, right - left, bottom - top);
+/* What the course painted on the keyword: its blur, its brackets' opacity and which way each stands off its place
+   (-1 to the left, 1 to the right, 0 home). */
+function inkOf(container: HTMLElement) {
+  const [start, end] = container.querySelectorAll<HTMLElement>("[data-ink-bracket]");
+  return {
+    blur: styleOf(container, "[data-ink-text]")?.filter,
+    opacity: start?.style.opacity,
+    start: Math.sign(pixels(start?.style.translate)),
+    end: Math.sign(pixels(end?.style.translate)),
+  };
+}
+
+/* The vertical middle of a box. */
+function middle(rect: DOMRect | undefined) {
+  return Number(rect?.top) + Number(rect?.height) / 2;
 }
 
 function styleOf(container: HTMLElement, selector: string) {
@@ -106,9 +111,67 @@ describe("questionCourse", () => {
     expect(styleOf(screen.container, "[data-question-plate]")?.opacity).toBe("0");
     paint?.(1);
     expect(styleOf(screen.container, "[data-question-plate]")?.opacity).toBe("1");
-    paint?.(3);
+    paint?.(3.4);
     expect(styleOf(screen.container, "[data-question-night]")?.clipPath).toBe("inset(50%)");
     expect(styleOf(screen.container, "[data-statement-line]")?.translate).toBe("0px 0%");
+  });
+
+  it("fills the screen at once and starts the course with no card when the night arrives full-screen", async () => {
+    await page.viewport(DESKTOP.width, DESKTOP.height);
+    const screen = await render(stage());
+    const paint = questionCourse(screen.container, 0);
+    paint?.(0);
+    /* The night already covers the screen: its clip opens from the top-left corner, with no card inset. */
+    expect(styleOf(screen.container, "[data-question-night]")?.clipPath).toContain("M 0 0 ");
+    /* The course runs from the first screen: the first plate is on its way before a quarter screen, where the card
+       arrival would still be holding the night's entrance. */
+    paint?.(0.2);
+    expect(Number(styleOf(screen.container, "[data-question-plate]")?.opacity)).toBeGreaterThan(0);
+  });
+
+  it("holds the question alone in the middle of the night, then raises it to the top with the plates under it", async () => {
+    await page.viewport(DESKTOP.width, DESKTOP.height);
+    const screen = await render(stage());
+    const paint = questionCourse(screen.container);
+    const night = screen.container.querySelector("[data-question-night]")?.getBoundingClientRect();
+    function question() {
+      return screen.container.querySelector("[data-question-text]")?.getBoundingClientRect();
+    }
+
+    paint?.(0.4);
+    expect(middle(question())).toBeCloseTo(middle(night), 0);
+    expect(styleOf(screen.container, "[data-question-plate]")?.opacity).toBe("0");
+
+    paint?.(0.4 + 1);
+    const plateTops = [...screen.container.querySelectorAll("[data-question-plate]")].map((plate) =>
+      Math.round(plate.getBoundingClientRect().top),
+    );
+    expect(middle(question())).toBeLessThan(middle(night) - 100);
+    expect(new Set(plateTops).size).toBe(1);
+    expect(plateTops[0]).toBeGreaterThan(Number(question()?.bottom));
+  });
+
+  it("dims the question with the plates before the shuriken lands on it, so the star never bites a lit headline", async () => {
+    await page.viewport(DESKTOP.width, DESKTOP.height);
+    const screen = await render(stage());
+    const paint = questionCourse(screen.container);
+
+    paint?.(0.4 + 1.1);
+    expect(styleOf(screen.container, "[data-question-text]")?.opacity).toBe("1");
+    /* The shuriken holds on its mark about 1.39 screens into the course. */
+    paint?.(0.4 + 1.39);
+    expect(Number(styleOf(screen.container, "[data-question-text]")?.opacity)).toBeLessThan(0.5);
+  });
+
+  it("keeps each answer line unseen under its mask until it starts to rise, so no glyph peeks out during the cut", async () => {
+    await page.viewport(DESKTOP.width, DESKTOP.height);
+    const screen = await render(stage());
+    const paint = questionCourse(screen.container);
+
+    paint?.(0.4 + 1.5);
+    expect(styleOf(screen.container, "[data-statement-line]")?.opacity).toBe("0");
+    paint?.(0.5 + 3);
+    expect(styleOf(screen.container, "[data-statement-line]")?.opacity).toBe("1");
   });
 
   it("raises whole paragraphs on phones, and measures again when the stage resizes", async () => {
@@ -118,24 +181,24 @@ describe("questionCourse", () => {
     paint?.(0);
     expect(styleOf(screen.container, "[data-statement-paragraph]")?.opacity).toBe("0");
     await page.viewport(DESKTOP.width, DESKTOP.height);
-    paint?.(3);
+    paint?.(3.4);
     expect(styleOf(screen.container, "[data-statement-line]")?.translate).toBe("0px 0%");
   });
 
-  it("designates each plate with one frame, lets go during the cut, then brackets the line that lands", async () => {
+  it("designates each plate with one frame and lets go for good during the cut", async () => {
     await page.viewport(DESKTOP.width, DESKTOP.height);
     const screen = await render(framedStage());
     const frame = screen.container.querySelector<HTMLElement>("[data-question-frame]");
     const paint = questionCourse(screen.container);
-    /* The course starts its question half a screen into the hold. */
+    /* The course starts its question four tenths of a screen into the hold. */
     function at(screens: number): void {
-      paint?.(0.5 + screens);
+      paint?.(0.4 + screens);
     }
 
-    at(0.1);
+    at(0.2);
     expect(frame?.dataset["shown"]).toBeUndefined();
 
-    at(0.3);
+    at(0.46);
     const second = inStage(
       screen.container,
       screen.container.querySelectorAll("[data-question-plate]")[1]?.getBoundingClientRect(),
@@ -146,23 +209,47 @@ describe("questionCourse", () => {
     expect(frameBox(screen.container).x).toBeCloseTo(second.x - 8, 0);
     expect(frameBox(screen.container).y).toBeCloseTo(second.y - 8, 0);
 
-    at(0.45);
+    at(0.61);
     expect(screen.container.querySelectorAll("[data-question-ghost]")).toHaveLength(3);
 
-    at(0.9);
+    at(1);
     expect(frame?.dataset["shown"]).toBeUndefined();
 
     at(2);
-    const landing = inStage(
-      screen.container,
-      wordsOf(screen.container.querySelector("[data-statement-paragraph]:last-of-type")),
-    );
-    expect(frame?.dataset["tone"]).toBe("paper");
-    /* Large brackets as tall as the phrase, standing off its words on their sides. */
-    expect(frame?.dataset["shape"]).toBe("bracket");
-    expect(frameBox(screen.container).y).toBeCloseTo(landing.y, 0);
-    expect(frameBox(screen.container).height).toBeCloseTo(landing.height, 0);
-    expect(frameBox(screen.container).x).toBeCloseTo(landing.x - 20, 0);
+    expect(frame?.dataset["shown"]).toBeUndefined();
+  });
+
+  it("brings the keyword into focus as its line lands, then closes its brackets on it from outside", async () => {
+    await page.viewport(DESKTOP.width, DESKTOP.height);
+    const screen = await render(framedStage());
+    const paint = questionCourse(screen.container);
+
+    paint?.(0.4 + 1.5);
+    expect(inkOf(screen.container)).toEqual({
+      blur: "blur(14px)",
+      opacity: "0",
+      start: -1,
+      end: 1,
+    });
+
+    paint?.(0.5 + 3);
+    expect(inkOf(screen.container)).toEqual({
+      blur: "blur(0px)",
+      opacity: "1",
+      start: 0,
+      end: 0,
+    });
+  });
+
+  it("shows the keyword faint and blurred as its line rises, so the line never reads with a hole in it", async () => {
+    await page.viewport(DESKTOP.width, DESKTOP.height);
+    const screen = await render(framedStage());
+    const paint = questionCourse(screen.container);
+
+    /* The last line has started to rise (2.78 screens into the course), the keyword not yet in focus (2.86). */
+    paint?.(0.4 + 2.8);
+    expect(Number(styleOf(screen.container, "[data-ink-text]")?.opacity)).toBeGreaterThan(0.2);
+    expect(styleOf(screen.container, "[data-ink-text]")?.filter).toBe("blur(14px)");
   });
 
   it("sets the line that lands in the same weight as the others", async () => {

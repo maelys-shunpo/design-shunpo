@@ -5,7 +5,7 @@ import { page, userEvent } from "vitest/browser";
 
 import { CaseCard } from "../src/agents/case-card.tsx";
 import { pause, SETTLE_MS } from "./support/pause.ts";
-import { DESKTOP } from "./support/viewports.ts";
+import { DESKTOP, PHONE } from "./support/viewports.ts";
 
 beforeEach(async () => {
   await page.viewport(DESKTOP.width, DESKTOP.height);
@@ -53,6 +53,12 @@ function foldOf(link: Element): number {
 /* How visible the frame's top start corner is on the card. */
 function cornerOpacityOf(link: Element): string {
   return getComputedStyle(link, "::before").opacity;
+}
+
+/* The key figure's size in pixels (its digits, not its unit). */
+function figureSizeOf(container: HTMLElement): number {
+  const digits = container.querySelector("[data-slot=rolling-figure] [aria-hidden=true] > span");
+  return digits === null ? Number.NaN : Number(getComputedStyle(digits).fontSize.replace("px", ""));
 }
 
 /* The first word of the mission, the one that rises first. */
@@ -137,6 +143,18 @@ describe("CaseCard", () => {
     await userEvent.unhover(link);
     await userEvent.tab();
     await expect.poll(() => cornerOpacityOf(link.element())).toBe("1");
+  });
+
+  it("sets its key figure large, a step over the phone's text and growing on wider screens", async () => {
+    await page.viewport(PHONE.width, PHONE.height);
+    const phone = await render(tf1());
+    const onPhone = figureSizeOf(phone.container);
+    await phone.unmount();
+    await page.viewport(DESKTOP.width, DESKTOP.height);
+    const desktop = await render(tf1());
+
+    expect(onPhone).toBe(64);
+    expect(figureSizeOf(desktop.container)).toBeGreaterThan(onPhone);
   });
 
   it("sets its words in ink on the light Shiro tint and in Kome on the others", async () => {

@@ -1,5 +1,5 @@
 import "../src/styles/globals.css";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
 
 import { Direction } from "../src/layout/direction.tsx";
@@ -13,7 +13,13 @@ const FROISSE = /^url\(.*agents-froisse.*\.webp/u;
 const PLIE = /^url\(.*agents-plie.*\.webp/u;
 const GRAIN = /^url\(.*agents-grain.*\.webp/u;
 
+/* The papers open once the page has gone idle (`PaperGate`); these tests read them in that settled state. */
+beforeEach(() => {
+  document.documentElement.dataset["papers"] = "";
+});
+
 afterEach(async () => {
+  delete document.documentElement.dataset["papers"];
   await allowMotion();
 });
 
@@ -25,6 +31,12 @@ function groundOf(element: Element) {
     blend: style.backgroundBlendMode,
     colour: style.backgroundColor,
   };
+}
+
+/* How a picture is laid over the section: once over all of it, or tiled. */
+function layOf(element: Element) {
+  const style = getComputedStyle(element);
+  return { size: style.backgroundSize, repeat: style.backgroundRepeat };
 }
 
 /* The film grain a section lays over its ground, under its content. */
@@ -78,9 +90,11 @@ describe("Section paper", () => {
         </Section>
       </Direction>,
     );
-    const ground = groundOf(screen.getByRole("region", { name: "Froissé" }).element());
+    const section = screen.getByRole("region", { name: "Froissé" }).element();
+    const ground = groundOf(section);
 
     expect(ground.image).toMatch(FROISSE);
+    expect(layOf(section)).toEqual({ size: "cover", repeat: "no-repeat" });
     expect(ground.blend).toBe("hard-light");
     expect(ground.colour).toBe(SHIRO);
   });
@@ -93,9 +107,11 @@ describe("Section paper", () => {
         </Section>
       </Direction>,
     );
-    const ground = groundOf(screen.getByRole("region", { name: "Plié" }).element());
+    const section = screen.getByRole("region", { name: "Plié" }).element();
+    const ground = groundOf(section);
 
     expect(ground.image).toMatch(PLIE);
+    expect(layOf(section)).toEqual({ size: "cover", repeat: "no-repeat" });
     expect(ground.blend).toBe("hard-light");
     expect(ground.colour).toBe(KOME);
   });
@@ -116,6 +132,8 @@ describe("Section paper", () => {
     expect(grain.animation).toBe("agents-grain");
     expect(grain.layer).toBe("-1");
     expect(getComputedStyle(section).position).toBe("relative");
+    /* The grain's layer is larger than the island and steps by transform: the island clips it. */
+    expect(getComputedStyle(section).overflow).toBe("clip");
   });
 
   it("keeps the grain still under reduced motion", async () => {

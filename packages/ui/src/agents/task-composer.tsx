@@ -115,7 +115,7 @@ export function TaskComposer({
   return (
     <div
       data-slot="task-composer"
-      className="flex flex-col gap-4 rounded-surface border border-agents-line bg-surface p-4 text-agents-ink shadow-agents-float md:p-6"
+      className="agents-sheet flex flex-col gap-4 p-4 text-agents-ink agents-sheet-float md:p-6"
     >
       <ComposerForm
         state={state}
@@ -130,7 +130,7 @@ export function TaskComposer({
       <output aria-live="polite" className="flex flex-col gap-3">
         {asked === null ? null : (
           <>
-            <span className="self-end rounded-surface bg-agents-ink px-4 py-3 text-sm text-agents-paper">
+            <span className="agents-sheet self-end px-4 py-3 text-sm text-agents-paper agents-sheet-night agents-sheet-xs">
               {asked.scenario.request}
             </span>
             <ComposerPlan key={asked.turn} scenario={asked.scenario} humanLabel={humanLabel} />

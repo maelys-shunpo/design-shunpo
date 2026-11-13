@@ -1,16 +1,36 @@
 /* The question scene's course, in screens of scroll from the moment its stage pins (the client's artifact,
-   « bascule courte », 28/10): the plates arrive around the question one every 0.14 screen, the shuriken
-   cuts the night away over two thirds of a screen (a full screen held the reader on one gesture), the
+   « bascule courte », 28/10, reordered and paced 12/11): the question, alone in the middle of the night, rises to the
+   top of it, the plates rise into place under it one every 0.28 screen (12/11, Maëlys: the pains went by too fast), all four rest whole for 0.9 screen of reading,
+   the shuriken cuts the night away over six tenths of a screen (a full screen held the reader on one gesture), the
    answer's lines rise as the last of the night goes, then a breath to read it before the page moves on. */
 const PLATE_COUNT = 4;
-const PLATE_STEP = 0.14;
+const RISE = { start: 0, length: 0.22 } as const;
+/* The first plate sets off before the question has quite reached the top, so the two read as one gesture. */
+const PLATES_FROM = 0.14;
+const PLATE_STEP = 0.28;
 const PLATE_LENGTH = 0.22;
 const PLATE_ARRIVING_SCALE = 1.06;
 /* A plate is opaque two thirds of the way into its arrival. */
 const PLATE_OPACITY_RATE = 1.6;
-const DIM = { start: 0.64, step: 0.025, length: 0.2, depth: 0.72 } as const;
-const CUT = { start: 0.64, length: 0.65 } as const;
-const ANSWER = { start: 1.19, step: 0.09, length: 0.12, reading: 0.35 } as const;
+/* The last plate has settled; the four then rest whole long enough to be read before the cut. */
+const SETTLED = PLATES_FROM + PLATE_STEP * (PLATE_COUNT - 1) + PLATE_LENGTH;
+/* The four plates then rest whole long enough to be read (12/11, Maëlys: lengthened from 0.6 so four dense plates
+   get air before the cut). */
+const READING = 0.9;
+const CUT = { start: SETTLED + READING, length: 0.6 } as const;
+const DIM = { start: CUT.start, step: 0.025, length: 0.2, depth: 0.72 } as const;
+/* The question dims a little less than its plates: it stays the subject while the shuriken cuts through it. */
+const QUESTION_DIM_DEPTH = 0.7;
+/* Screens of the hold in which the night arrives as a card around the question and grows to the screen, before the
+   course starts. */
+export const NIGHT_ENTER_SCREENS = 0.4;
+/* The answer's first line sets off a tenth of a screen before the last of the night goes. */
+const ANSWER = {
+  start: CUT.start + CUT.length - 0.1,
+  step: 0.09,
+  length: 0.12,
+  reading: 0.35,
+} as const;
 
 /* The shuriken grows from a point to 240 px (less on a phone) a third of the way, then on until it covers
    the screen: fast at first, a pause on the mark, then faster again. Scales are in 100 px. */
@@ -34,49 +54,51 @@ function easeInOut(progress: number): number {
   return progress < 0.5 ? 4 * progress ** 3 : 1 - (-2 * progress + 2) ** 3 / 2;
 }
 
-/* Screens the stage stays pinned for an answer of `lines` lines. */
+/* Screens into the course at which the last of an answer's `lines` lines has risen. */
+function lastLineLanded(lines: number): number {
+  return ANSWER.start + ANSWER.step * (lines - 1) + ANSWER.length;
+}
+
+/* Screens the course runs for an answer of `lines` lines, from the night's full screen to the reading breath. */
 export function courseLength(lines: number): number {
-  return ANSWER.start + ANSWER.step * (lines - 1) + ANSWER.length + ANSWER.reading;
+  return lastLineLanded(lines) + ANSWER.reading;
+}
+
+/* Screens the stage stays held for an answer of `lines` lines: the night's entrance, then the course, and no longer,
+   so the scroll never runs on over a finished scene. A full-screen arrival (`nightEnter` 0, the night already risen
+   over the hero) drops the entrance and holds for the course alone. */
+export function questionHold(lines: number, nightEnter = NIGHT_ENTER_SCREENS): number {
+  return nightEnter + courseLength(lines);
+}
+
+/* How far the question has dimmed after `screens`, from 0 to `QUESTION_DIM_DEPTH`: it dims with the plates as the
+   shuriken starts to cut, so the star lands on a quiet night rather than on the lit headline. */
+export function questionDim(screens: number): number {
+  return easeInOut(clamp((screens - DIM.start) / DIM.length)) * QUESTION_DIM_DEPTH;
+}
+
+/* How far the question has risen from the middle of the night to its place at the top, from 0 to 1. */
+export function questionRise(screens: number): number {
+  return easeInOut(clamp((screens - RISE.start) / RISE.length));
 }
 
 function arrival(screens: number, index: number): number {
-  return clamp((screens - PLATE_STEP * index) / PLATE_LENGTH);
-}
-
-interface PlatePath {
-  /* Unit vector from the plate's place towards the middle of the screen. */
-  direction: readonly [number, number];
-  /* How far beyond its place the plate starts, in px. */
-  reach: number;
-  /* How much closer to the question each later plate draws it, in px. */
-  press: number;
+  return clamp((screens - PLATES_FROM - PLATE_STEP * index) / PLATE_LENGTH);
 }
 
 export interface PlateFrame {
-  x: number;
   y: number;
   scale: number;
   opacity: number;
 }
 
-/* Where plate `index` stands after `screens`: it arrives from beyond its place towards the question, is
-   drawn a little closer by each plate after it, then dims while the shuriken cuts. */
-export function plateFrame(
-  screens: number,
-  index: number,
-  { direction, reach, press }: PlatePath,
-): PlateFrame {
+/* Where plate `index` stands after `screens`: it rises into its place under the question from `reach` px below,
+   then dims while the shuriken cuts. */
+export function plateFrame(screens: number, index: number, reach: number): PlateFrame {
   const progress = arrival(screens, index);
-  const far = reach * (1 - easeOut(progress));
-  let drawn = 0;
-  for (let later = index + 1; later < PLATE_COUNT; later += 1) {
-    drawn += press * easeInOut(arrival(screens, later));
-  }
   const dim = easeInOut(clamp((screens - (DIM.start + DIM.step * index)) / DIM.length));
-  const [dx, dy] = direction;
   return {
-    x: dx === 0 ? 0 : -dx * far,
-    y: -dy * far + Math.sign(dy) * drawn,
+    y: reach * (1 - easeOut(progress)),
     scale: PLATE_ARRIVING_SCALE - (PLATE_ARRIVING_SCALE - 1) * easeOut(progress),
     opacity: clamp(progress * PLATE_OPACITY_RATE) * (1 - dim * DIM.depth),
   };
@@ -149,24 +171,41 @@ export function answerRise(screens: number, line: number): number {
   return easeOut(clamp((screens - (ANSWER.start + ANSWER.step * line)) / ANSWER.length));
 }
 
-export type Designated = { kind: "plate"; index: number } | { kind: "answer" };
+/* The plate the travelling frame designates. */
+export interface Designated {
+  index: number;
+}
 
-/* The travelling frame takes a plate once it is most of the way in (its title readable), lets go as the
-   shuriken starts to cut, and lands on the answer's last line once it has risen. */
+/* The travelling frame takes a plate once it is most of the way in (its title readable) and lets go for good a beat
+   after the last one has landed, so the four are read as one group: the answer carries its own brackets, around its
+   keyword. */
 const DESIGNATE_PLATE_AFTER = 0.13;
+/* The last plate keeps the frame as long as the others did. */
+const RELEASE = PLATES_FROM + DESIGNATE_PLATE_AFTER + PLATE_STEP * PLATE_COUNT;
 
-/* What the travelling frame designates after `screens`, for an answer of `lines` lines: each plate in turn,
-   nothing while the night is cut away, then the line that lands. */
-export function designatedAt(screens: number, lines: number): Designated | undefined {
-  if (screens >= ANSWER.start + ANSWER.step * (lines - 1) + ANSWER.length) {
-    return { kind: "answer" };
-  }
-  if (screens >= CUT.start) {
+/* The plate the travelling frame designates after `screens`, or nothing before the first and from the release on. */
+export function designatedAt(screens: number): Designated | undefined {
+  if (screens >= RELEASE) {
     return undefined;
   }
-  const index = Math.floor((screens - DESIGNATE_PLATE_AFTER) / PLATE_STEP);
+  const index = Math.floor((screens - PLATES_FROM - DESIGNATE_PLATE_AFTER) / PLATE_STEP);
   if (index < 0) {
     return undefined;
   }
-  return { kind: "plate", index: Math.min(index, PLATE_COUNT - 1) };
+  return { index: Math.min(index, PLATE_COUNT - 1) };
+}
+
+/* The answer's keyword, as in the method's title: it comes into focus as its line lands, then the brackets close on it
+   from outside, both done within the reading breath. In screens from the last line's landing. */
+const INK_FOCUS = { from: -0.04, length: 0.12 } as const;
+const INK_CLOSE = { from: 0.04, length: 0.12 } as const;
+
+/* How far the keyword of an answer of `lines` lines has come into focus after `screens`, from 0 (blurred, unseen) to 1. */
+export function inkWordFocus(screens: number, lines: number): number {
+  return easeOut(clamp((screens - lastLineLanded(lines) - INK_FOCUS.from) / INK_FOCUS.length));
+}
+
+/* How far the keyword's brackets have closed on it after `screens`, from 0 (outside, unseen) to 1. */
+export function inkWordClose(screens: number, lines: number): number {
+  return easeInOut(clamp((screens - lastLineLanded(lines) - INK_CLOSE.from) / INK_CLOSE.length));
 }

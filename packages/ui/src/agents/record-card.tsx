@@ -24,7 +24,7 @@ export function RecordCard({
     <div
       data-slot="record-card"
       {...liveAttributes({ live, liveKind })}
-      className="flex flex-col gap-3 rounded-lg border border-agents-line bg-surface p-4"
+      className="agents-sheet flex flex-col gap-3 p-4 agents-sheet-lg"
     >
       <div className="flex items-center gap-3">
         <Avatar initials={initials} tone="cobalt" />

@@ -102,10 +102,12 @@ export function createLoops({ rests, paused, draw }: Loops) {
       if (phase === resting) {
         return;
       }
-      entering = phase !== undefined && before < phase;
+      /* Where the leaving phase stood, read before the flags move on: its loop fades out from the frame on screen,
+         which is its entrance's while that entrance is still playing. */
       const position = current();
       caught =
         resting === undefined || position === undefined ? caught : { phase: resting, position };
+      entering = phase !== undefined && before < phase;
       resting = phase;
       elapsed = 0;
       run();

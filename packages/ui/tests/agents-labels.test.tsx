@@ -33,10 +33,12 @@ describe("Section labels", () => {
 
   it("name a pain on its plate without a number", async () => {
     const screen = await render(
-      <NightPlate title="Vous ressaisissez" text="Un devis, une facture." />,
+      <NightPlate icon="time" title="Vous perdez du temps" text="Un devis, une facture." />,
     );
 
-    await expect.element(screen.getByRole("heading", { name: "Vous ressaisissez" })).toBeVisible();
+    await expect
+      .element(screen.getByRole("heading", { name: "Vous perdez du temps" }))
+      .toBeVisible();
     expect(screen.container.textContent).not.toMatch(/\d/u);
   });
 
@@ -77,9 +79,10 @@ describe("Section labels", () => {
         client="TF1"
         tint="tenku"
         mission="Une application de jeu."
-        figure="1,4"
+        figure="+1,4"
         unit="M"
-        figureLabel="de téléspectateurs"
+        figureLabel="de téléspectateurs ont joué"
+        image={<img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />}
         action="Lire le cas client"
       />,
     );

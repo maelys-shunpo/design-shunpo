@@ -20,10 +20,16 @@ interface WheelInkProps {
 
 /* The stroke along the wheel and its dots (internal to `MethodWheel`), drawn by the wheel's course from tablets up with
    motion. The stroke is one sumi brush stroke (`paintBrushStroke`), rasterised once into `data-wheel-ink`; the course
-   reveals it along its centre line (`data-wheel-brush`), as the brush travels down the arc and on down the page. */
+   reveals it along its centre line (`data-wheel-brush`), as the brush travels down the arc and on down the page.
+   Under them, the held stage's own paper when the sheet shows a grain (`data-wheel-paper`, `wheel-paper.ts`). */
 export function WheelInk({ ink, dots, className }: WheelInkProps) {
   return (
     <>
+      <div
+        data-wheel-paper
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 hidden md:motion-safe:block"
+      />
       <svg data-slot="wheel-ink" aria-hidden="true" className={cn(inkVariants(), className)}>
         <defs>
           <mask id={`${ink}-reveal`} maskUnits="userSpaceOnUse" {...FULL}>

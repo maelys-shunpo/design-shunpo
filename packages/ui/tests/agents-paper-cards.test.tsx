@@ -62,6 +62,7 @@ describe("Paper cards", () => {
 
   it("stirs a film grain in the problem's night, under the question", async () => {
     const plate = {
+      icon: "time",
       title: "Des outils",
       text: "Qui ne se parlent pas.",
     } as const;

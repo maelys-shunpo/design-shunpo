@@ -4,7 +4,7 @@ import type { InputHTMLAttributes } from "react";
 import { cn } from "../lib/cn.ts";
 
 const fieldVariants = cva(
-  "w-full rounded-control border border-border bg-background px-4 text-foreground transition-colors duration-200 placeholder:text-muted-foreground hover:border-foreground/30 focus-visible:border-foreground/50",
+  "w-full border border-border bg-background px-4 text-foreground transition-colors duration-200 placeholder:text-muted-foreground hover:border-foreground/30 focus-visible:border-foreground/50",
   {
     variants: {
       size: {

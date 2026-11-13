@@ -53,10 +53,7 @@ export function ComposerPlan({
 }) {
   const shown = useRevealed(scenario.steps.length + 1);
   return (
-    <div
-      data-slot="composer-plan"
-      className="flex flex-col gap-4 rounded-surface border border-agents-line bg-agents-paper p-4"
-    >
+    <div data-slot="composer-plan" className="flex flex-col gap-4 border-y border-agents-line py-4">
       <span className="flex items-center gap-2 text-sm font-medium">
         <span aria-hidden className="size-2 bg-agents-signal" />
         {scenario.title}
@@ -82,7 +79,7 @@ export function ComposerPlan({
       </ol>
       <p
         className={cn(
-          "rounded-lg bg-agents-wait-tint px-3 py-2 text-sm text-agents-ink transition-opacity duration-300",
+          "bg-agents-wait-tint px-3 py-2 text-sm text-agents-ink transition-opacity duration-300",
           shown > scenario.steps.length ? "opacity-100" : "opacity-0",
         )}
       >

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { cn } from "../lib/cn.ts";
 
-const bodyVariants = cva("grid min-h-0 divide-agents-line", {
+const bodyVariants = cva("grid min-h-0 flex-1 divide-agents-line bg-agents-paper", {
   variants: {
     layout: {
       single: "grid-cols-1",
@@ -26,7 +26,8 @@ interface MockWindowProps extends VariantProps<typeof bodyVariants> {
   className?: string | undefined;
 }
 
-/* The window of an application built by SHUNPO, shown on a photographed surface: white, hairlines, a soft shadow. */
+/* The window of an application built by SHUNPO, shown on a photographed surface: a sheet cut 20 px deep, its white
+   title bar over a paper body, hairlines, a shadow that follows the cut. */
 export function MockWindow({
   title,
   context,
@@ -39,11 +40,11 @@ export function MockWindow({
     <div
       data-slot="mock-window"
       className={cn(
-        "@container flex w-full flex-col overflow-clip rounded-surface border border-agents-line bg-agents-paper text-agents-ink shadow-agents-float",
+        "@container agents-sheet agents-sheet-ring flex w-full flex-col overflow-clip text-agents-ink agents-sheet-float",
         className,
       )}
     >
-      <div className="flex items-center justify-between gap-4 border-b border-agents-line bg-surface px-4 py-3">
+      <div className="flex items-center justify-between gap-4 border-b border-agents-line px-4 py-3">
         <div className="flex min-w-0 items-center gap-3">
           <span aria-hidden className="flex gap-1">
             <span className="size-3 rounded-full bg-agents-line" />

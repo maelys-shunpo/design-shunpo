@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Testimonial is a client's words, signed: initials, name and role above, the quote below, an optional source under it, no network badge. TestimonialCascade shows the cards two by two, stepping from one edge to the other from tablets up, the pairs taking turns in a loop with a pause control and one dot per pair.",
+          "Testimonial is a client's words, signed: initials, name and role above, the quote below, an optional source under it, no network badge, on a white card whose top right corner is cut on the bias like the actions. TestimonialCascade shows the cards two by two, stepping from one edge to the other from tablets up, the pairs landing in turn in a loop with a pause control and one dot per pair: the pair shown sinks and fades, then each new card comes down from a step above, tilted, and settles as its flight shadow melts into its own. Reduced motion swaps them at once.",
       },
     },
   },
@@ -53,7 +53,7 @@ export const Cascade: Story = {
   ),
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole("button", { name: "Avis 3" }));
-    /* The pair rises into place. */
+    /* The pair lands. */
     await waitFor(async () => {
       await expect(canvas.getByText("Corentin Lambert")).toBeVisible();
     });

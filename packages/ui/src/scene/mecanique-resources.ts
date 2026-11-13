@@ -23,10 +23,13 @@ export function createCalibreOn(canvas: HTMLCanvasElement, tier: QualityTier): C
   });
 }
 
-/* A studio light box, prefiltered once: the metals need something to reflect. */
+/* A studio light box, prefiltered once: the metals need something to reflect. The room itself is only the source of
+   the prefiltered map: its geometries and materials go back to the GPU as soon as it is read. */
 export function createEnvironment(renderer: WebGLRenderer): WebGLRenderTarget {
   const generator = new PMREMGenerator(renderer);
-  const target = generator.fromScene(new RoomEnvironment(), 0.04);
+  const room = new RoomEnvironment();
+  const target = generator.fromScene(room, 0.04);
+  room.dispose();
   generator.dispose();
   return target;
 }

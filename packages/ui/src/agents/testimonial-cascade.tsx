@@ -5,20 +5,20 @@ import { Pause, Play } from "lucide-react";
 import { type ReactNode, useCallback, useState } from "react";
 
 import { cn } from "../lib/cn.ts";
+import { useArrival } from "./use-arrival.ts";
 import { useAutoAdvance } from "./use-auto-advance.ts";
 
 type PageState = "current" | "leaving" | "waiting";
 
-/* The shown pair rises into place, one card after the other; the pair it replaces lifts away; the others wait below,
-   out of sight. Reduced motion swaps them without travel. */
-const cardVariants = cva("ease-emphasized md:w-5/6 md:even:self-end", {
+/* The shown pair lands on top of the others: the pair it replaces sinks and fades first, then each card comes down
+   from a step above and settles, the second a beat after the first (`agents-landing`). The others wait in the air, out
+   of sight. Reduced motion swaps them at once. Three quarters wide on tablets, so a quote keeps a reading measure. */
+const pairVariants = cva("col-start-1 row-start-1 flex flex-col gap-6", {
   variants: {
     state: {
-      current:
-        "translate-y-0 opacity-100 transition duration-500 even:delay-150 motion-reduce:transition-none",
-      leaving:
-        "-translate-y-8 opacity-0 transition duration-300 even:delay-100 motion-reduce:transition-none",
-      waiting: "invisible translate-y-8 opacity-0 transition-none",
+      current: "z-10",
+      leaving: "",
+      waiting: "",
     },
   },
 });
@@ -38,9 +38,17 @@ function pairsOf(cards: ReactNode[]) {
   );
 }
 
-function stateOf(index: number, current: number, previous: number | undefined): PageState {
+/* Until the cascade arrives in view, even the current pair waits in the air. */
+function stateOf(
+  index: number,
+  {
+    current,
+    previous,
+    arrived,
+  }: { current: number; previous?: number | undefined; arrived: boolean },
+): PageState {
   if (index === current) {
-    return "current";
+    return arrived ? "current" : "waiting";
   }
   return index === previous ? "leaving" : "waiting";
 }
@@ -106,28 +114,38 @@ function Pairs({
   pairs,
   current,
   previous,
+  arrived,
 }: {
   pairs: ReactNode[][];
   current: number;
   previous: number | undefined;
+  arrived: boolean;
 }) {
   return (
     <div className="grid">
       {pairs.map((cards, index) => {
-        const state = stateOf(index, current, previous);
+        const state = stateOf(index, { current, previous, arrived });
+        const shown = index === current;
         return (
           <ul
             // eslint-disable-next-line react/no-array-index-key -- a pair is its place in the loop.
             key={index}
-            aria-hidden={state === "current" ? undefined : true}
-            tabIndex={state === "current" ? undefined : -1}
-            inert={state !== "current"}
-            className="col-start-1 row-start-1 flex flex-col gap-6"
+            aria-hidden={shown ? undefined : true}
+            tabIndex={shown ? undefined : -1}
+            inert={!shown}
+            className={pairVariants({ state })}
           >
             {cards.map((card, position) => (
-              // eslint-disable-next-line react/no-array-index-key -- a card is its place in the pair.
-              <li key={position} className={cardVariants({ state })}>
-                {card}
+              <li
+                // eslint-disable-next-line react/no-array-index-key -- a card is its place in the pair.
+                key={position}
+                data-state={state}
+                className="agents-landing md:w-3/4 md:even:self-end lg:w-5/6"
+              >
+                <span aria-hidden data-landing="shadow">
+                  <span />
+                </span>
+                <div data-landing="card">{card}</div>
               </li>
             ))}
           </ul>
@@ -147,8 +165,9 @@ interface TestimonialCascadeProps {
   className?: string | undefined;
 }
 
-/* The clients' words two by two, stepping from one edge to the other from tablets up, the pairs taking turns in a loop:
-   held off screen, under the pointer, paused at will, and never on their own under reduced motion. */
+/* The clients' words two by two, stepping from one edge to the other from tablets up, the pairs landing in turn in a
+   loop: the first pair lands as the cascade comes into view (as painted if it already was), the loop is held off
+   screen, under the pointer, paused at will, and never runs on its own under reduced motion. */
 export function TestimonialCascade({
   children,
   label,
@@ -165,11 +184,12 @@ export function TestimonialCascade({
       next === shown.current ? shown : { current: next, previous: shown.current },
     );
   }, []);
+  const arrived = useArrival(root);
   const { current } = page;
   const advance = useCallback(() => {
     show((current + 1) % pairs.length);
   }, [current, pairs.length, show]);
-  useAutoAdvance({ root, count: paused ? 0 : pairs.length, every, advance });
+  useAutoAdvance({ root, count: paused || !arrived ? 0 : pairs.length, every, advance });
 
   return (
     <section
@@ -178,7 +198,7 @@ export function TestimonialCascade({
       aria-label={label}
       className={cn("flex flex-col gap-6", className)}
     >
-      <Pairs pairs={pairs} current={page.current} previous={page.previous} />
+      <Pairs pairs={pairs} current={page.current} previous={page.previous} arrived={arrived} />
       {pairs.length > 1 ? (
         <Controls
           pages={pairs.length}

@@ -4,16 +4,20 @@ import type { ReactNode } from "react";
 import { cn } from "../lib/cn.ts";
 import { type LiveStep, liveAttributes } from "./live.ts";
 
-const bubbleVariants = cva("flex max-w-full flex-col gap-2 rounded-2xl px-4 py-3 text-sm", {
-  variants: {
-    from: {
-      customer: "self-end bg-agents-ink text-agents-paper",
-      agent: "self-start border border-agents-line bg-surface text-agents-ink",
-      human: "self-start bg-agents-info-tint text-agents-ink",
+/* Cut 10 px on the speaker's side: top right for the customer on the right, top left for the agent and the team. */
+const bubbleVariants = cva(
+  "agents-sheet flex max-w-full flex-col gap-2 px-4 py-3 text-sm agents-sheet-xs",
+  {
+    variants: {
+      from: {
+        customer: "self-end text-agents-paper agents-sheet-night",
+        agent: "self-start text-agents-ink agents-sheet-left",
+        human: "self-start text-agents-ink agents-sheet-info agents-sheet-left",
+      },
     },
+    defaultVariants: { from: "agent" },
   },
-  defaultVariants: { from: "agent" },
-});
+);
 
 interface ChatBubbleProps extends VariantProps<typeof bubbleVariants>, LiveStep {
   author: string;

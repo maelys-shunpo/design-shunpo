@@ -24,7 +24,7 @@ function Highlight({ step }: { step: number | undefined }) {
     <span
       aria-hidden
       {...liveAttributes({ live: step })}
-      className="pointer-events-none absolute -inset-1 rounded-md border border-agents-signal bg-agents-signal/10"
+      className="pointer-events-none absolute -inset-1 border border-agents-signal bg-agents-signal/10"
     />
   );
 }
@@ -43,7 +43,7 @@ export function DocumentSheet({
   return (
     <div
       data-slot="document-sheet"
-      className="flex flex-col gap-4 rounded-md bg-surface p-5 text-agents-ink shadow-agents-card"
+      className="agents-sheet flex flex-col gap-4 p-5 text-agents-ink agents-sheet-lift agents-sheet-bare"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="relative flex flex-col gap-0.5">

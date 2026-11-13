@@ -4,14 +4,10 @@ import { type FrameBox, ghostTrail } from "../lib/frame-jump.ts";
 const STILL_PX = 0.5;
 
 export type FrameTone = "paper" | "night";
-/* `corners`: two 14 px corners; `bracket`: large brackets whose upright runs the full height of what they
-   hold (a line of display type). */
-export type FrameShape = "corners" | "bracket";
 
-/* The ground the frame sits on, and its shape (`corners` by default). */
+/* The ground the frame sits on. */
 export interface FrameLook {
   tone: FrameTone;
-  shape?: FrameShape;
 }
 
 export interface TravellingFrame {
@@ -59,13 +55,12 @@ export function travellingFrame(
   /* The frame this factory owns, written through (its tone) as the scene designates. */
   const owned = frame;
 
-  function leaveGhosts(from: FrameBox, to: FrameBox, { tone, shape = "corners" }: FrameLook): void {
+  function leaveGhosts(from: FrameBox, to: FrameBox, { tone }: FrameLook): void {
     for (const ghost of ghostTrail(from, to)) {
       const element = document.createElement("span");
       element.setAttribute(ghostAttribute, "");
       element.setAttribute("aria-hidden", "true");
       element.dataset["tone"] = tone;
-      element.dataset["shape"] = shape;
       element.className = "agents-frame-ghost";
       element.style.setProperty("--ghost", String(ghost.opacity));
       setBox(element, ghost);
@@ -77,9 +72,7 @@ export function travellingFrame(
   }
 
   function show(key: string, box: FrameBox, look: FrameLook): void {
-    const { tone, shape = "corners" } = look;
-    owned.dataset["tone"] = tone;
-    owned.dataset["shape"] = shape;
+    owned.dataset["tone"] = look.tone;
     if (placed === undefined) {
       placeAtOnce(frame, box);
       frame.toggleAttribute("data-shown", true);

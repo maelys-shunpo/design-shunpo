@@ -28,11 +28,11 @@ export function WorkflowNode({
     <li data-slot="workflow-node" className="flex flex-col items-center">
       <div
         className={cn(
-          "flex w-full items-center gap-3 rounded-xl border bg-surface p-3 text-agents-ink shadow-agents-card",
-          agent ? "border-agents-signal" : "border-agents-line",
+          "agents-sheet flex w-full items-center gap-3 p-3 text-agents-ink agents-sheet-lift agents-sheet-sm",
+          agent && "agents-sheet-signal",
         )}
       >
-        <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-lg bg-muted">
+        <span aria-hidden className="grid size-8 shrink-0 place-items-center bg-muted">
           {icon === undefined ? (
             <span className={cn("size-3", agent ? "bg-agents-signal" : "bg-agents-ink")} />
           ) : (

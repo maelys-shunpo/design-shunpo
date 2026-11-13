@@ -6,7 +6,7 @@ import { Avatar } from "./avatar.tsx";
 /* A leaf of fibrous washi on a Shiro hairline, its top right corner cut on the bias like the actions, no rounded
    corner: the words are printed on paper, not floated on a screen. */
 const cardVariants = cva(
-  "agents-card-cut flex flex-col gap-5 agents-card-paper p-6 text-agents-ink md:p-8",
+  "agents-sheet flex flex-col gap-5 agents-card-paper p-6 text-agents-ink agents-sheet-lift md:p-8",
 );
 
 type AvatarTone = "ink" | "cobalt" | "warm" | "mint";

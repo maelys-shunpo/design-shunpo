@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/cn.ts";
 
 const chipVariants = cva(
-  "inline-flex shrink-0 items-center gap-1 rounded-full border whitespace-nowrap transition-colors duration-200",
+  "inline-flex shrink-0 items-center gap-1 border whitespace-nowrap transition-colors duration-200",
   {
     variants: {
       size: {

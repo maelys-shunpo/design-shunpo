@@ -107,6 +107,21 @@ describe("ScrollScene hold", () => {
     },
   );
 
+  it("holds its stage for a measured number of screens when a scene sets its own length", async () => {
+    const screen = await render(
+      <ScrollScene choreography={vi.fn<Choreography>()} length={2.25}>
+        <p>Measured content</p>
+      </ScrollScene>,
+    );
+    const [stage, ...holds] = [
+      ...screen.container.querySelectorAll("[data-slot='scroll-scene'] > div"),
+    ].map((part) => part.getBoundingClientRect().height);
+    const held = holds.reduce((total, height) => total + height, 0);
+
+    expect(stage).toBeCloseTo(window.innerHeight, 0);
+    expect(held).toBeCloseTo(2.25 * window.innerHeight, 0);
+  });
+
   it("holds its stage on screen for its length without shifting the layout", async () => {
     const stopRecording = recordLayoutShifts();
     const screen = await render(

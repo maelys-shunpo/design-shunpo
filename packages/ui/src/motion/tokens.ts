@@ -8,6 +8,8 @@ export const ease = {
   standard: "power2.out",
   emphasized: "expo.out",
   inOut: "power3.inOut",
+  /* Exits: they accelerate away, on the same family as `standard`. */
+  exit: "power2.in",
   /* Starts and lands softly, with no still moment: a drawn curve, registered by `registerCustomEases`. */
   fluid: "fluid",
 } as const;

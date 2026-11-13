@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "QuestionScene, as on the home page: held on screen, Fuji Night arrives as a card around the question, the four NightPlates arrive around it, the SHUNPO shuriken cuts the night away and the StatementLines answer rises on the paper. Reduced motion: the question and its plates on a night band, then the answer under the shuriken.",
+          "QuestionScene, as on the home page: held on screen, Fuji Night arrives as a card around the question, the question rises to the top and the four NightPlates (a hairline icon, a title, a sentence) rise into a row under it, the SHUNPO shuriken cuts the night away and the StatementLines answer rises on the paper. Reduced motion: the question and its plates on a night band, then the answer under the shuriken.",
       },
     },
   },
@@ -23,23 +23,27 @@ const meta = {
     question: <h2 className="text-center font-display text-5xl">Vos outils ne suivent plus ?</h2>,
     plates: [
       {
-        title: "Vous ressaisissez les mêmes données",
-        text: "Un devis, une facture, un Excel.",
+        icon: "time",
+        title: "Vous perdez du temps",
+        text: "Un devis, une facture, la bonne information à chercher.",
       },
       {
-        title: "Vous cherchez la bonne information",
-        text: "Mails, WhatsApp, Drive.",
+        icon: "departure",
+        title: "La mémoire part avec les gens",
+        text: "Le contexte s’en va avec celui qui le portait.",
       },
+      { icon: "hidden", title: "Vous pilotez à l’aveugle", text: "Le problème a déjà coûté." },
       {
-        title: "Tout repose sur une personne",
-        text: "Quand elle est absente, tout ralentit.",
+        icon: "restart",
+        title: "Chaque IA repart de zéro",
+        text: "Elle ne connaît ni vos clients ni vos projets.",
       },
-      { title: "Vous pilotez à l’aveugle", text: "Le problème a déjà coûté." },
     ],
     answer: [
       ["Vos outils devraient", "vous faire gagner du temps."],
       ["Pas vous en faire perdre."],
     ],
+    answerKeyword: "perdre",
     answerLevel: "h3",
   },
 } satisfies Meta<typeof QuestionScene>;
@@ -59,17 +63,18 @@ export const Parts: Story = {
   render: () => (
     <div className="flex flex-col gap-8 p-8">
       <div className="bg-background p-8 scheme-dark">
-        <NightPlate title="Vous ressaisissez les mêmes données" text="Un devis, une facture." />
+        <NightPlate icon="time" title="Vous perdez du temps" text="Un devis, une facture." />
       </div>
       <StatementLines
         paragraphs={[
           ["Vos outils devraient", "vous faire gagner du temps."],
           ["Pas vous en faire perdre."],
         ]}
+        keyword="perdre"
       />
     </div>
   ),
   play: async ({ canvas }) => {
-    await expect(canvas.getByText("Pas vous en faire perdre.")).toBeVisible();
+    await expect(canvas.getByText("perdre")).toBeVisible();
   },
 };

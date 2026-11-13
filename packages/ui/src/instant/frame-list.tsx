@@ -60,36 +60,40 @@ function rectOf(item: Element, list: Element): Rect {
 
 type EffectCleanup = (() => void) | undefined;
 
-/* Watches the list: the frame starts on the first item, and pointing at or focusing an item moves it there. */
+/* Watches the list: the frame starts on the first item, and pointing at or focusing an item moves it there. It keeps
+   the item it is on, so a resize measures that one again where it now stands rather than leaving the corners behind.
+   Returns what stops it. */
+function watchList(element: HTMLOListElement, place: (rect: Rect) => void): () => void {
+  let designated: Element | null = null;
+  function moveTo(item: Element | null): void {
+    if (item === null) {
+      return;
+    }
+    designated = item;
+    place(rectOf(item, element));
+  }
+  function designate(event: Event): void {
+    moveTo(event.target instanceof Element ? event.target.closest("[data-frame-item]") : null);
+  }
+  const observer = new ResizeObserver(() => {
+    moveTo(designated ?? element.querySelector("[data-frame-item]"));
+  });
+  observer.observe(element);
+  const listening = new AbortController();
+  element.addEventListener("pointerover", designate, { signal: listening.signal });
+  element.addEventListener("focusin", designate, { signal: listening.signal });
+  return () => {
+    observer.disconnect();
+    listening.abort();
+  };
+}
+
 function useDesignated(list: RefObject<HTMLOListElement | null>): Rect | null {
   const [target, setTarget] = useState<Rect | null>(null);
 
   useEffect((): EffectCleanup => {
     const element = list.current;
-    if (element === null) {
-      return undefined;
-    }
-    function designate(event: Event): void {
-      const item =
-        event.target instanceof Element ? event.target.closest("[data-frame-item]") : null;
-      if (item !== null && element !== null) {
-        setTarget(rectOf(item, element));
-      }
-    }
-    const observer = new ResizeObserver(() => {
-      const first = element.querySelector("[data-frame-item]");
-      setTarget((current) =>
-        current === null && first !== null ? rectOf(first, element) : current,
-      );
-    });
-    observer.observe(element);
-    const listening = new AbortController();
-    element.addEventListener("pointerover", designate, { signal: listening.signal });
-    element.addEventListener("focusin", designate, { signal: listening.signal });
-    return () => {
-      observer.disconnect();
-      listening.abort();
-    };
+    return element === null ? undefined : watchList(element, setTarget);
   }, [list]);
 
   return target;

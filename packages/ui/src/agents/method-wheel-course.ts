@@ -4,6 +4,8 @@ import { wheelCourse, wheelGeometry } from "../lib/wheel-geometry.ts";
 import { stepPitch, tipDistance, type WheelTrail, wheelTrail } from "../lib/wheel-trail.ts";
 import { sceneLength } from "../motion/tokens.ts";
 import { paintSlides, paintSteps } from "./method-wheel-slides.ts";
+import { paintPaper, planPaper } from "./wheel-paper.ts";
+import { releaseSizes, watchSizes } from "./wheel-sizes.ts";
 
 /* Screens the wheel is held under the floating nav (`ScrollScene length="long"`). */
 export const WHEEL_HOLD = sceneLength.long;
@@ -13,6 +15,8 @@ const QUESTION_HOLD_SCREENS = 0.25;
 const LEAVE_SCREENS = 0.4;
 const STROKE_AFTER_SCREENS = 0.1;
 const QUESTION_RISE_PX = 48;
+/* Where the stroke sets off, in screens of the hold: until then only the question stands on the paper. */
+const STROKE_SETS_OFF = QUESTION_HOLD_SCREENS + STROKE_AFTER_SCREENS;
 /* The last phase holds complete, every deliverable ticked, before the section scrolls on. */
 const TAIL_SCREENS = 0.25;
 /* Pixels between the resting drop and the copy, less on a narrow screen. */
@@ -41,8 +45,7 @@ export function questionLeave(held: number): { opacity: number; rise: number } {
 /* The wheel's course (0 to 1) at a point of the hold: it starts as the question starts to leave and ends before the
    tail. */
 export function wheelProgress(held: number): number {
-  const start = QUESTION_HOLD_SCREENS + STROKE_AFTER_SCREENS;
-  return clamp((held - start) / (WHEEL_HOLD - start - TAIL_SCREENS));
+  return clamp((held - STROKE_SETS_OFF) / (WHEEL_HOLD - STROKE_SETS_OFF - TAIL_SCREENS));
 }
 
 /* Where each phase is named along the course (0 to 1): the first once its dot has landed, each next one as its dot
@@ -184,9 +187,6 @@ function measure(parts: Parts): Measures {
   return { width, height, copyBlock: tallest, trail, pitch, reveal };
 }
 
-/* Each held wheel's watch on its copies: one at a time, let go when the wheel is let go or held again. */
-const copyWatchers = new WeakMap<HTMLElement, ResizeObserver>();
-
 interface TrailFrame {
   brush: SVGPathElement;
   dots: readonly HTMLElement[];
@@ -195,8 +195,8 @@ interface TrailFrame {
 }
 
 /* The brush paints down to its tip; the page follows the tip, so the ink and its drops rise a pitch a phase. A drop
-   lands as the tip reaches it and stays on the ink. */
-function paintTrail({ brush, dots, measures, course }: TrailFrame): void {
+   lands as the tip reaches it and stays on the ink. Returns how far the ink has risen (negative: up). */
+function paintTrail({ brush, dots, measures, course }: TrailFrame): number {
   const { trail, pitch, reveal } = measures;
   const tip = tipDistance(trail, course.entry, course.travel);
   const painted = course.entry > 0 ? (reveal.before + tip) / reveal.total : 0;
@@ -213,6 +213,13 @@ function paintTrail({ brush, dots, measures, course }: TrailFrame): void {
     dot.toggleAttribute("data-active", index === current);
     dot.toggleAttribute("data-passed", index < current);
   }
+  return rise;
+}
+
+/* The held paper against the sheet, for the stage's size: the ink has risen a pitch a phase when the wheel lets go. */
+function paperFor(root: HTMLElement, { pitch }: Measures, phases: number) {
+  const riseEnd = -wheelCourse(wheelProgress(WHEEL_HOLD), phases).travel * pitch;
+  return planPaper(root, { hold: WHEEL_HOLD, questionEnd: STROKE_SETS_OFF, riseEnd });
 }
 
 /* The wheel's course over the hold, in screens: the question alone, then it rises and fades while the ink stroke comes
@@ -232,27 +239,28 @@ export function methodWheelCourse(
   const { title, brush, dots, steps } = parts;
   const starts = phaseStarts(steps.length);
   let measures = measure(parts);
+  let paper = paperFor(root, measures, steps.length);
   /* A copy that grows past the tallest (text set in a late font, a longer line) changes the pitch, not the stage: the
      next paint measures again. */
-  let stale = false;
-  copyWatchers.get(root)?.disconnect();
-  const copies = new ResizeObserver((entries) => {
-    stale ||= entries.some(
-      (entry) => (entry.borderBoxSize[0]?.blockSize ?? 0) > measures.copyBlock + 0.5,
-    );
-  });
-  for (const step of steps) {
-    const copy = step.querySelector("[data-wheel-copy]");
-    if (copy !== null) {
-      copies.observe(copy);
+  const stale = watchSizes(parts, () => measures.copyBlock);
+  const wheelParts: Parts = parts;
+  function refresh() {
+    if (
+      stale.copy ||
+      root.clientWidth !== measures.width ||
+      root.clientHeight !== measures.height
+    ) {
+      stale.copy = false;
+      measures = measure(wheelParts);
+      stale.paper = true;
+    }
+    if (stale.paper) {
+      stale.paper = false;
+      paper = paperFor(root, measures, steps.length);
     }
   }
-  copyWatchers.set(root, copies);
   return (held: number) => {
-    if (stale || root.clientWidth !== measures.width || root.clientHeight !== measures.height) {
-      stale = false;
-      measures = measure(parts);
-    }
+    refresh();
     const leave = questionLeave(held);
     title?.style.setProperty("--wheel-title-opacity", String(leave.opacity));
     title?.style.setProperty("--wheel-title-rise", `${String(leave.rise)}px`);
@@ -260,7 +268,10 @@ export function methodWheelCourse(
     const progress = wheelProgress(held);
     const course = wheelCourse(progress, steps.length);
     onCourse?.({ travel: course.travel, active: course.active });
-    paintTrail({ brush, dots, measures, course });
+    const rise = paintTrail({ brush, dots, measures, course });
+    if (paper !== undefined) {
+      paintPaper(paper, { held, rise, questionEnd: STROKE_SETS_OFF });
+    }
     paintSlides({ steps, pitch: measures.pitch, travel: course.travel, entry: course.entry });
     const deliverables =
       steps[course.active]?.querySelectorAll("[data-wheel-deliverable]").length ?? 0;
@@ -274,8 +285,7 @@ export function methodWheelCourse(
 
 /* Leaves the phases as phones and reduced motion read them: no phase current, every deliverable ticked. */
 export function settleWheel(root: HTMLElement): void {
-  copyWatchers.get(root)?.disconnect();
-  copyWatchers.delete(root);
+  releaseSizes(root);
   for (const step of root.querySelectorAll<HTMLElement>("[data-slot=wheel-step]")) {
     delete step.dataset["wheelActive"];
     step.style.removeProperty("--wheel-shift");

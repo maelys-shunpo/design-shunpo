@@ -23,6 +23,17 @@ const sectionVariants = cva("text-foreground", {
       muted: "bg-muted",
       sheet: "bg-surface",
     },
+    /* `screen`: at least the window's height, its content centred between two bands the floating nav's height (and a
+       step of air from tablets up, `header-clear`), in place of the rhythm `spacing` would give. */
+    height: {
+      auto: "",
+      screen: "flex min-h-svh flex-col justify-center py-header md:py-header-clear",
+    },
+    /* `clip`: what floats inside never spills over the neighbouring sections. */
+    overflow: {
+      visible: "",
+      clip: "overflow-clip",
+    },
     /* The folds, crumples or grain of a paper over the section's own colour, which they keep on average. `grain` is a
        film grain for dark islands, under the content, still under reduced motion. */
     paper: {
@@ -39,7 +50,14 @@ const sectionVariants = cva("text-foreground", {
       field: "bg-background scheme-field",
     },
   },
-  defaultVariants: { spacing: "md", tone: "default", paper: "plain", scheme: "inherit" },
+  defaultVariants: {
+    spacing: "md",
+    tone: "default",
+    height: "auto",
+    overflow: "visible",
+    paper: "plain",
+    scheme: "inherit",
+  },
 });
 
 type SectionElement = "section" | "header" | "footer" | "aside";
@@ -64,6 +82,8 @@ export function Section({
   as: Element = "section",
   spacing,
   tone,
+  height,
+  overflow,
   paper,
   scheme,
   className,
@@ -73,7 +93,17 @@ export function Section({
     <Element
       data-slot="section"
       data-scheme={shownScheme({ scheme, tone })}
-      className={cn(sectionVariants({ spacing, tone, paper, scheme }), className)}
+      className={cn(
+        sectionVariants({
+          spacing: height === "screen" ? "flush" : spacing,
+          tone,
+          height,
+          overflow,
+          paper,
+          scheme,
+        }),
+        className,
+      )}
       {...props}
     />
   );

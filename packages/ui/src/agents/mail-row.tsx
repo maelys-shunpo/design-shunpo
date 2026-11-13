@@ -30,8 +30,8 @@ export function MailRow({
       data-slot="mail-row"
       {...liveAttributes({ live, liveKind })}
       className={cn(
-        "flex flex-col gap-1 rounded-lg border px-3 py-2",
-        selected ? "border-agents-ink/15 bg-surface shadow-agents-card" : "border-transparent",
+        "flex flex-col gap-1 border-b border-agents-line px-3 py-2",
+        selected && "bg-surface shadow-agents-card",
       )}
     >
       <div className="flex items-baseline justify-between gap-3">
@@ -44,8 +44,8 @@ export function MailRow({
           {attachment === undefined ? (
             <span />
           ) : (
-            <span className="inline-flex items-center gap-1 rounded-md border border-agents-line bg-surface px-2 py-0.5 font-mono text-xs text-muted-foreground">
-              <span aria-hidden className="size-2 rounded-sm bg-agents-signal" />
+            <span className="inline-flex items-center gap-1 border border-agents-line bg-surface px-2 py-0.5 font-mono text-xs text-muted-foreground">
+              <span aria-hidden className="size-2 bg-agents-signal" />
               {attachment}
             </span>
           )}

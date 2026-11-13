@@ -5,7 +5,7 @@ import { cn } from "../lib/cn.ts";
 import { type LiveStep, liveAttributes } from "./live.ts";
 
 const pillVariants = cva(
-  "inline-flex min-h-6 shrink-0 items-center gap-1 rounded-full px-2 text-xs font-medium whitespace-nowrap",
+  "inline-flex min-h-6 shrink-0 items-center gap-1 px-2 text-xs font-medium whitespace-nowrap",
   {
     variants: {
       tone: {
@@ -35,18 +35,26 @@ const dotVariants = cva("size-2 shrink-0 rounded-full", {
 
 interface StatusPillProps extends VariantProps<typeof pillVariants>, LiveStep {
   children: ReactNode;
+  /* Drawn in place of the dot: a check for done, typing dots for work under way. Decorative. */
+  mark?: ReactNode;
   className?: string | undefined;
 }
 
 /* A status inside a mockup: a dot and a word, coloured by what the agent is doing. */
-export function StatusPill({ children, tone, live, liveKind, className }: StatusPillProps) {
+export function StatusPill({ children, tone, mark, live, liveKind, className }: StatusPillProps) {
   return (
     <span
       data-slot="status-pill"
       {...liveAttributes({ live, liveKind })}
       className={cn(pillVariants({ tone }), className)}
     >
-      <span aria-hidden className={dotVariants({ tone })} />
+      {mark === undefined ? (
+        <span aria-hidden className={dotVariants({ tone })} />
+      ) : (
+        <span aria-hidden className="inline-flex shrink-0 items-center">
+          {mark}
+        </span>
+      )}
       {children}
     </span>
   );

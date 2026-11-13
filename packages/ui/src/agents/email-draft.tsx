@@ -23,7 +23,7 @@ export function EmailDraft({
     <div
       data-slot="email-draft"
       {...liveAttributes({ live, liveKind })}
-      className="flex flex-col gap-3 rounded-lg border border-agents-line bg-surface p-4"
+      className="agents-sheet flex flex-col gap-3 agents-sheet-fold p-4 agents-sheet-float agents-sheet-lg"
     >
       <dl className="flex flex-col gap-1 text-xs">
         <div className="flex gap-2">
@@ -43,7 +43,7 @@ export function EmailDraft({
       </p>
       <span
         aria-hidden
-        className="inline-flex h-8 items-center self-end rounded-md bg-agents-ink px-3 text-xs font-medium text-agents-paper"
+        className="agents-cut pointer-events-none relative isolate inline-flex h-8 items-center self-end px-3 text-xs font-medium text-agents-paper before:bg-agents-ink"
       >
         {sendLabel}
       </span>

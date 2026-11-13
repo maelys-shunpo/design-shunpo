@@ -38,3 +38,23 @@ export const Navigation: Story = {
     ).toBeInTheDocument();
   },
 };
+
+/* Over a hero film: out of the flow, in Kome on the night until the visitor scrolls and the pill floats. */
+export const OverFilm: Story = {
+  render: () => (
+    <div className="h-svh bg-fuji">
+      <AgentsNav
+        label="Navigation principale"
+        over="film"
+        brand={<Wordmark />}
+        links={<NavAnchor href="#methode">Méthode</NavAnchor>}
+        action={<AgentsAction href="#contact">Parlons de votre projet</AgentsAction>}
+      />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("navigation", { name: "Navigation principale" })).toHaveClass(
+      "scheme-dark",
+    );
+  },
+};

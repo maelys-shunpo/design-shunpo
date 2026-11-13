@@ -21,8 +21,32 @@ describe("AgentsNav", () => {
       </>,
     );
     const bar = screen.getByRole("navigation", { name: "Navigation" }).element();
-    expect(classOf(bar)).toContain("bg-transparent");
+    expect(classOf(bar)).toContain("before:opacity-0");
     window.scrollTo(0, 400);
-    await expect.poll(() => classOf(bar)).toContain("bg-surface");
+    await expect.poll(() => classOf(bar)).toContain("agents-sheet-float");
+  });
+
+  it("lets a hero film show through: out of the flow, in Kome on the night until it floats", async () => {
+    const screen = await render(
+      <>
+        <AgentsNav
+          label="Navigation"
+          brand={<span>marque</span>}
+          links={null}
+          action={null}
+          over="film"
+        />
+        <div data-testid="film" style={{ height: "300vh" }} />
+      </>,
+    );
+    const bar = screen.getByRole("navigation", { name: "Navigation" }).element();
+    const header = screen.getByRole("banner").element();
+
+    expect(getComputedStyle(header).position).toBe("fixed");
+    expect(screen.getByTestId("film").element().getBoundingClientRect().top).toBe(0);
+    expect(classOf(bar)).toContain("scheme-dark");
+    window.scrollTo(0, 400);
+    await expect.poll(() => classOf(bar)).toContain("agents-sheet-float");
+    expect(classOf(bar)).not.toContain("scheme-dark");
   });
 });

@@ -26,17 +26,17 @@ export function ApprovalCard({
     <div
       data-slot="approval-card"
       {...liveAttributes({ live, liveKind })}
-      className="flex flex-col gap-3 rounded-lg border border-agents-wait/25 bg-agents-wait-tint p-3"
+      className="agents-sheet flex flex-col gap-3 agents-sheet-fold p-3 agents-sheet-float agents-sheet-wait agents-sheet-lg"
     >
       <div className="flex flex-col gap-1">
         <span className="text-xs font-medium text-agents-wait">{reason}</span>
         <span className="text-sm">{detail}</span>
       </div>
       <div aria-hidden className="flex gap-2">
-        <span className="inline-flex h-8 items-center rounded-md bg-agents-ink px-3 text-xs font-medium text-agents-paper">
+        <span className="agents-cut pointer-events-none relative isolate inline-flex h-8 items-center px-3 text-xs font-medium text-agents-paper before:bg-agents-ink">
           {approve}
         </span>
-        <span className="inline-flex h-8 items-center rounded-md border border-agents-ink/20 bg-surface px-3 text-xs font-medium">
+        <span className="agents-cut pointer-events-none relative isolate inline-flex h-8 items-center px-3 text-xs font-medium agents-cut-line before:bg-agents-ink/20">
           {edit}
         </span>
       </div>

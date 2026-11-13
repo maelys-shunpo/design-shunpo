@@ -94,7 +94,7 @@ export function WheelStep({ phase, className }: WheelStepProps) {
         <span
           lang="ja"
           aria-hidden="true"
-          className="pointer-events-none absolute agents-wheel-kanji -z-10 hidden agents-wheel-slide font-mincho font-medium text-agents-line select-none md:block"
+          className="pointer-events-none absolute agents-wheel-kanji -z-10 hidden agents-wheel-slide font-mincho font-medium text-agents-kanji select-none md:block"
         >
           {phase.kanji}
         </span>

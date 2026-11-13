@@ -24,7 +24,7 @@ const actionVariants = cva(
           "agents-cut text-foreground agents-cut-line before:bg-foreground/30 hover:before:bg-foreground/60",
         /* A link set as text, underlined. */
         quiet:
-          "rounded-control text-foreground underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground focus-visible:ring-3 focus-visible:ring-ring/45 focus-visible:outline-none",
+          "text-foreground underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground focus-visible:ring-3 focus-visible:ring-ring/45 focus-visible:outline-none",
       },
       size: {
         /* Inside an interface. */

@@ -14,6 +14,13 @@ import { DESKTOP } from "./support/viewports.ts";
 const ENTRANCE = { timeout: 5000 };
 let releaseIdleCallbacks: () => void;
 
+function required<T>(value: T | null | undefined, message: string): T {
+  if (value === null || value === undefined) {
+    throw new Error(message);
+  }
+  return value;
+}
+
 beforeEach(async () => {
   await page.viewport(DESKTOP.width, DESKTOP.height);
   releaseIdleCallbacks = holdIdleCallbacks();
@@ -115,6 +122,22 @@ describe("InkWord", () => {
     /* They hold the word, not the line: never more than a fifth of an em past its letters. */
     expect(bracketReach(screen.container).above).toBeLessThan(0.2);
     expect(bracketReach(screen.container).below).toBeLessThan(0.2);
+  });
+
+  it("makes room for its brackets in proportion to the type, with no off-scale padding", async () => {
+    const screen = await render(question(false));
+    const word = required(
+      screen.container.querySelector<HTMLElement>("[data-slot=ink-word]"),
+      "no word",
+    );
+    const text = required(word.querySelector<HTMLElement>("[data-ink-text]"), "no text");
+    const style = getComputedStyle(word);
+    expect([style.paddingInlineStart, style.paddingInlineEnd]).toEqual(["0px", "0px"]);
+    const size = Number(style.fontSize.replace("px", ""));
+    const outer = word.getBoundingClientRect();
+    const inner = text.getBoundingClientRect();
+    expect((inner.left - outer.left) / size).toBeCloseTo(0.3, 2);
+    expect((outer.right - inner.right) / size).toBeCloseTo(0.3, 2);
   });
 
   it("raises its headline's lines, then brings the word into focus letter by letter and closes the brackets on it, once well inside the window", async () => {

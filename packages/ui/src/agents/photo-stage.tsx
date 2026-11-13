@@ -3,17 +3,21 @@ import type { ReactElement, ReactNode } from "react";
 
 import { cn } from "../lib/cn.ts";
 
-const stageVariants = cva("relative isolate grid overflow-clip rounded-stage bg-muted", {
-  variants: {
-    padding: {
-      /* Beside a column of text: the surface narrows to a frame on tablets, so the interface keeps its width. */
-      sm: "px-4 py-8 sm:px-8 md:p-6 lg:p-12",
-      md: "px-4 py-8 sm:px-8 md:p-12",
-      lg: "px-4 py-10 sm:px-10 md:p-20",
+/* Cut 32 px, the photograph clipped along the cut, no hairline. */
+const stageVariants = cva(
+  "relative isolate grid overflow-clip bg-muted agents-sheet-clip agents-sheet-xl",
+  {
+    variants: {
+      padding: {
+        /* Beside a column of text: the surface narrows to a frame on tablets, so the interface keeps its width. */
+        sm: "px-4 py-8 sm:px-8 md:p-6 lg:p-12",
+        md: "px-4 py-8 sm:px-8 md:p-12",
+        lg: "px-4 py-10 sm:px-10 md:p-20",
+      },
     },
+    defaultVariants: { padding: "lg" },
   },
-  defaultVariants: { padding: "lg" },
-});
+);
 
 /* How wide the interface sits on the surface: the full stage, or a narrower window with the surface around it. */
 const contentVariants = cva("relative mx-auto w-full min-w-0", {
@@ -21,6 +25,7 @@ const contentVariants = cva("relative mx-auto w-full min-w-0", {
     width: {
       wide: "max-w-wide",
       narrow: "max-w-narrow",
+      window: "max-w-window",
     },
   },
   defaultVariants: { width: "wide" },
