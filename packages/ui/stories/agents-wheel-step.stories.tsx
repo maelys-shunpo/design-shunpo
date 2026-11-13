@@ -44,7 +44,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Step: Story = {
-  play: async ({ canvas }) => {
+  play: async ({ canvas, canvasElement }) => {
+    /* Standalone, show the phase at its rest the way MethodWheel reveals it when held (`--wheel-presence`); phones and
+       reduced motion read it complete without this. */
+    const step = canvasElement.querySelector<HTMLElement>("[data-slot=wheel-step]");
+    step?.style.setProperty("--wheel-presence", "1");
+
     await expect(canvas.getByRole("heading", { level: 3, name: "Immersion" })).toBeVisible();
     await expect(canvas.getByText("Feuille de route priorisée")).toBeVisible();
   },

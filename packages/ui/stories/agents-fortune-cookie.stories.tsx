@@ -48,9 +48,17 @@ async function waitUntilOpen(query: () => HTMLElement | null): Promise<void> {
 }
 
 export const Crack: Story = {
-  play: async ({ canvas, userEvent }) => {
+  play: async ({ canvas, canvasElement, userEvent }) => {
     const button = canvas.getByRole("button", { name: "Casser le biscuit" });
     await expect(button).toHaveAttribute("aria-expanded", "false");
+
+    /* Wait until the motion has loaded and the cookie is laid out and floating, so the gesture is not lost before it
+       is interactive (the open needs the measured layout). */
+    await waitFor(async () => {
+      const float = canvasElement.querySelector<HTMLElement>("[data-cookie-part=float]");
+      const transform = float === null ? "none" : getComputedStyle(float).transform;
+      await expect(transform).not.toBe("none");
+    });
 
     await userEvent.click(button);
 
