@@ -1,18 +1,28 @@
-import { GridArea } from "@repo/ui/layout/grid-area";
-import { PageGrid } from "@repo/ui/layout/page-grid";
-import { Section } from "@repo/ui/layout/section";
+import { AgentsAction } from "@repo/ui/agents/action";
+import { HeroFilm } from "@repo/ui/agents/hero-film";
+import Image from "next/image";
 
-import { HeroCopy } from "./hero-copy";
+import { contactUrl } from "../shunpo/content";
+import { heroCopy, heroFilm } from "./hero-content";
+import sunriseRisen from "./images/hero-sunrise-risen.webp";
+import sunriseStart from "./images/hero-sunrise-start.webp";
 
-/* Centred: the promise on 10 columns. The example lives in the section that follows. */
+/* The home page's hero: the sunrise read by the scroll behind the promise. */
 export function HeroSection() {
   return (
-    <Section spacing="regular">
-      <PageGrid>
-        <GridArea columns={{ md: 8, lg: 10 }}>
-          <HeroCopy />
-        </GridArea>
-      </PageGrid>
-    </Section>
+    <HeroFilm
+      sources={heroFilm.sources}
+      poster={
+        <Image src={sunriseStart} alt="" fill sizes="100vw" loading="eager" fetchPriority="high" />
+      }
+      still={<Image src={sunriseRisen} alt="" fill sizes="100vw" />}
+      title={heroCopy.title}
+      action={
+        <AgentsAction href={contactUrl} size="lg" arrow>
+          {heroCopy.action}
+        </AgentsAction>
+      }
+      leaveAt={heroFilm.leaveAt}
+    />
   );
 }

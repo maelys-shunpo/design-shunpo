@@ -6,7 +6,7 @@ import { Stack } from "@repo/ui/layout/stack";
 
 import { ReferencesWall } from "./references-wall";
 
-/* The clients under the hero: the title on one half, their logos drifting in three columns on the other. */
+/* The clients who trusted us, opening the proof: the title on one half, their logos drifting in three columns on the other. */
 export function ReferencesBand() {
   return (
     <Section spacing="regular" aria-label="Références">

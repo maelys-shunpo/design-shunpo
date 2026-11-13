@@ -162,7 +162,7 @@ export interface Reference {
   href: string;
 }
 
-/* Published references only, described as the brief describes them: no figure is attributed to SHUNPO. */
+/* Published references only, described as the brief describes them; their key figures live in `figures.ts`. */
 export const references: Reference[] = [
   {
     id: "tf1",
@@ -192,7 +192,7 @@ export const references: Reference[] = [
   },
   {
     id: "vicat",
-    name: "1817 · Groupe Vicat",
+    name: "Groupe Vicat",
     project: "Expérience web",
     stake: "Visibilité et performance SEO",
     mission: "Une expérience web conçue pour gagner en visibilité et en performance SEO.",

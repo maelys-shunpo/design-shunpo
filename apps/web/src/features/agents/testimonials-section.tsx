@@ -30,7 +30,8 @@ export function TestimonialsSection() {
           <TestimonialsCopy />
         </GridArea>
         <GridArea columns={{ lg: { start: 7, span: 6 } }}>
-          <TestimonialCascade label="Avis de clients" labels={labels}>
+          {/* A pair of quotes reads in about fifteen seconds; the loop holds under the pointer. */}
+          <TestimonialCascade label="Avis de clients" labels={labels} every={14_000}>
             {testimonials.map((testimonial, index) => (
               <Testimonial
                 key={testimonial.id}

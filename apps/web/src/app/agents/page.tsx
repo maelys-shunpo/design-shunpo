@@ -1,9 +1,7 @@
-import { Direction } from "@repo/ui/layout/direction";
 import type { Metadata } from "next";
 
-import { PageBody } from "@/features/agents/page-body";
-import { PageFooter } from "@/features/agents/page-footer";
-import { PageNav } from "@/features/agents/page-nav";
+import { AgentsPage } from "@/features/agents/agents-page";
+import { HeroSection } from "@/features/agents/hero-section";
 
 export const metadata: Metadata = {
   title: "Agents IA sur mesure",
@@ -11,12 +9,6 @@ export const metadata: Metadata = {
     "SHUNPO conçoit, connecte et maintient des agents IA et des automatisations sur mesure pour les PME, ETI et grands comptes.",
 };
 
-export default function AgentsPage() {
-  return (
-    <Direction name="agents">
-      <PageNav />
-      <PageBody />
-      <PageFooter />
-    </Direction>
-  );
+export default function Page() {
+  return <AgentsPage hero={<HeroSection />} opening="film" />;
 }

@@ -5,18 +5,22 @@ import { Wordmark } from "@repo/ui/agents/wordmark";
 import Link from "next/link";
 
 import { contactUrl } from "../shunpo/content";
+import { casesAreShown } from "./cases-visibility";
 
-const links = [
+const allLinks = [
   { href: "#outils", label: "Intégrations" },
-  { href: "#methode", label: "Méthode" },
-  { href: "#references", label: "Références" },
   { href: "#essayer", label: "Essayer" },
+  { href: "#references", label: "Références" },
+  { href: "#methode", label: "Méthode" },
 ] as const;
 
-export function PageNav() {
+const links = allLinks.filter((link) => casesAreShown || link.href !== "#references");
+
+export function PageNav({ over }: { over: "paper" | "film" }) {
   return (
     <AgentsNav
       label="Navigation principale"
+      over={over}
       brand={
         <Link href="/agents" aria-label="shunpo, accueil">
           <Wordmark />

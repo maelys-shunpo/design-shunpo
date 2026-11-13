@@ -1,23 +1,25 @@
 import { AgentsAction } from "@repo/ui/agents/action";
 import { Eyebrow } from "@repo/ui/agents/eyebrow";
 import { Headline } from "@repo/ui/agents/headline";
+import { HeadlinePart } from "@repo/ui/agents/headline-part";
 import { Inline } from "@repo/ui/layout/inline";
 import { Stack } from "@repo/ui/layout/stack";
 import { Text } from "@repo/ui/typography/text";
 
 import { contactUrl } from "../shunpo/content";
 
-export function HeroCopy() {
+/* The promise of the « Convergence » hero: the grey context, then the words the scene acts out. */
+export function ConvergenceCopy() {
   return (
     <Stack gap="xl" align="center">
       <Eyebrow align="center">Agents IA sur mesure</Eyebrow>
-      <Headline level={1} size="display" align="center">
-        Une interface pour faire travailler vos outils ensemble
+      <Headline level={1} size="title" align="center">
+        <HeadlinePart tone="dim">Une interface pour faire travailler </HeadlinePart>
+        <HeadlinePart>vos outils ensemble</HeadlinePart>
       </Headline>
       <Text size="lg" align="center" measure="prose" tone="muted">
-        SHUNPO crée une interface simple, reliée à votre messagerie, votre CRM et votre ERP. Vos
-        agents IA font avancer les tâches dans ces outils. Depuis votre espace de travail, vous
-        voyez ce qui a été fait et ce qui attend votre validation.
+        Votre messagerie, votre CRM et votre ERP restent en place. Vos agents IA y font avancer les
+        tâches, et vous suivez tout depuis un seul espace de travail.
       </Text>
       <Inline gap="sm" justify="center">
         <AgentsAction href={contactUrl} size="lg" variant="signal" arrow>

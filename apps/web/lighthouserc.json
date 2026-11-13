@@ -6,6 +6,11 @@
       "url": [
         "http://localhost:3200/",
         "http://localhost:3200/agents",
+        "http://localhost:3200/agents/convergence",
+        "http://localhost:3200/agents/couches",
+        "http://localhost:3200/agents/semaine",
+        "http://localhost:3200/agents/shuriken",
+        "http://localhost:3200/agents/pliage",
         "http://localhost:3200/origami",
         "http://localhost:3200/instant",
         "http://localhost:3200/mecanique",
