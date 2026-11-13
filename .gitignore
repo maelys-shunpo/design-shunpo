@@ -25,6 +25,11 @@ next-env.d.ts
 # Conductor workspace context (attachments, research notes)
 .context/
 
+# Superpowers scratch (visual-companion sessions, sdd logs)
+.superpowers/
+
 # Impeccable decision rounds and mocks
 .impeccable/mocks/
 .impeccable/questions/
+.impeccable/critique/
+.impeccable/live/
