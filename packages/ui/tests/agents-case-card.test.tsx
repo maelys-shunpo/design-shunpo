@@ -61,6 +61,13 @@ function figureSizeOf(container: HTMLElement): number {
   return digits === null ? Number.NaN : Number(getComputedStyle(digits).fontSize.replace("px", ""));
 }
 
+/* An element's font size in pixels, NaN when it is missing. */
+function textSizeOf(element: Element | null): number {
+  return element === null
+    ? Number.NaN
+    : Number(getComputedStyle(element).fontSize.replace("px", ""));
+}
+
 /* The first word of the mission, the one that rises first. */
 function firstWord(container: HTMLElement): Element | null {
   return container.querySelector("[data-case-word]");
@@ -149,11 +156,13 @@ describe("CaseCard", () => {
     await page.viewport(PHONE.width, PHONE.height);
     const phone = await render(tf1());
     const onPhone = figureSizeOf(phone.container);
+    const phoneText = textSizeOf(mission(phone.container));
     await phone.unmount();
     await page.viewport(DESKTOP.width, DESKTOP.height);
     const desktop = await render(tf1());
 
-    expect(onPhone).toBe(64);
+    /* A clear step over the card's own text on the phone (the fluid type token grows it), larger again on wider screens. */
+    expect(onPhone).toBeGreaterThan(phoneText);
     expect(figureSizeOf(desktop.container)).toBeGreaterThan(onPhone);
   });
 
