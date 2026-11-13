@@ -4,7 +4,7 @@ The three grey reliefs (`froisse.png`, `plie.png`, `fibres.png`) were rendered o
 texture shader (`@paper-design/shaders` 0.0.82, Apache-2.0), white paper over black shade, in a headless browser. No
 runtime dependency ships: the page only loads the webp tiles in `packages/ui/src/styles/`.
 
-The grain tile (`agents-grain.webp`) has no master: it is 128 px of seeded mid-grey noise (the sum of three uniforms per
+The grain tile (`agents-grain.webp`) has no master: it is 256 px of seeded mid-grey noise (the sum of three uniforms per
 pixel, mean centred on 128), written losslessly by the recipe below.
 
 Re-render a master (throwaway script, run from `/tmp`, not from the repo; `REPO` is the path of your checkout):
@@ -17,31 +17,35 @@ const { chromium } = require("@playwright/test");
 /* Renders the paper.design paper texture as a grey relief: white paper, black shade, so 255 is flat paper. */
 const jobs = {
   froisse: {
-    width: 2160,
-    height: 2160,
+    width: 2880,
+    height: 1800,
+    rotation: 17,
     params: {
       fiber: 0.4,
       fiberSize: 0.5,
       roughness: 0.35,
       roughnessSize: 0.25,
       crumples: 1,
-      crumpleCount: 5,
+      crumpleCount: 15,
       angle: 60,
       seed: 49,
       scale: 1,
     },
   },
   plie: {
-    width: 2400,
-    height: 1600,
+    width: 2880,
+    height: 1800,
+    rotation: 28,
     params: {
       fiber: 0.5,
       fiberSize: 0.5,
       roughness: 0.15,
       roughnessSize: 0.25,
       folds: 0.45,
-      foldSizeX: 0.3,
-      foldSizeY: 0.6,
+      foldSizeX: 0.55,
+      foldSizeY: 0.65,
+      foldOffsetX: 0.3,
+      foldOffsetY: 0.2,
       angle: 236,
       seed: 613,
       scale: 1,
@@ -50,6 +54,7 @@ const jobs = {
   fibres: {
     width: 1320,
     height: 1320,
+    rotation: 0,
     params: {
       fiber: 0.75,
       fiberSize: 0.35,
@@ -103,8 +108,8 @@ for (const [name, job] of Object.entries(jobs)) {
           u_folds: p.folds ?? 0,
           u_foldSizeX: p.foldSizeX ?? 1,
           u_foldSizeY: p.foldSizeY ?? 1,
-          u_foldOffsetX: 0,
-          u_foldOffsetY: 0,
+          u_foldOffsetX: p.foldOffsetX ?? 0,
+          u_foldOffsetY: p.foldOffsetY ?? 0,
           u_wrinkles: p.wrinkles ?? 0,
           u_wrinkleSize: p.wrinkleSize ?? 0.65,
           u_crumples: p.crumples ?? 0,
@@ -113,7 +118,7 @@ for (const [name, job] of Object.entries(jobs)) {
           u_noiseTexture: noise,
           u_fit: s.ShaderFitOptions.cover,
           u_scale: p.scale,
-          u_rotation: 0,
+          u_rotation: job.rotation,
           u_offsetX: 0,
           u_offsetY: 0,
           u_originX: 0.5,
@@ -280,5 +285,31 @@ console.log(
 );
 ```
 
-Final settings (12 November 2026): froisse 1200 px q80 seamless on Shiro, plie 1600 px q78 on Kome, fibres 990 px q78
-seamless on #FAF9F6; grain 128 px lossless.
+Final settings (12 November 2026, after the design review): froisse 2400 px q75 and plie 2880 px q80, both unseamed
+and laid once over their section (`background-size: cover`), so they never repeat on wide screens and the plie's folds,
+turned 28°, never run along a line of text; fibres 990 px q78 seamless on #FAF9F6; grain 256 px lossless.
+
+The grain tile (run from `/tmp`, `node grain-tile.mjs 256 agents-grain.webp 1213`):
+
+```js
+import { createRequire } from "node:module";
+const sharp = createRequire(
+  `${process.env.REPO}/node_modules/.pnpm/sharp@0.35.5_@types+node@26.6.5/node_modules/`,
+)("sharp");
+/* size output seed: seeded mid-grey noise, the sum of three uniforms on [0, 85] per pixel (mean 127.5, std 42.5). */
+const [sizeArg, output, seedArg] = process.argv.slice(2);
+const size = Number(sizeArg);
+let state = Number(seedArg) >>> 0;
+const random = () => {
+  state = (state + 0x6d2b79f5) >>> 0;
+  let t = state;
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+const raw = Buffer.alloc(size * size);
+for (let i = 0; i < raw.length; i++) raw[i] = Math.round(85 * (random() + random() + random()));
+await sharp(raw, { raw: { width: size, height: size, channels: 1 } })
+  .webp({ lossless: true, effort: 6 })
+  .toFile(output);
+```
