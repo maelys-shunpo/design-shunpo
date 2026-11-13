@@ -142,7 +142,8 @@ describe("questionCourse", () => {
     expect(middle(question())).toBeCloseTo(middle(night), 0);
     expect(styleOf(screen.container, "[data-question-plate]")?.opacity).toBe("0");
 
-    paint?.(0.4 + 1);
+    /* All four plates have settled (the last lands 1.2 screens into the course). */
+    paint?.(0.4 + 1.3);
     const plateTops = [...screen.container.querySelectorAll("[data-question-plate]")].map((plate) =>
       Math.round(plate.getBoundingClientRect().top),
     );
@@ -158,8 +159,8 @@ describe("questionCourse", () => {
 
     paint?.(0.4 + 1.1);
     expect(styleOf(screen.container, "[data-question-text]")?.opacity).toBe("1");
-    /* The shuriken holds on its mark about 1.39 screens into the course. */
-    paint?.(0.4 + 1.39);
+    /* The shuriken holds on its mark about 2.31 screens into the course (0.35 of the way through the cut). */
+    paint?.(0.4 + 2.31);
     expect(Number(styleOf(screen.container, "[data-question-text]")?.opacity)).toBeLessThan(0.5);
   });
 
@@ -198,7 +199,8 @@ describe("questionCourse", () => {
     at(0.2);
     expect(frame?.dataset["shown"]).toBeUndefined();
 
-    at(0.46);
+    /* The frame has reached the second plate (designated from 0.55 screens into the course). */
+    at(0.7);
     const second = inStage(
       screen.container,
       screen.container.querySelectorAll("[data-question-plate]")[1]?.getBoundingClientRect(),
@@ -209,10 +211,12 @@ describe("questionCourse", () => {
     expect(frameBox(screen.container).x).toBeCloseTo(second.x - 8, 0);
     expect(frameBox(screen.container).y).toBeCloseTo(second.y - 8, 0);
 
-    at(0.61);
+    /* The frame has jumped on to the third plate, leaving one trail of three ghosts. */
+    at(0.9);
     expect(screen.container.querySelectorAll("[data-question-ghost]")).toHaveLength(3);
 
-    at(1);
+    /* It lets go for good once the last plate has landed (the release is 1.39 screens in). */
+    at(1.4);
     expect(frame?.dataset["shown"]).toBeUndefined();
 
     at(2);
