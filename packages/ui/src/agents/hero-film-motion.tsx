@@ -8,6 +8,7 @@ import type { RefObject } from "react";
 import { scrub } from "../motion/tokens.ts";
 import { createVideoSeeker, type VideoSources, whenNear } from "../motion/video-seeker.ts";
 import { type FilmCues, heroFilmCourse } from "./hero-film-course.ts";
+import { splitPromiseLetters } from "./hero-film-letters.ts";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -40,12 +41,15 @@ export function HeroFilmMotion({ stage, track, video, sources, cues }: HeroFilmM
       const seeker = createVideoSeeker(film, sources);
       const stopWatching = whenNear(film, seeker.load);
       let timeline: gsap.core.Timeline | undefined;
+      let revertLetters: (() => void) | undefined;
       let cancelled = false;
       async function build(): Promise<void> {
         await document.fonts.ready;
         if (cancelled) {
           return;
         }
+        /* Split once the faces are loaded, so each letter sits on the line the visitor sees before the course lights it. */
+        revertLetters = splitPromiseLetters(mounted(stage));
         timeline = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {
@@ -63,6 +67,7 @@ export function HeroFilmMotion({ stage, track, video, sources, cues }: HeroFilmM
         stopWatching();
         seeker.dispose();
         timeline?.kill();
+        revertLetters?.();
       };
     });
   });

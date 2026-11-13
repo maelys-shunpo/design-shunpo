@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect } from "storybook/test";
+import { expect, waitFor } from "storybook/test";
 
 import { AgentsAction } from "../src/agents/action.tsx";
 import { CoverSheet } from "../src/agents/cover-sheet.tsx";
@@ -53,7 +53,10 @@ export const Night: Story = {
   ),
   play: async ({ canvas }) => {
     await expect(canvas.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(canvas.getByRole("link", { name: "Réserver une Immersion" })).toBeVisible();
+    /* The action rises in over its entrance (`agents-hero-action-rise`); wait for it to land. */
+    await waitFor(() =>
+      expect(canvas.getByRole("link", { name: "Réserver une Immersion" })).toBeVisible(),
+    );
     await expect(canvas.getByAltText("Le soleil se lève sur les montagnes")).toBeVisible();
   },
 };

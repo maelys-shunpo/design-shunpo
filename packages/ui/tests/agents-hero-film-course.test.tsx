@@ -4,13 +4,18 @@ import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 
 import { FILM_SCREENS, HOLD_SCREENS, heroFilmCourse } from "../src/agents/hero-film-course.ts";
+import { splitPromiseLetters } from "../src/agents/hero-film-letters.ts";
 import { CUES, filmPart, HeroFilmPage, shown, TITLE } from "./support/hero-film.tsx";
 
 async function course() {
   const screen = await render(<HeroFilmPage />);
   const seek = vi.fn<(share: number) => void>();
   const timeline = gsap.timeline({ paused: true, defaults: { ease: "none" } });
-  heroFilmCourse(filmPart(screen.container, "stage"), CUES, seek)(timeline);
+  const stage = filmPart(screen.container, "stage");
+  /* The scene splits the promise into letters once the faces are loaded, before building the course; mirror that here. */
+  await document.fonts.ready;
+  splitPromiseLetters(stage);
+  heroFilmCourse(stage, CUES, seek)(timeline);
   return { screen, container: screen.container, seek, timeline };
 }
 
