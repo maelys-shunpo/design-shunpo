@@ -6,6 +6,8 @@ import { expect, test } from "@playwright/test";
    value. */
 test("agents page dresses each ground in its own paper", async ({ page }) => {
   await page.goto("/agents");
+  /* The section papers are held off the first paint until `PaperGate` opens them once the page is idle (`html[data-papers]`). */
+  await page.waitForFunction(() => Object.hasOwn(document.documentElement.dataset, "papers"));
 
   const found = await page.evaluate(() => ({
     grounds: [...document.querySelectorAll("main [id]")]
