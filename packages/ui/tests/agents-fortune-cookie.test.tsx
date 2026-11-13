@@ -79,7 +79,7 @@ describe("FortuneCookie", () => {
     await expect
       .poll(() => document.activeElement === paper(screen.container), { timeout: 4000 })
       .toBe(true);
-    expect(paper(screen.container)?.getAttribute("aria-hidden")).toBe("false");
+    await expect.poll(() => paper(screen.container)?.getAttribute("aria-hidden")).toBe("false");
     await expect.element(screen.getByRole("link", { name: "Voir les conditions" })).toBeVisible();
   });
 
