@@ -37,6 +37,9 @@ const ART_WIDTH = 1380;
 const ART_HEIGHT = 793;
 /* On phones the cookie is drawn this much larger, as far as the open halves stay whole: the photographs' white margins run past the screen's edges. */
 const COMPACT_ZOOM = 1.1;
+/* On wider scenes the cookie sits a touch inside the column rather than filling it, so it reads as one object held
+   in its halo, not as the section's whole width. The paper and the figure keep their own size. */
+const WIDE_ZOOM = 0.92;
 /* The paper's panels on the 690 px scene, and their height as a share of their width. */
 const PANEL_WIDTH = 270;
 const PANEL_RATIO = 0.5;
@@ -76,7 +79,7 @@ export function cookieLayout(
   compact: boolean,
   art: CookieArtGeometry,
 ): CookieLayout {
-  const zoom = compact ? COMPACT_ZOOM : 1;
+  const zoom = compact ? COMPACT_ZOOM : WIDE_ZOOM;
   const scale = width / SCENE_WIDTH;
   const artScale = scale * zoom;
   const artWidth = width * zoom;

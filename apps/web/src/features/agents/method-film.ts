@@ -32,5 +32,4 @@ export const agentsMethodFilm: WheelFilmSource = {
       loop: { from: 171, to: 187, seconds: 5, hold: 2, delay: SETTLE, motion: "repeat" },
     },
   ],
-  labels: { pause: "Mettre l’animation en pause", play: "Relancer l’animation" },
 };

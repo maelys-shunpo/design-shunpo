@@ -5,7 +5,6 @@ import {
   filmPosition,
   loopPosition,
   restingPhase,
-  type Signal,
 } from "./wheel-film-course.ts";
 
 /* One picture of the film to draw, and how much of it. */
@@ -56,15 +55,14 @@ function rememberNamed() {
 
 interface Loops {
   rests: readonly FilmRest[];
-  paused: Signal<boolean>;
   /* Draws the film again: the loop moved. */
   draw: () => void;
 }
 
 /* The loops of the phases, played in time while the wheel rests on one, never by the scroll: the scroll only carries
    the paper from one phase to the next, and a loop caught mid-way fades into it as the dots set off. They hold while
-   paused, and while the film is out of the window. */
-export function createLoops({ rests, paused, draw }: Loops) {
+   the film is out of the window. */
+export function createLoops({ rests, draw }: Loops) {
   let resting: number | undefined;
   let elapsed = 0;
   let last = 0;
@@ -80,7 +78,7 @@ export function createLoops({ rests, paused, draw }: Loops) {
   }
   function tick(now: number) {
     clock = 0;
-    if (resting === undefined || paused.get() || !seen) {
+    if (resting === undefined || !seen) {
       return;
     }
     elapsed += (now - last) / 1000;
@@ -89,12 +87,11 @@ export function createLoops({ rests, paused, draw }: Loops) {
     clock = requestAnimationFrame(tick);
   }
   function run() {
-    if (clock === 0 && resting !== undefined && !paused.get() && seen) {
+    if (clock === 0 && resting !== undefined && seen) {
       last = performance.now();
       clock = requestAnimationFrame(tick);
     }
   }
-  const stopListening = paused.listen(run);
   return {
     follow: (course: CourseValue) => {
       const before = namedBefore(course.active);
@@ -119,7 +116,6 @@ export function createLoops({ rests, paused, draw }: Loops) {
       run();
     },
     stop: () => {
-      stopListening();
       cancelAnimationFrame(clock);
     },
   };

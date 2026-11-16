@@ -20,6 +20,10 @@ export interface WheelPhase {
   kanji: string;
   /* The phase's still, cut out on the page's paper: a next/image with `fill`, kept whole in its square. */
   panel: ReactNode;
+  /* An optional call under the phase's deliverables (the Immersion phase carries « Réserver une Immersion »). Held,
+     it answers the pointer only while its phase is the one named, so the stacked phases never catch a click meant for
+     the one on top. */
+  action?: ReactNode;
 }
 
 /* Phones: the still above its copy (its object stands on the frame's ground line, so the empty top parts it from the
@@ -58,6 +62,11 @@ function WheelCopy({ phase }: { phase: WheelPhase }) {
           </li>
         ))}
       </ul>
+      {phase.action === undefined ? null : (
+        <div data-wheel-action className="agents-wheel-action">
+          {phase.action}
+        </div>
+      )}
     </div>
   );
 }

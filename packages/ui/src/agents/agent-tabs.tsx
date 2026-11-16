@@ -56,7 +56,7 @@ export function AgentTabs({ items, label, every = 9000, className }: AgentTabsPr
       </div>
       <Tabs.List aria-label={label} className="flex flex-col lg:col-span-4">
         {items.map((item, index) => (
-          <Tabs.Tab key={item.id} value={index} className={sideTab}>
+          <Tabs.Tab key={item.id} value={index} data-cursor="designate" className={sideTab}>
             <TabProgress
               key={`${String(index)}-${String(active)}`}
               active={index === active}

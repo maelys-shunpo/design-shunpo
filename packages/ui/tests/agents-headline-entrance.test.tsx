@@ -11,7 +11,7 @@ import { allowMotion, preferReducedMotion } from "./support/reduced-motion.ts";
 import { DESKTOP } from "./support/viewports.ts";
 
 const ENTRANCE = { timeout: 5000 };
-const TITLE = "Vos agents travaillent dans les outils que vous avez déjà";
+const TITLE = "Nous connectons tous vos outils";
 let releaseIdleCallbacks: () => void;
 
 beforeEach(async () => {

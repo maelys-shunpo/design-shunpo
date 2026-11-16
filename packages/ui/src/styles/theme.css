@@ -1770,6 +1770,11 @@
   &[data-tone="night"] {
     color: var(--color-agents-paper);
   }
+
+  /* Under reduced motion the frame appears on its target without the jump (DA: no ghost, no slide). */
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 120ms linear;
+  }
 }
 
 /* A ghost the travelling frame leaves where it was: its corners at their own opacity (`--ghost`), gone in 200 ms. */
@@ -1806,6 +1811,161 @@
 
   to {
     opacity: 0;
+  }
+}
+
+/* The page's own cursor (DA « Immobile, puis instantané »): a full-screen layer above everything (over the z-40 nav),
+   drawn only once its motion module is live, so a dropped chunk leaves the system cursor. It holds the ink point and
+   the two-corner travelling frame. The point is the cut square of the direction; `data-mode` says what it does over the
+   element under it, `data-tone="night"` takes it to Kome on a dark island. It is never red: the frame carries the
+   Fushimi signal, the point stays ink or paper. */
+@utility agents-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  color: var(--color-agents-ink);
+
+  &[data-tone="night"] {
+    color: var(--color-agents-paper);
+  }
+
+  /* The point sits in a weightless box centred on the pointer (its transform set from script), so changing the mark's
+     size never shifts it off the pointer. The box draws nothing; its mark is `::before`. */
+  & [data-slot="agents-cursor-dot"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  /* The mark: a 6 px square cut at the top right like the actions, on the pointer with no trail. */
+  & [data-slot="agents-cursor-dot"]::before {
+    content: "";
+    inline-size: 6px;
+    block-size: 6px;
+    background: currentColor;
+    clip-path: polygon(0 0, calc(100% - 2px) 0, 100% 2px, 100% 100%, 0 100%);
+    opacity: 0;
+    transition:
+      opacity 120ms linear,
+      scale 120ms var(--ease-shift),
+      inline-size 240ms var(--ease-shift),
+      block-size 240ms var(--ease-shift);
+  }
+
+  /* Over open ground the point shows; before a ruled link it shrinks, the line taking over; over a control that answers
+     the pointer itself, and where the system cursor reads or types, it is gone. */
+  &[data-mode="point"] [data-slot="agents-cursor-dot"]::before,
+  &[data-mode="shrink"] [data-slot="agents-cursor-dot"]::before {
+    opacity: 1;
+  }
+
+  &[data-mode="shrink"] [data-slot="agents-cursor-dot"]::before {
+    scale: 0.5;
+  }
+
+  /* Over a held scene the point stands as a short upright line that fills with how far the scene has been read
+     (`--scrub`), so the wheel reads as travel without a word. */
+  &[data-mode="scrub"] [data-slot="agents-cursor-dot"]::before {
+    opacity: 1;
+    inline-size: 2px;
+    block-size: 18px;
+    clip-path: none;
+    background: linear-gradient(
+      to top,
+      currentColor var(--scrub, 0%),
+      color-mix(in oklab, currentColor 22%, transparent) var(--scrub, 0%)
+    );
+  }
+
+  /* The satin ring: a weightless box centred on the pointer (its transform set from script, trailing the dot), drawing
+     a thin round outline. Off in the coupe form, it carries the Framer-smooth reading in satin. */
+  & [data-cursor-ring] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  & [data-cursor-ring]::before {
+    content: "";
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border: 1px solid currentColor;
+    border-radius: 9999px;
+    opacity: 0;
+    transition:
+      opacity 200ms linear,
+      scale 240ms var(--ease-shift);
+  }
+
+  /* Satin: the point is a round dot, not a cut square, and the ring stands behind it over open ground, widens over a
+     control that answers the pointer, and clears for a held scene or a field. */
+  &[data-form="satin"] [data-slot="agents-cursor-dot"]::before {
+    inline-size: 5px;
+    block-size: 5px;
+    clip-path: none;
+    border-radius: 9999px;
+  }
+
+  &[data-form="satin"][data-mode="point"] [data-cursor-ring]::before,
+  &[data-form="satin"][data-mode="shrink"] [data-cursor-ring]::before {
+    opacity: 0.4;
+  }
+
+  &[data-form="satin"][data-mode="hide"] [data-cursor-ring]::before {
+    opacity: 0.9;
+    scale: 1.3;
+  }
+
+  /* Carré: the point is a small solid square that trails the pointer, grows over a control, and clears for a field or a
+     held scene. No ring. */
+  &[data-form="carre"] [data-slot="agents-cursor-dot"]::before {
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    background: currentColor;
+    clip-path: none;
+  }
+
+  &[data-form="carre"][data-mode="hide"] [data-slot="agents-cursor-dot"]::before {
+    opacity: 1;
+    scale: 1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & [data-slot="agents-cursor-dot"]::before,
+    & [data-cursor-ring]::before {
+      transition: opacity 120ms linear;
+    }
+  }
+}
+
+/* The satin and carré forms' designation: the two-corner frame gives way to a thin outline that keeps the object's own
+   coupe and glides onto it, ink on paper and Kome on the night, the Framer box-highlight in the direction's corner
+   language. */
+.agents-frame-travel[data-form="satin"],
+.agents-frame-travel[data-form="carre"] {
+  --agents-frame-cut: calc(var(--spacing-2) + var(--spacing-0\.5));
+  color: var(--color-agents-ink);
+  background: none;
+  border: 1px solid currentColor;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--agents-frame-cut)) 0,
+    100% var(--agents-frame-cut),
+    100% 100%,
+    0 100%
+  );
+
+  &[data-tone="night"] {
+    color: var(--color-agents-paper);
   }
 }
 
@@ -1858,7 +2018,7 @@
   }
 }
 
-/* The tool hub (`ToolHub`), « Vos agents travaillent dans les outils que vous avez déjà » (DESIGN.md « Vos outils
+/* The tool hub (`ToolHub`), « Nous connectons tous vos outils » (DESIGN.md « Vos outils
    reliés au sceau »): the SHUNPO seal in an octagon, the tools cut from the sheet down two symmetric arcs, and a beam
    of 45°-chamfered wires running each tool into the ring. One box that scales: a size container, so the tiles, logos
    and names — set as shares of its width — follow it. It is fitted (`contain`) inside the stage: driven by the room
@@ -2020,7 +2180,12 @@
   line-height: var(--text-sm--line-height);
   font-weight: var(--font-weight-semibold);
   color: var(--color-agents-ink);
-  white-space: nowrap;
+  /* Held to the seal's width, so a long name (« Votre second cerveau ») breaks under the octagon on phones instead of
+     running into the tool names beside it; one line on the wide layout. */
+  width: max-content;
+  max-width: var(--hub-seal);
+  text-align: center;
+  text-wrap: balance;
 }
 
 /* A tool placed by its centre, its tile and name scaling with the box. The name sits under the tile on phones and
@@ -2109,18 +2274,7 @@
   white-space: nowrap;
 }
 
-/* The control is gone under reduced motion, where nothing moves to stop. */
-@utility agents-hub-pause {
-  display: grid;
-  place-items: center;
-
-  /* Owns its own display so the reduced-motion rule wins: nothing moves to stop, so the control is gone. */
-  @media (prefers-reduced-motion: reduce) {
-    display: none;
-  }
-}
-
-/* Stopped or off screen: the flows, the draw and the float hold where they are, the composition whole. */
+/* Off screen: the flows, the draw and the float hold where they are, the composition whole. */
 @utility agents-hub-still {
   & .agents-hub-flow-head,
   & .agents-hub-flow-tail,
@@ -2372,6 +2526,76 @@
   }
 }
 
+/* A soft light that follows the pointer across a paper surface (`PaperSheen`), a beat behind, clipped to the sheet's
+   bias cut (`--agents-cut`, inherited from the surface). It lights the paper under the content, never scales or tilts
+   it; the matter answers the hand. Shown only while the pointer is over (`--sheen-on`, faded by the runtime), and gone
+   under reduced motion. */
+@utility agents-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--agents-cut, 0px)) 0,
+    100% var(--agents-cut, 0px),
+    100% 100%,
+    0 100%
+  );
+  background: radial-gradient(
+    18rem 18rem at var(--sheen-x, 50%) var(--sheen-y, 50%),
+    oklch(0.68 0.03 70 / 0.1),
+    transparent 62%
+  );
+  opacity: var(--sheen-on, 0);
+  transition: opacity 400ms var(--ease-standard);
+
+  @media (prefers-reduced-motion: reduce) {
+    display: none;
+  }
+}
+
+/* A decision settling done (`OsDecisionCard`): approved, the done card arrives instead of snapping in. It settles up,
+   and a beat later its check draws, on the emphasized curve with no bounce. Reduced motion paints it done at once. */
+@utility agents-decided {
+  animation: agents-settle-in 400ms var(--ease-emphasized) both;
+
+  & [data-decided-check] {
+    animation: agents-check-in 320ms var(--ease-emphasized) 120ms both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+
+    & [data-decided-check] {
+      animation: none;
+    }
+  }
+}
+
+/* The done card stays readable as it settles (a state confirmation), so it moves without fading; the fade is the
+   check's. */
+@keyframes agents-settle-in {
+  from {
+    translate: 0 6px;
+  }
+
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes agents-check-in {
+  from {
+    opacity: 0;
+    scale: 0.5;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
 /* A letter of the promise, lit then overexposed by the sunrise (temps 2 and 3, piste A, sortie « surexposition »). The
    dawn climbs it letter by letter from the horizon (`--lit`, 0 to 1: Kome in the night to Fuji ink once the sky is
    light, a warm rim where the light just touched); then the risen sun overexposes it from below (`--heat`, 0 to 1: to
@@ -2442,6 +2666,19 @@
 
   @media (min-width: 64rem) {
     translate: -30% -24%;
+  }
+}
+
+/* A phase's call under its deliverables: held, the phases stack in one cell, so only the named one's action answers
+   the pointer; the faded ones let the click through to it. Phones and reduced motion read every phase in flow, each
+   action live. */
+@utility agents-wheel-action {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    pointer-events: none;
+
+    [data-wheel-active] & {
+      pointer-events: auto;
+    }
   }
 }
 

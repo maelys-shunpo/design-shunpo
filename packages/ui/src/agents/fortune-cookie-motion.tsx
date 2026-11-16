@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import type { CookieArtGeometry } from "./fortune-geometry.ts";
 import { useCookieCursor } from "./use-cookie-cursor.ts";
 import { useCookieGestures } from "./use-cookie-gestures.ts";
+import { useCookieGrip } from "./use-cookie-grip.ts";
 import { useCookieLayout } from "./use-cookie-layout.ts";
 
 /* What the static scene shows of the cookie's state, and what its button calls once the motion has loaded. */
@@ -37,6 +38,7 @@ export function CookieMotion({ root, art, trigger, onShown, onControls }: Cookie
   const scene = useRef(root);
   const layout = useCookieLayout(scene, art);
   useCookieCursor(scene);
+  useCookieGrip(scene);
   const cookie = useCookieGestures(scene, { layout, split: art.split, trigger });
   const shown = shownOf(cookie);
 

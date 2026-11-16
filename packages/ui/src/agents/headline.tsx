@@ -40,6 +40,9 @@ export function Headline({ level, size, align, entrance, className, ...props }: 
   const heading = (
     <Element
       data-slot="headline"
+      /* The page cursor goes away over a headline, so a large display line reads clean; a caller can override with its
+         own `data-cursor`. */
+      data-cursor="away"
       className={cn(headlineVariants({ size, align }), className)}
       {...props}
     />

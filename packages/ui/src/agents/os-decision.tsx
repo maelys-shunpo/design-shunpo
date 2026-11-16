@@ -28,10 +28,10 @@ export function OsDecisionCard({ decision, decided, note, onApprove }: OsDecisio
     return (
       <div
         data-slot="os-decision"
-        className="agents-sheet flex flex-col gap-1 agents-sheet-fold p-3 agents-sheet-float agents-sheet-ok agents-sheet-lg"
+        className="agents-sheet flex agents-decided flex-col gap-1 agents-sheet-fold p-3 agents-sheet-float agents-sheet-ok agents-sheet-lg"
       >
         <output className="flex items-center gap-2 text-xs font-medium text-agents-ok">
-          <Check aria-hidden className="size-4" strokeWidth={2.4} />
+          <Check data-decided-check aria-hidden className="size-4" strokeWidth={2.4} />
           {note}
         </output>
         <span className="text-sm">{decision.title}</span>

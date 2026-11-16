@@ -14,6 +14,11 @@ const phases = [
     deliverables: ["Carte des processus", "Heures perdues estimées", "Feuille de route"],
     kanji: "見",
     panel: <p>Carte du flux</p>,
+    action: (
+      <a data-test-book href="#reserver">
+        Réserver une Immersion
+      </a>
+    ),
   },
   {
     id: "construction",
@@ -62,6 +67,15 @@ export function inkOf(container: HTMLElement) {
 
 export function currentOf(container: HTMLElement) {
   return container.querySelector("[data-wheel-active] h3")?.textContent ?? "";
+}
+
+/* The Immersion phase's action (the fixture's only one), guaranteed present. */
+export function bookOf(container: HTMLElement): HTMLElement {
+  const book = container.querySelector<HTMLElement>("[data-test-book]");
+  if (book === null) {
+    throw new Error("the Immersion phase has no action");
+  }
+  return book;
 }
 
 /* How far the ink layer has risen (negative: up), in px. */

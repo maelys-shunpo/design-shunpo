@@ -24,17 +24,19 @@ function CookieLayers({ art }: { art: CookieImages }) {
         art.blend === "multiply" && "mix-blend-multiply",
       )}
     >
-      <div data-cookie-part="whole" className={layer}>
-        {art.whole}
-      </div>
-      <div data-cookie-part="cracked" className={waiting}>
-        {art.cracked}
-      </div>
-      <div data-cookie-part="openLeft" className={waiting}>
-        {art.openLeft}
-      </div>
-      <div data-cookie-part="openRight" className={waiting}>
-        {art.openRight}
+      <div data-cookie-part="grip" className="absolute inset-0 transform-3d">
+        <div data-cookie-part="whole" className={layer}>
+          {art.whole}
+        </div>
+        <div data-cookie-part="cracked" className={waiting}>
+          {art.cracked}
+        </div>
+        <div data-cookie-part="openLeft" className={waiting}>
+          {art.openLeft}
+        </div>
+        <div data-cookie-part="openRight" className={waiting}>
+          {art.openRight}
+        </div>
       </div>
     </div>
   );
@@ -129,6 +131,8 @@ function CookieButton({
       data-cookie-part="button"
       type="button"
       hidden={open}
+      /* The cookie has its own « Casser » pill, so the page cursor goes away over it rather than doubling up. */
+      data-cursor="away"
       aria-label={label}
       aria-expanded={open}
       aria-busy={opening}

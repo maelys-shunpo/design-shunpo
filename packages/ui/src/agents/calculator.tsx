@@ -7,6 +7,7 @@ import { AgentsAction } from "./action.tsx";
 import type { CalculatorModel, CalculatorQuestion } from "./calculator-model.ts";
 import { CalculatorResult } from "./calculator-result.tsx";
 import { Chip } from "./chip.tsx";
+import { PaperSheen } from "./paper-sheen.tsx";
 import { type Calculator as Flow, useCalculator } from "./use-calculator.ts";
 
 interface CalculatorProps {
@@ -165,6 +166,7 @@ export function Calculator({ model, hoursLeadIn, reportCta, className }: Calcula
       data-slot="calculator"
       className={cn("agents-sheet flex flex-col gap-8 p-6 agents-sheet-lift md:p-8", className)}
     >
+      <PaperSheen />
       <Body flow={flow} model={model} hoursLeadIn={hoursLeadIn} reportCta={reportCta} />
     </div>
   );

@@ -38,13 +38,13 @@ const meta = {
     docs: {
       description: {
         component:
-          "ToolHub sets the copy over an octagon holding the SHUNPO seal, the tools cut from the sheet down two symmetric arcs, and a beam of 45°-chamfered wires running each tool into the ring. Every tool sends a continuous flow of ink to the centre; the octagon is drawn on in ink, then wiped off, in a slow sweep; the tools float a few pixels. The owner's own software waits as a dashed slot on a dashed wire until a connector is built. A control stops the flows; off screen and under reduced motion everything is still, the composition whole. The wide layout shows from lg, the phone layout below.",
+          "ToolHub sets the copy over an octagon holding the SHUNPO seal, the tools cut from the sheet down two symmetric arcs, and a beam of 45°-chamfered wires running each tool into the ring. Every tool sends a continuous flow of ink to the centre; the octagon is drawn on in ink, then wiped off, in a slow sweep; the tools float a few pixels. The owner's own software waits as a dashed slot on a dashed wire until a connector is built. Off screen and under reduced motion everything is still, the composition whole. The wide layout shows from lg, the phone layout below.",
       },
     },
   },
   args: {
-    label: "Vos outils, reliés à votre agent",
-    sealLabel: "Votre agent",
+    label: "Vos outils, reliés à votre second cerveau",
+    sealLabel: "Votre second cerveau",
     desk: {
       left: [siGmail, siShopify, siStripe, siZendesk, googleAgenda, siBrevo],
       right: [siOdoo, siSage, siGooglesheets, siNotion, siHubspot, yours],
@@ -53,13 +53,9 @@ const meta = {
       left: [siGmail, siShopify, siStripe, googleAgenda],
       right: [siOdoo, siSage, siGooglesheets, yours],
     },
-    labels: {
-      pause: "Mettre en pause l’animation des outils",
-      play: "Relancer l’animation des outils",
-    },
     children: (
       <Headline level={2} align="center">
-        Vos agents travaillent dans les outils que vous avez déjà
+        Nous connectons tous vos outils
       </Headline>
     ),
   },
@@ -73,12 +69,10 @@ export const Hub: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByRole("heading", { level: 2 })).toBeVisible();
     await expect(
-      canvas.getAllByRole("figure", { name: "Vos outils, reliés à votre agent" })[0],
+      canvas.getAllByRole("figure", { name: "Vos outils, reliés à votre second cerveau" })[0],
     ).toBeInTheDocument();
     await expect(canvas.getAllByText("Gmail")[0]).toBeInTheDocument();
-    await expect(canvas.getAllByText("Votre agent")[0]).toBeInTheDocument();
-    await expect(
-      canvas.getByRole("button", { name: "Mettre en pause l’animation des outils" }),
-    ).toBeInTheDocument();
+    await expect(canvas.getAllByText("Votre second cerveau")[0]).toBeInTheDocument();
+    await expect(canvas.queryByRole("button")).toBeNull();
   },
 };

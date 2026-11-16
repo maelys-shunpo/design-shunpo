@@ -47,6 +47,52 @@ interface AgentsNavProps {
   over?: "paper" | "film";
 }
 
+/* The nav item of the section the reader is in takes `aria-current`, so its Fushimi brackets close on it (DA: the
+   current item is bracketed like a hover). A thin band near the top of the window decides which section is current;
+   above the first section (the hero) none is. */
+function useCurrentSection(container: HTMLElement | null): void {
+  useEffect((): (() => void) | undefined => {
+    if (container === null) {
+      return undefined;
+    }
+    const anchorById = new Map<string, HTMLAnchorElement>();
+    const sections: HTMLElement[] = [];
+    for (const anchor of container.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')) {
+      const id = anchor.hash.slice(1);
+      const section = id === "" ? null : document.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
+      if (section !== null) {
+        anchorById.set(id, anchor);
+        sections.push(section);
+      }
+    }
+    if (sections.length === 0) {
+      return undefined;
+    }
+    const visible = new Set<string>();
+    function mark(): void {
+      const current = sections.find((section) => visible.has(section.id))?.id;
+      for (const [id, anchor] of anchorById) {
+        anchor.toggleAttribute("aria-current", id === current);
+      }
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          visible[entry.isIntersecting ? "add" : "delete"](entry.target.id);
+        }
+        mark();
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    for (const section of sections) {
+      observer.observe(section);
+    }
+    return () => {
+      observer.disconnect();
+    };
+  }, [container]);
+}
+
 function useFloating(): boolean {
   const [floating, setFloating] = useState(false);
   useEffect(() => {
@@ -65,11 +111,15 @@ function useFloating(): boolean {
 /* The page's bar: flat over the hero, then a floating sheet cut 14 px with a hairline once the visitor scrolls. */
 export function AgentsNav({ brand, links, action, label, over = "paper" }: AgentsNavProps) {
   const floating = useFloating();
+  const [linksEl, setLinksEl] = useState<HTMLDivElement | null>(null);
+  useCurrentSection(linksEl);
   return (
     <header data-slot="agents-nav" className={headerVariants({ over })}>
       <nav aria-label={label} className={barVariants({ floating, over })}>
         {brand}
-        <div className="hidden items-center gap-8 text-sm lg:flex">{links}</div>
+        <div ref={setLinksEl} className="hidden items-center gap-8 text-sm lg:flex">
+          {links}
+        </div>
         {action}
       </nav>
     </header>

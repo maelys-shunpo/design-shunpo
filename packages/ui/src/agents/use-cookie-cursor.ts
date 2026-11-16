@@ -5,24 +5,12 @@ import { gsap } from "gsap";
 import type { RefObject } from "react";
 
 import { mounted } from "../lib/mounted.ts";
+import { MOUSE, onCookie } from "./cookie-pointer.ts";
 
 gsap.registerPlugin(useGSAP);
 
-/* Only where a mouse hovers: touch screens have the label under the cookie. */
-const MOUSE = "(hover: hover) and (pointer: fine)";
 /* The pill follows the pointer a beat behind. */
 const FOLLOW = 0.25;
-
-/* The cookie fills an ellipse inside its button: the pill shows over it, never over the empty paper around. */
-const COOKIE_RX = 0.42;
-const COOKIE_RY = 0.4;
-const COOKIE_CY = 0.42;
-
-function onCookie(x: number, y: number, box: DOMRect): boolean {
-  const dx = (x - box.width / 2) / (box.width * COOKIE_RX);
-  const dy = (y - box.height * COOKIE_CY) / (box.height * COOKIE_RY);
-  return dx * dx + dy * dy <= 1;
-}
 
 /* Moves the pill with the pointer over the cookie; returns what stops it. */
 function followPointer(

@@ -19,3 +19,5 @@ export const Default: Story = {
 };
 export const Large: Story = { args: { size: "lg" } };
 export const Small: Story = { args: { size: "sm", label: "SHUNPO, accueil" } };
+/* The poster size spans its container: the footer's rising sign (`AgentsFooter`). */
+export const Poster: Story = { args: { size: "poster" } };

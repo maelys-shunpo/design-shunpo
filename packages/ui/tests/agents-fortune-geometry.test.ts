@@ -14,7 +14,7 @@ const ORIGAMI = {
 } as const;
 
 describe("cookieLayout", () => {
-  it("lays the scene out as the approved 690 px prototype", () => {
+  it("lays the scene out as the approved 690 px prototype, the cookie drawn a touch inside the column", () => {
     const layout = cookieLayout(690, false, ORIGAMI);
 
     expect(layout.panelWidth).toBe(270);
@@ -23,21 +23,23 @@ describe("cookieLayout", () => {
     expect(layout.paperTop).toBe(392);
     expect(layout.linkTop).toBe(551);
     expect(layout.sceneHeight).toBe(599);
-    expect(layout.button).toEqual({ left: 100, top: 16, width: 490, height: 408 });
-    expect(layout.art).toEqual({ left: 0, width: 690 });
+    expect(layout.button).toEqual({ left: 120, top: 15, width: 450, height: 409 });
+    expect(layout.art.left).toBeCloseTo(27.6);
+    expect(layout.art.width).toBeCloseTo(634.8);
     expect(layout.restOffset).toBe(88);
   });
 
-  it("scales with a wider scene", () => {
+  it("scales with a wider scene, the paper from the scene width, not the shrunk cookie", () => {
     const layout = cookieLayout(1380, false, ORIGAMI);
 
     expect(layout.panelWidth).toBe(540);
     expect(layout.paperTop).toBe(784);
+    expect(layout.art.width).toBeCloseTo(1269.6);
   });
 
-  it("scales how far the open halves start from each other", () => {
-    expect(cookieLayout(690, false, ORIGAMI).spread).toBe(14);
-    expect(cookieLayout(1380, false, ORIGAMI).spread).toBe(28);
+  it("scales how far the open halves start from each other, off the shrunk cookie", () => {
+    expect(cookieLayout(690, false, ORIGAMI).spread).toBeCloseTo(12.88);
+    expect(cookieLayout(1380, false, ORIGAMI).spread).toBeCloseTo(25.76);
   });
 
   it("enlarges the cookie on phones, its white margins running past the edges", () => {

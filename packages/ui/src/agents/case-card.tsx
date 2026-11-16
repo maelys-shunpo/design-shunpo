@@ -128,6 +128,8 @@ export function CaseCard({
   );
   const ownProps = {
     "data-slot": "case-card",
+    /* The page's cursor designates a case with its two-corner frame rather than hiding on the link. */
+    "data-cursor": "designate",
     className: cn(cardVariants({ tint }), className),
     children,
   };

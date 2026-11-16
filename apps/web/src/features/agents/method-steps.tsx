@@ -4,6 +4,7 @@ import Image from "next/image";
 import construction from "./images/method-construction.avif";
 import evolution from "./images/method-evolution.avif";
 import immersion from "./images/method-immersion.avif";
+import { MethodActions } from "./method-actions";
 
 /* The phases' stills fill a square of five columns of twelve from desktops, four of eight on tablets, the whole width
    on phones. */
@@ -26,6 +27,7 @@ export const agentsMethod: WheelPhase[] = [
     text: "On suit votre équipe pour comprendre où le travail ralentit et choisir avec vous le premier flux à automatiser.",
     deliverables: ["Carte des processus", "Heures perdues estimées", "Feuille de route priorisée"],
     panel: still(immersion),
+    action: <MethodActions />,
   },
   {
     id: "construction",

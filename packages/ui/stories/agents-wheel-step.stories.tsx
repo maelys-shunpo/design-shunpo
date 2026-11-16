@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
+import { AgentsAction } from "../src/agents/action.tsx";
 import { WheelStep } from "../src/agents/wheel-step.tsx";
 import { inAgents } from "./support/agents-direction.tsx";
 
@@ -52,5 +53,25 @@ export const Step: Story = {
 
     await expect(canvas.getByRole("heading", { level: 3, name: "Immersion" })).toBeVisible();
     await expect(canvas.getByText("Feuille de route priorisée")).toBeVisible();
+  },
+};
+
+/* The Immersion phase carries a call under its deliverables. */
+export const WithAction: Story = {
+  args: {
+    phase: {
+      ...meta.args.phase,
+      action: (
+        <AgentsAction href="#reserver" size="lg" variant="signal" arrow>
+          Réserver une Immersion
+        </AgentsAction>
+      ),
+    },
+  },
+  play: async ({ canvas, canvasElement }) => {
+    const step = canvasElement.querySelector<HTMLElement>("[data-slot=wheel-step]");
+    step?.style.setProperty("--wheel-presence", "1");
+
+    await expect(canvas.getByRole("link", { name: "Réserver une Immersion" })).toBeVisible();
   },
 };

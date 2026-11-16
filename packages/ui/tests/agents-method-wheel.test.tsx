@@ -4,7 +4,7 @@ import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 
 import { holdIdleCallbacks } from "./support/idle-callbacks.ts";
-import { currentOf, holdAt, inkOf, wheel } from "./support/method-wheel.tsx";
+import { bookOf, currentOf, holdAt, inkOf, wheel } from "./support/method-wheel.tsx";
 import { pause, SETTLE_MS } from "./support/pause.ts";
 import { allowMotion, preferReducedMotion } from "./support/reduced-motion.ts";
 import { DESKTOP, PHONE } from "./support/viewports.ts";
@@ -49,7 +49,6 @@ async function testFilm() {
         loop: { from: 9, to: 11, seconds: 1, hold: 0.2, delay: 0, motion: "repeat" as const },
       },
     ],
-    labels: { pause: "Pause", play: "Lecture" },
   };
 }
 
@@ -128,7 +127,7 @@ describe("MethodWheel", () => {
     expect(pixel?.[3]).toBe(255);
   });
 
-  it("plays Immersion's entrance from the question, then loops it on its own until paused", async () => {
+  it("plays Immersion's entrance from the question, then loops it on its own, with no pause control", async () => {
     const screen = await render(wheel(await testFilm()));
     releaseIdleCallbacks();
     await holdAt(0.3);
@@ -151,11 +150,7 @@ describe("MethodWheel", () => {
       )
       .toBeGreaterThan(2);
 
-    await screen.getByRole("button", { name: "Pause" }).click();
-    const held = centreGrey(screen.container);
-    await pause(SETTLE_MS * 2);
-    expect(centreGrey(screen.container)).toBe(held);
-    await expect.element(screen.getByRole("button", { name: "Lecture" })).toBeInTheDocument();
+    expect(screen.container.querySelector("button")).toBeNull();
   });
 
   it("never puts the film's canvas in under reduced motion or on phones", async () => {
@@ -181,6 +176,27 @@ describe("MethodWheel", () => {
     await holdAt(0.6);
     expect(inkOf(screen.container)).toBe("");
     expect(currentOf(screen.container)).toBe("");
+  });
+
+  it("gives a phase its action, clickable only while that phase holds", async () => {
+    const screen = await render(wheel());
+    releaseIdleCallbacks();
+    const book = bookOf(screen.container);
+    await expect.element(screen.getByText("Réserver une Immersion")).toBeInTheDocument();
+    await holdAt(0.46);
+    await expect.poll(() => currentOf(screen.container), { timeout: 5000 }).toBe("Immersion");
+    expect(getComputedStyle(book).pointerEvents).toBe("auto");
+    await holdAt(0.6);
+    await expect.poll(() => currentOf(screen.container), { timeout: 5000 }).toBe("Construction");
+    expect(getComputedStyle(book).pointerEvents).toBe("none");
+  });
+
+  it("keeps a phase's action clickable on phones", async () => {
+    await page.viewport(PHONE.width, PHONE.height);
+    const screen = await render(wheel());
+    releaseIdleCallbacks();
+    await pause(SETTLE_MS);
+    expect(getComputedStyle(bookOf(screen.container)).pointerEvents).toBe("auto");
   });
 
   it("stacks the phases on phones, without the ink", async () => {

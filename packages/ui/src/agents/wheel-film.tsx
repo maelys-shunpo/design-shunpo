@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import type { CourseSignal, CourseValue, FilmRest, Signal } from "./wheel-film-course.ts";
+import type { CourseSignal, CourseValue, FilmRest } from "./wheel-film-course.ts";
 import { createFilmFrames, type FilmFrames } from "./wheel-film-frames.ts";
 import { createLoops, type FilmLayer } from "./wheel-film-loops.ts";
 
@@ -66,7 +66,6 @@ interface Playing {
   box: HTMLElement;
   film: Film;
   course: CourseSignal;
-  paused: Signal<boolean>;
   onReady: (ready: boolean) => void;
 }
 
@@ -118,7 +117,7 @@ function createCanvas(box: HTMLElement): HTMLCanvasElement {
 
 /* Puts the film's canvas in its box and draws what the wheel's course and the phases' loops ask for, from the moment
    the wheel nears the window. Returns what takes it all away. */
-function play({ box, film, course, paused, onReady }: Playing): () => void {
+function play({ box, film, course, onReady }: Playing): () => void {
   const canvas = createCanvas(box);
   const context = canvas.getContext("2d");
   const state: { store?: FilmFrames<ImageBitmap>; course: CourseValue; frame: number } = {
@@ -147,7 +146,7 @@ function play({ box, film, course, paused, onReady }: Playing): () => void {
       state.frame = requestAnimationFrame(draw);
     }
   }
-  const loops = createLoops({ rests: film.rests, paused, draw });
+  const loops = createLoops({ rests: film.rests, draw });
   const unwatch = watch(
     box,
     () => {
@@ -183,21 +182,20 @@ interface WheelFilmProps extends Film {
   /* Where the canvas goes: the box the phases' stills fill. */
   box: HTMLElement | null;
   course: CourseSignal;
-  paused: Signal<boolean>;
   onReady: (ready: boolean) => void;
 }
 
 /* The method wheel's paper film, from tablets up with motion only (internal to `MethodWheel`, loaded once the page is
    idle): carried by the scroll from one phase to the next, and each phase's short loop played in time while the wheel
-   rests on it, held when paused or out of the window. Phones and reduced motion keep the phases' stills and never get a
+   rests on it, held while out of the window. Phones and reduced motion keep the phases' stills and never get a
    canvas. */
-export function WheelFilm({ box, frames, rests, course, paused, onReady }: WheelFilmProps): null {
+export function WheelFilm({ box, frames, rests, course, onReady }: WheelFilmProps): null {
   useEffect((): EffectCleanup => {
     if (box === null) {
       return undefined;
     }
     const media = window.matchMedia(WIDE_WITH_MOTION);
-    const playing = { box, film: { frames, rests }, course, paused, onReady };
+    const playing = { box, film: { frames, rests }, course, onReady };
     let stop: (() => void) | undefined;
     function update() {
       stop?.();
@@ -209,6 +207,6 @@ export function WheelFilm({ box, frames, rests, course, paused, onReady }: Wheel
       media.removeEventListener("change", update);
       stop?.();
     };
-  }, [box, frames, rests, course, paused, onReady]);
+  }, [box, frames, rests, course, onReady]);
   return null;
 }

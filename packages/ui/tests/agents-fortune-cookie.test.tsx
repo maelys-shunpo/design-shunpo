@@ -123,6 +123,27 @@ describe("FortuneCookie", () => {
     await expect.element(button).toHaveAttribute("aria-expanded", "false");
   });
 
+  it("is taken up by a mouse over it, leaning towards the point it is held by, and set down when the mouse leaves", async () => {
+    const screen = await render(<Cookie />);
+    const button = screen.getByRole("button", { name: "Casser le biscuit" });
+    await expect.poll(() => paper(screen.container)?.style.top).toBe(PAPER_TOP);
+    const grip = screen.container.querySelector<HTMLElement>("[data-cookie-part=grip]");
+    const box = button.element().getBoundingClientRect();
+
+    await userEvent.hover(button, {
+      position: { x: box.width * 0.7, y: box.height * 0.42 },
+    });
+
+    await expect.poll(() => Number(gsap.getProperty(grip, "scale"))).toBeGreaterThan(1.02);
+    await expect.poll(() => Number(gsap.getProperty(grip, "y"))).toBeLessThan(0);
+    await expect.poll(() => Number(gsap.getProperty(grip, "rotationY"))).toBeLessThan(0);
+
+    await userEvent.unhover(button);
+
+    await expect.poll(() => gsap.getProperty(grip, "scale"), { timeout: 2000 }).toBe(1);
+    await expect.poll(() => gsap.getProperty(grip, "rotationY"), { timeout: 2000 }).toBe(0);
+  });
+
   it("opens by itself once it is well into the screen", async () => {
     const screen = await render(<Cookie trigger="arrival" />);
 

@@ -1,4 +1,4 @@
-/* The tool hub « Vos agents travaillent dans les outils que vous avez déjà » (DESIGN.md « Vos outils reliés au
+/* The tool hub « Nous connectons tous vos outils » (DESIGN.md « Vos outils reliés au
    sceau »): the SHUNPO seal in an octagon at the centre, the tools cut from the sheet down two symmetric arcs, and a
    beam of 45°-chamfered wires running each tool into the ring. Every measure is a share of the design box, so the one
    layout scales to any width. This module is pure geometry: it builds the wire and octagon paths and the tools'

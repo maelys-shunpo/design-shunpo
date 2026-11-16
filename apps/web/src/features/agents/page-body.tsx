@@ -1,7 +1,6 @@
 import { CoverSheet } from "@repo/ui/agents/cover-sheet";
 import type { ReactNode } from "react";
 
-import { CalculatorSection } from "./calculator-section";
 import { ClosingSection } from "./closing-section";
 import { ConversionSections } from "./conversion-sections";
 import { OsSection } from "./os-section";
@@ -11,14 +10,13 @@ import { ProofSections } from "./proof-sections";
 import { ToolsSection } from "./tools-section";
 
 /* The order a PME owner reads in: their problem, what they would get (the Monday screen), that it runs on the tools
-   they already have, their own task, then the proof, how it starts and what it costs, and the call. */
+   they already have, then the proof, how it starts, what it costs, their own lost hours, and the call. */
 function Sections() {
   return (
     <>
       <ProblemSection />
       <OsSection />
       <ToolsSection />
-      <CalculatorSection />
       <ProofSections />
       <ConversionSections />
       <ClosingSection />

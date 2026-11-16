@@ -25,6 +25,22 @@ const logoVariants = cva("block w-auto shrink-0 fill-current", {
       sm: "h-6",
       md: "h-8",
       lg: "h-12",
+      /* A poster of the mark: it spans its container and takes the height its width gives, for the footer's rising sign. */
+      poster: "h-auto w-full",
+    },
+  },
+  defaultVariants: { size: "md" },
+});
+
+/* The drawing sits in an inline box that shrinks to it — except the poster, which must fill its container so the
+   svg's `w-full` has a width to take. */
+const frameVariants = cva("text-current", {
+  variants: {
+    size: {
+      sm: "inline-flex",
+      md: "inline-flex",
+      lg: "inline-flex",
+      poster: "flex w-full",
     },
   },
   defaultVariants: { size: "md" },
@@ -38,7 +54,7 @@ interface ShunpoLogoProps extends VariantProps<typeof logoVariants> {
 
 export function ShunpoLogo({ size, label = "SHUNPO", className }: ShunpoLogoProps) {
   return (
-    <span data-slot="shunpo-logo" className="inline-flex text-current">
+    <span data-slot="shunpo-logo" className={frameVariants({ size })}>
       <svg
         aria-hidden
         viewBox="0 0 940.29 259.22"

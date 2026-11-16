@@ -1,6 +1,5 @@
 "use client";
 
-import { Pause, Play } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { Shuriken } from "../brand/shuriken.tsx";
@@ -165,28 +164,6 @@ function HubFigure({
   );
 }
 
-/* Stops and starts the continuous flows (WCAG 2.2.2); gone under reduced motion, where nothing moves to stop. */
-function HubControl({
-  paused,
-  labels,
-  onToggle,
-}: {
-  paused: boolean;
-  labels: { pause: string; play: string };
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-label={paused ? labels.play : labels.pause}
-      className="absolute right-0 bottom-0 agents-hub-pause size-8 cursor-pointer rounded-full border border-agents-line bg-surface text-agents-ink transition-colors hover:border-agents-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-    >
-      {paused ? <Play aria-hidden className="size-3" /> : <Pause aria-hidden className="size-3" />}
-    </button>
-  );
-}
-
 interface ToolHubProps {
   /* The copy over the hub: the section's title and its one line. */
   children: ReactNode;
@@ -198,27 +175,16 @@ interface ToolHubProps {
   label: string;
   /* The label under the seal, naming what it stands for. */
   sealLabel: string;
-  /* Names the control that stops and starts the flows. */
-  labels: { pause: string; play: string };
   className?: string | undefined;
 }
 
 /* The copy over an octagon holding the SHUNPO seal, the tools cut from the sheet down two symmetric arcs, and a beam
    of 45°-chamfered wires running each tool into the ring. Each tool sends a continuous flow of ink into the centre;
    the octagon is drawn on in ink, then wiped off, in a slow sweep; the tools float a few pixels. The owner's own
-   software waits as a dashed slot on a dashed wire, with no flow, until a connector is built. A control stops the
-   flows; off screen and under reduced motion everything is still, the composition whole. The wide layout shows from
+   software waits as a dashed slot on a dashed wire, with no flow, until a connector is built. Off screen and under
+   reduced motion everything is still, the composition whole. The wide layout shows from
    `lg`, the phone layout below it. */
-export function ToolHub({
-  children,
-  desk,
-  phone,
-  label,
-  sealLabel,
-  labels,
-  className,
-}: ToolHubProps) {
-  const [paused, setPaused] = useState(false);
+export function ToolHub({ children, desk, phone, label, sealLabel, className }: ToolHubProps) {
   const [visible, setVisible] = useState(true);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -242,11 +208,7 @@ export function ToolHub({
     <div
       ref={rootRef}
       data-slot="tool-hub"
-      className={cn(
-        "agents-hub-root w-full",
-        (paused || !visible) && "agents-hub-still",
-        className,
-      )}
+      className={cn("agents-hub-root w-full", !visible && "agents-hub-still", className)}
     >
       <div className="z-10 w-full">{children}</div>
       <div className="relative flex min-h-0 w-full flex-1 items-center justify-center">
@@ -257,13 +219,6 @@ export function ToolHub({
           className="hidden lg:block"
         />
         <HubFigure layout={phoneLayout} label={label} sealLabel={sealLabel} className="lg:hidden" />
-        <HubControl
-          paused={paused}
-          labels={labels}
-          onToggle={() => {
-            setPaused((value) => !value);
-          }}
-        />
       </div>
     </div>
   );

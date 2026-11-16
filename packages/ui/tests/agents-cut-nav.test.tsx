@@ -70,13 +70,7 @@ describe("Nav, stages and tiles", () => {
     const columns = { left: [siGmail], right: [yours] };
     const screen = await render(
       <Direction name="agents">
-        <ToolHub
-          desk={columns}
-          phone={columns}
-          label="Vos outils"
-          sealLabel="Votre agent"
-          labels={{ pause: "Pause", play: "Lecture" }}
-        >
+        <ToolHub desk={columns} phone={columns} label="Vos outils" sealLabel="Votre agent">
           <span>Vos outils</span>
         </ToolHub>
       </Direction>,

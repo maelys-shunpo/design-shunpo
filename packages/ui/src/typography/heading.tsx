@@ -50,6 +50,9 @@ export function Heading({ level, size, tone, align, className, ...props }: Headi
   return (
     <Element
       data-slot="heading"
+      /* The page cursor goes away over a title, so a large display line reads clean (ignored where no cursor renders);
+         a caller can override with its own `data-cursor`. */
+      data-cursor="away"
       className={cn(
         headingVariants({ size: size ?? defaultSizeByLevel[level], tone, align }),
         className,

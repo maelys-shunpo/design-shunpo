@@ -9,10 +9,10 @@ import { casesAreShown } from "./cases-visibility";
 
 const allLinks = [
   { href: "#outils", label: "Intégrations" },
-  { href: "#essayer", label: "Essayer" },
   { href: "#references", label: "Références" },
   { href: "#methode", label: "Méthode" },
   { href: "#avis", label: "Avis" },
+  { href: "#essayer", label: "Essayer" },
   { href: "#questions", label: "FAQ" },
 ] as const;
 

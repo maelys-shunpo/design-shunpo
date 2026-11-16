@@ -1,3 +1,4 @@
+import { Cursor } from "@repo/ui/agents/cursor";
 import { Direction } from "@repo/ui/layout/direction";
 import { PaperGate } from "@repo/ui/lib/paper-gate";
 import type { ReactNode } from "react";
@@ -18,6 +19,7 @@ export function AgentsPage({ hero, opening = "paper" }: AgentsPageProps) {
   return (
     <Direction name="agents">
       <PaperGate />
+      <Cursor form="carre" />
       <PageNav over={opening} />
       <PageBody hero={hero} opening={opening} />
     </Direction>

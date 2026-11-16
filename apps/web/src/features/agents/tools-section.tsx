@@ -18,12 +18,8 @@ export function ToolsSection() {
           <ToolHub
             desk={deskColumns}
             phone={phoneColumns}
-            label="Vos outils, reliés à votre agent"
-            sealLabel="Votre agent"
-            labels={{
-              pause: "Mettre en pause l’animation des outils",
-              play: "Relancer l’animation des outils",
-            }}
+            label="Vos outils, reliés à votre second cerveau"
+            sealLabel="Votre second cerveau"
           >
             <Stack gap="md" align="center">
               <ToolsTitle align="center" />

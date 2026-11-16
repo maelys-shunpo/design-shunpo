@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createSignal, type FilmRest } from "../src/agents/wheel-film-course.ts";
+import { type FilmRest } from "../src/agents/wheel-film-course.ts";
 import { createLoops, filmLayers } from "../src/agents/wheel-film-loops.ts";
 
 const rests = [{ pose: 10 }, { pose: 40 }, { pose: 80 }];
@@ -40,7 +40,7 @@ describe("filmLayers", () => {
 /* The film is never seen here (`see` is never told otherwise), so no clock runs and every phase is read at its first
    instant: enough to tell its entrance's first frame from its pose. */
 function restingLoops(phases: readonly FilmRest[]) {
-  return createLoops({ rests: phases, paused: createSignal(false), draw: () => {} });
+  return createLoops({ rests: phases, draw: () => {} });
 }
 
 describe("createLoops", () => {

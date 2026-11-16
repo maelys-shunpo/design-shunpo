@@ -65,13 +65,13 @@ export const Headlines: Story = {
 export const HeadlineEntrance: Story = {
   render: () => (
     <Headline level={2} size="title" align="center" entrance="lines">
-      Vos agents travaillent dans les outils que vous avez déjà
+      Nous connectons tous vos outils
     </Headline>
   ),
   play: async ({ canvas, canvasElement }) => {
     await expect(
       canvas.getByRole("heading", {
-        name: "Vos agents travaillent dans les outils que vous avez déjà",
+        name: "Nous connectons tous vos outils",
       }),
     ).toBeVisible();
     await expect(canvasElement.querySelectorAll("[data-slot=headline-entrance]")).toHaveLength(1);

@@ -4,7 +4,7 @@ import { Text } from "@repo/ui/typography/text";
 export function ToolsTitle({ align }: { align: "start" | "center" }) {
   return (
     <Headline level={2} size="title" align={align} entrance="lines">
-      Vos agents travaillent dans les outils que{"\u00A0"}vous avez déjà
+      Nous connectons tous vos{"\u00A0"}outils
     </Headline>
   );
 }

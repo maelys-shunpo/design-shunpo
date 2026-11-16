@@ -14,6 +14,8 @@ interface NavAnchorProps extends useRender.ComponentProps<"a"> {
 export function NavAnchor({ render, className, ...props }: NavAnchorProps) {
   const ownProps = {
     "data-slot": "nav-anchor",
+    /* The brackets already answer the hover, so the page cursor goes away over a nav item rather than sitting on it. */
+    "data-cursor": "away",
     className: cn(
       "agents-bracket inline-flex min-h-6 items-center text-muted-foreground transition-colors duration-200 hover:text-foreground",
       className,
