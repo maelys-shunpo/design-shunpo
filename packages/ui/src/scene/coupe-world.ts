@@ -1,7 +1,7 @@
 // prettier-ignore
 import {
-  type BufferGeometry, CanvasTexture, Color, DoubleSide, Float32BufferAttribute, FrontSide, Group,
-  Mesh, MeshBasicMaterial, PlaneGeometry, RepeatWrapping, Shape, ShapeGeometry, SRGBColorSpace, Vector2,
+  type BufferGeometry, type CanvasTexture, Color, DoubleSide, Float32BufferAttribute, FrontSide,
+  Group, Mesh, MeshBasicMaterial, PlaneGeometry, Shape, ShapeGeometry, SRGBColorSpace, Vector2,
 } from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 
@@ -9,6 +9,7 @@ import { STAR } from "../brand/shuriken-paths.ts";
 import { type Rgb, resolveColor } from "../lib/css-color.ts";
 import type { QualityTier } from "../lib/quality-tier.ts";
 import { GHOST_COUNT } from "../motion/coupe-geometry.ts";
+import { drawPaper, sheetTexture } from "./coupe-sheet.ts";
 
 /* The sheet covers this half-width and half-height in world units: wide enough that the camera's eight-unit-tall
    frame is filled at any aspect the held stage takes, so the halves never need rebuilding. */
@@ -16,6 +17,23 @@ const COVER_X = 12;
 const COVER_Y = 6;
 /* The visible height the camera frames, used to throw each half clear of the screen as the page gives. */
 export const SCREEN_HEIGHT = 8;
+
+/* Where the questions' sheet lands on a half's 24 × 12 world-unit UVs so it covers the frame once, cropped to fit and
+   centred, never stretched and never tiled, as a poster's `background-size: cover` would. The frame is `SCREEN_HEIGHT`
+   tall and `SCREEN_HEIGHT × frameAspect` wide; the sheet keeps its own `sheetAspect`. Returned as the texture's repeat
+   and offset over the half's UVs (0 at a half's far corner, 1 at the opposite one). */
+export function sheetFraming(
+  frameAspect: number,
+  sheetAspect: number,
+): { repeat: Vector2; offset: Vector2 } {
+  const cover = Math.max((SCREEN_HEIGHT * frameAspect) / sheetAspect, SCREEN_HEIGHT);
+  const repeatX = (COVER_X * 2) / (cover * sheetAspect);
+  const repeatY = (COVER_Y * 2) / cover;
+  return {
+    repeat: new Vector2(repeatX, repeatY),
+    offset: new Vector2(0.5 * (1 - repeatX), 0.5 * (1 - repeatY)),
+  };
+}
 
 /* The blade's line: across the whole page, through the middle, falling gently to the right. */
 const CUT_CENTER = new Vector2(0, -0.35);
@@ -52,6 +70,11 @@ export interface CoupeWorld {
   star: Group;
   ghosts: readonly Group[];
   cut: CoupeCut;
+  /* The printed face (the questions' sheet) and the washi back, laid once over the frame; the aspect they keep so the
+     pose can re-frame them as the window's aspect changes. */
+  paper: CanvasTexture;
+  washi: CanvasTexture;
+  sheetAspect: number;
   resources: readonly Resource[];
 }
 
@@ -64,51 +87,6 @@ function toColor([red, green, blue]: Rgb): Color {
 /* A seeded hash so the cut's tiny irregularities are the same every build: a blade through paper, not a ruler. */
 function jitter(index: number): number {
   return Math.abs((Math.sin(index * 12.9898) * 43_758.5453) % 1) - 0.5;
-}
-
-/* A sheet of paper as a texture: the base colour, a dusting of lighter and darker flecks, then short fibres. A warmer,
-   more fibrous base reads as the washi backing; the lighter one as the printed face. */
-function paperTexture(base: Rgb, tier: QualityTier, fibres: number): CanvasTexture {
-  const size = tier === "full" ? 512 : 256;
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const context = canvas.getContext("2d");
-  if (context === null) {
-    return new CanvasTexture(canvas);
-  }
-  const [red, green, blue] = base;
-  context.fillStyle = `rgb(${String(red)}, ${String(green)}, ${String(blue)})`;
-  context.fillRect(0, 0, size, size);
-  for (let fleck = 0; fleck < size * 10; fleck += 1) {
-    const light = Math.random() < 0.5;
-    context.fillStyle = `rgba(${light ? "255,255,250" : "150,135,112"},${String(Math.random() * 0.05)})`;
-    context.beginPath();
-    context.arc(Math.random() * size, Math.random() * size, Math.random() * 18 + 4, 0, Math.PI * 2);
-    context.fill();
-  }
-  for (let fibre = 0; fibre < fibres; fibre += 1) {
-    let x = Math.random() * size;
-    let y = Math.random() * size;
-    let angle = Math.random() * Math.PI * 2;
-    context.strokeStyle = `rgba(150,135,112,${String(0.06 + Math.random() * 0.12)})`;
-    context.lineWidth = Math.random() * 0.9 + 0.3;
-    context.beginPath();
-    context.moveTo(x, y);
-    for (let step = 0; step < 8; step += 1) {
-      angle += (Math.random() - 0.5) * 0.6;
-      x += Math.cos(angle) * 7;
-      y += Math.sin(angle) * 7;
-      context.lineTo(x, y);
-    }
-    context.stroke();
-  }
-  const texture = new CanvasTexture(canvas);
-  texture.colorSpace = SRGBColorSpace;
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  texture.repeat.set(2.5, 1.3);
-  return texture;
 }
 
 /* The cut as a polyline from well off one edge to well off the other, a hair irregular. */
@@ -152,8 +130,8 @@ function buildHalf(
   geometry.setAttribute("uv", new Float32BufferAttribute(uv, 2));
   /* Pivot each half on the cut under the middle of the screen, so it turns from the cut. */
   geometry.translate(-CUT_CENTER.x, -CUT_CENTER.y, 0);
-  const front = new MeshBasicMaterial({ map: textures.paper, side: FrontSide });
-  const back = new MeshBasicMaterial({ map: textures.washi, side: DoubleSide });
+  const front = new MeshBasicMaterial({ map: textures.paper, side: FrontSide, toneMapped: false });
+  const back = new MeshBasicMaterial({ map: textures.washi, side: DoubleSide, toneMapped: false });
   const group = new Group();
   group.position.set(CUT_CENTER.x, CUT_CENTER.y, 0);
   group.add(new Mesh(geometry, front), new Mesh(geometry, back));
@@ -167,11 +145,14 @@ function buildHalves(textures: { paper: CanvasTexture; washi: CanvasTexture }): 
   const outline = cutLine();
   const left = -COVER_X - 2;
   const right = COVER_X + 2;
+  /* Each half is a simple polygon: the top (or bottom) edge, then the cut traced back the other way. The lower half
+     closes along its bottom edge first (`left → right`) so the outline joins its ends without the path crossing itself
+     and leaving the far corner bare. */
   const upper = [new Vector2(left, COVER_Y), ...outline, new Vector2(right, COVER_Y)];
   const lower = [
     new Vector2(left, -COVER_Y),
-    ...outline.toReversed(),
     new Vector2(right, -COVER_Y),
+    ...outline.toReversed(),
   ];
   const builds = [buildHalf(upper, 1, textures), buildHalf(lower, -1, textures)];
   return {
@@ -226,18 +207,27 @@ function buildStars(fushimi: Color): {
   return { star, ghosts, resources };
 }
 
-/* The whole coupe: the two paper halves pivoted on the cut (a printed face, a washi back), the hairline left behind,
-   the brand shuriken and its three ghosts. The canvas is transparent: the night and the closing wait in the DOM
-   behind it, uncovered as the halves fall away. */
-export function createCoupeWorld(canvas: HTMLCanvasElement, tier: QualityTier): CoupeWorld {
+/* The whole coupe: the two paper halves pivoted on the cut (the questions' sheet as the printed face, a washi back,
+   both laid once over the frame), the hairline left behind, the brand shuriken and its three ghosts. The canvas is
+   transparent: the night and the closing wait in the DOM behind it, uncovered as the halves fall away. The sheet is
+   the questions' own sheet, so the held paper reads as the page the questions scrolled by on, not a cool grey panel. */
+export function createCoupeWorld(
+  canvas: HTMLCanvasElement,
+  tier: QualityTier,
+  sheet: HTMLCanvasElement,
+): CoupeWorld {
   const fushimi = toColor(resolveColor(canvas, "--color-fushimi"));
   const kome = resolveColor(canvas, "--color-kome");
   const [red, green, blue] = kome;
   const washiBase: Rgb = [red - 8, green - 11, blue - 16];
   const fujiDeep = toColor(resolveColor(canvas, "--color-fuji-deep"));
 
-  const paper = paperTexture(kome, tier, tier === "full" ? 520 : 240);
-  const washi = paperTexture(washiBase, tier, tier === "full" ? 720 : 320);
+  const paper = sheetTexture(sheet);
+  const washiCanvas = document.createElement("canvas");
+  washiCanvas.width = sheet.width;
+  washiCanvas.height = sheet.height;
+  drawPaper(washiCanvas, washiBase, tier === "full" ? 720 : 320);
+  const washi = sheetTexture(washiCanvas);
 
   const root = new Group();
   const halfBuild = buildHalves({ paper, washi });
@@ -269,6 +259,9 @@ export function createCoupeWorld(canvas: HTMLCanvasElement, tier: QualityTier): 
       direction: CUT_DIRECTION.clone(),
       normal: CUT_NORMAL.clone(),
     },
+    paper,
+    washi,
+    sheetAspect: sheet.width / sheet.height,
     resources: [
       ...halfBuild.resources,
       slitGeometry,

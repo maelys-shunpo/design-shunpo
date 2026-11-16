@@ -31,7 +31,10 @@ export function MarqueeMotion({ track, direction, lap }: MarqueeMotionProps): nu
     }
     const tween = gsap.to(track, { ...travel[direction], duration: lap, ease: "none", repeat: -1 });
     /* The wall the column belongs to: the pointer over any column, or focus inside it, holds them all. */
-    const wall = track.closest("[data-slot=tool-columns]") ?? track.parentElement ?? track;
+    const wall =
+      track.closest("[data-slot=tool-columns], [data-slot=testimonial-drift]") ??
+      track.parentElement ??
+      track;
     const held = { seen: false, pointer: false, focus: false };
     function update() {
       tween.paused(!held.seen || held.pointer || held.focus);

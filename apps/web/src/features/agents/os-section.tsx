@@ -1,3 +1,4 @@
+import { Arrival } from "@repo/ui/agents/arrival";
 import { OsWindow } from "@repo/ui/agents/os-window";
 import { PanScene } from "@repo/ui/agents/pan-scene";
 import { PhotoStage } from "@repo/ui/agents/photo-stage";
@@ -19,7 +20,9 @@ export function OsSection() {
         lead={
           <Stack gap="lg" align="start">
             <OsTitle />
-            <OsLine />
+            <Arrival mode="follow">
+              <OsLine />
+            </Arrival>
           </Stack>
         }
       >

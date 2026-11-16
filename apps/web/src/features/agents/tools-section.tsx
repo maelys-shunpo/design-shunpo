@@ -1,3 +1,4 @@
+import { Arrival } from "@repo/ui/agents/arrival";
 import { ToolHub } from "@repo/ui/agents/tool-hub";
 import { GridArea } from "@repo/ui/layout/grid-area";
 import { PageGrid } from "@repo/ui/layout/page-grid";
@@ -26,7 +27,9 @@ export function ToolsSection() {
           >
             <Stack gap="md" align="center">
               <ToolsTitle align="center" />
-              <ToolsLine align="center" />
+              <Arrival mode="follow">
+                <ToolsLine align="center" />
+              </Arrival>
             </Stack>
           </ToolHub>
         </GridArea>

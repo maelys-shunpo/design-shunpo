@@ -1,3 +1,4 @@
+import { Arrival } from "@repo/ui/agents/arrival";
 import { FaqItem } from "@repo/ui/agents/faq-item";
 import { Headline } from "@repo/ui/agents/headline";
 import { GridArea } from "@repo/ui/layout/grid-area";
@@ -15,14 +16,16 @@ export function QuestionsSection() {
         <GridArea columns={{ lg: { start: 1, span: 5 } }}>
           <Stack gap="lg">
             <Headline level={2} size="heading" entrance="lines">
-              Ce qu’on nous demande avant de commencer.
+              Les questions qu’on nous pose le plus.
             </Headline>
           </Stack>
         </GridArea>
         <GridArea columns={{ lg: { start: 7, span: 6 } }}>
-          {objections.map((objection) => (
-            <FaqItem key={objection.id} question={objection.question} answer={objection.answer} />
-          ))}
+          <Arrival mode="block">
+            {objections.map((objection) => (
+              <FaqItem key={objection.id} question={objection.question} answer={objection.answer} />
+            ))}
+          </Arrival>
         </GridArea>
       </PageGrid>
     </Section>

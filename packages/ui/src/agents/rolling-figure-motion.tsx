@@ -16,12 +16,27 @@ type EffectCleanup = (() => void) | undefined;
 
 /* Built once idle: the face's digits become wheels, rolled once by the scroll (`enterUnseen`). A face with no digit, or
    already in view, stays as painted. */
-export function RollingFigureMotion({ face }: { face: HTMLElement | null }): null {
+export function RollingFigureMotion({
+  face,
+  roll = "seen",
+}: {
+  face: HTMLElement | null;
+  roll?: "seen" | "reveal" | undefined;
+}): null {
   useEffect((): EffectCleanup => {
     if (face === null || window.matchMedia(REDUCED_MOTION).matches) {
       return undefined;
     }
-    if (!/\d/u.test(face.textContent ?? "") || inWindow(face)) {
+    if (!/\d/u.test(face.textContent ?? "")) {
+      return undefined;
+    }
+    /* A figure a state change brings in under the reader's eye rolls on its own arrival, even in view. */
+    if (roll === "reveal") {
+      const { timeline, revert } = buildWheels(face);
+      timeline.play();
+      return revert;
+    }
+    if (inWindow(face)) {
       return undefined;
     }
     const { timeline, revert } = buildWheels(face);
@@ -31,6 +46,6 @@ export function RollingFigureMotion({ face }: { face: HTMLElement | null }): nul
       stop?.();
       revert();
     };
-  }, [face]);
+  }, [face, roll]);
   return null;
 }

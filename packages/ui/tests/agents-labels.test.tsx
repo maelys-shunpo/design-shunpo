@@ -20,6 +20,16 @@ function corner(element: Element, pseudo: "::before" | "::after") {
   };
 }
 
+/* A bracket a link draws, read on the pseudo-element: shown or not, and whether it is a glyph (strokes painted as
+   background gradients) rather than a border. */
+function bracket(element: Element, pseudo: "::before" | "::after") {
+  const style = getComputedStyle(element, pseudo);
+  return {
+    opacity: style.opacity,
+    glyph: style.backgroundImage.includes("gradient"),
+  };
+}
+
 describe("Section labels", () => {
   it("label a section in plain words: no symbol, no capitals, no monospace", async () => {
     const screen = await render(<Eyebrow>Agents IA sur mesure</Eyebrow>);
@@ -46,29 +56,24 @@ describe("Section labels", () => {
     const screen = await render(<NavAnchor href="#methode">Méthode</NavAnchor>);
     const link = screen.getByRole("link", { name: "Méthode" }).element();
 
-    expect(corner(link, "::before").opacity).toBe("0");
-    expect(corner(link, "::after").opacity).toBe("0");
+    expect(bracket(link, "::before").opacity).toBe("0");
+    expect(bracket(link, "::after").opacity).toBe("0");
   });
 
-  it("designates a focused link with two opposite corners, never four", async () => {
+  it("takes a focused link between square brackets, not a corner frame", async () => {
     const screen = await render(<NavAnchor href="#methode">Méthode</NavAnchor>);
     const link = screen.getByRole("link", { name: "Méthode" }).element();
 
     await userEvent.tab();
 
-    await expect.poll(() => corner(link, "::before").opacity).toBe("1");
+    await expect.poll(() => bracket(link, "::before").opacity).toBe("1");
+    expect(bracket(link, "::before")).toMatchObject({ opacity: "1", glyph: true });
+    expect(bracket(link, "::after")).toMatchObject({ opacity: "1", glyph: true });
     expect(corner(link, "::before")).toMatchObject({
-      top: true,
-      left: true,
-      bottom: false,
-      right: false,
-    });
-    expect(corner(link, "::after")).toMatchObject({
-      opacity: "1",
       top: false,
       left: false,
-      bottom: true,
-      right: true,
+      bottom: false,
+      right: false,
     });
   });
 

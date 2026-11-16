@@ -16,27 +16,33 @@ const rollingFigureVariants = cva(
 );
 
 const figureVariants = cva("", {
-  variants: { size: { md: "text-3xl", lg: "text-4xl" } },
+  variants: { size: { md: "text-3xl md:text-4xl", lg: "text-4xl" } },
   defaultVariants: { size: "md" },
 });
 
 const unitVariants = cva("", {
-  variants: { size: { md: "text-xl", lg: "text-2xl" } },
+  variants: { size: { md: "text-xl md:text-2xl", lg: "text-2xl" } },
   defaultVariants: { size: "md" },
 });
+
+/* When the figure rolls. `seen` (default): once idle and scrolled into view, as on the references wall. `reveal`: once
+   on its own arrival even when already in view, for a figure a state change brings in under the reader's eye, like the
+   calculator's result landing after the last question. */
+type RollTrigger = "seen" | "reveal";
 
 interface RollingFigureProps extends VariantProps<typeof figureVariants> {
   /* The key figure as its published case states it (« +1,4 ») and its unit (« M »). */
   figure: string;
   unit: string;
+  roll?: RollTrigger | undefined;
   className?: string;
 }
 
-/* A key figure whose digits roll like a counter: painted complete; once idle and in view, each digit's column rolls a
-   full turn and stops on its value, left to right, while the other signs fade up (`RollingFigureMotion`). On the
-   curved wall it rolls again each time its card comes to the front (`--ring-voice`). Readers hear the figure whole;
-   reduced motion keeps it painted. */
-export function RollingFigure({ figure, unit, size, className }: RollingFigureProps) {
+/* A key figure whose digits roll like a counter: painted complete; each digit's column rolls a full turn and stops on
+   its value, left to right, while the other signs fade up (`RollingFigureMotion`), on arrival (`roll`). On the curved
+   wall it rolls again each time its card comes to the front (`--ring-voice`). Readers hear the figure whole; reduced
+   motion keeps it painted. */
+export function RollingFigure({ figure, unit, size, roll, className }: RollingFigureProps) {
   const [face, setFace] = useState<HTMLElement | null>(null);
   return (
     <span data-slot="rolling-figure" className={cn(rollingFigureVariants(), className)}>
@@ -47,7 +53,7 @@ export function RollingFigure({ figure, unit, size, className }: RollingFigurePr
         <span className={unitVariants({ size })}>{unit}</span>
       </span>
       <AfterIdle>
-        <LazyRollingFigureMotion face={face} />
+        <LazyRollingFigureMotion face={face} roll={roll} />
       </AfterIdle>
     </span>
   );

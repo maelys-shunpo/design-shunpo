@@ -6,6 +6,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "../lib/cn.ts";
 import { AgentsAction } from "./action.tsx";
 import type { CalculatorResult as Result } from "./calculator-model.ts";
+import { RollingFigure } from "./rolling-figure.tsx";
 
 function renderButton(props: ComponentProps<"button">) {
   return <button type="button" {...props} />;
@@ -27,13 +28,29 @@ interface CalculatorResultProps {
   className?: string | undefined;
 }
 
-function Figure({ value, unit, label }: { value: string; unit: string; label: string }) {
+/* A result figure and its label. A figure the hourly dial recomputes live (the yearly cost) stays a plain readout so it
+   tracks the slider; the stable ones (`roll`) roll up once as the result lands. */
+function Figure({
+  value,
+  unit,
+  label,
+  roll,
+}: {
+  value: string;
+  unit: string;
+  label: string;
+  roll?: boolean;
+}) {
   return (
     <div className="flex flex-col gap-1">
-      <p className="font-display text-3xl leading-none font-medium text-tenku lining-nums tabular-nums md:text-4xl">
-        {value}
-        <span className="text-xl md:text-2xl">&#8239;{unit}</span>
-      </p>
+      {roll === true ? (
+        <RollingFigure figure={value} unit={unit} roll="reveal" className="text-tenku" />
+      ) : (
+        <p className="font-display text-3xl leading-none font-medium text-tenku lining-nums tabular-nums md:text-4xl">
+          {value}
+          <span className="text-xl md:text-2xl">&#8239;{unit}</span>
+        </p>
+      )}
       <p className="text-sm text-muted-foreground">{label}</p>
     </div>
   );
@@ -56,12 +73,13 @@ function LossSentence({ result }: { result: Result }) {
 function Figures({ result }: { result: Result }) {
   return (
     <div className="grid gap-6 sm:grid-cols-3">
-      <Figure value={hours(result.yearlyHours)} unit="h/an" label="récupérables" />
+      <Figure value={hours(result.yearlyHours)} unit="h/an" label="récupérables" roll />
       <Figure value={euros.format(result.yearlyCost)} unit="€/an" label="à ce coût horaire" />
       <Figure
         value={result.fullTime.toLocaleString("fr-FR")}
         unit="temps plein"
         label="équivalent"
+        roll
       />
     </div>
   );

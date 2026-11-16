@@ -60,6 +60,9 @@ function pieceFor(sign: string, document: Document, carved: Carved) {
   const glyph = document.createElement("span");
   glyph.dataset["figureGlyph"] = "";
   glyph.style.display = "inline-block";
+  /* A multi-word unit (« temps plein ») is carved sign by sign; `pre` keeps a space's width, which an inline-block
+     would otherwise collapse to nothing. */
+  glyph.style.whiteSpace = "pre";
   glyph.textContent = sign;
   carved.glyphs.push(glyph);
   return glyph;

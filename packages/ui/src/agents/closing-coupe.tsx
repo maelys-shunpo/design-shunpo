@@ -21,7 +21,10 @@ export function ClosingCoupe({ children }: ClosingCoupeProps) {
   const [progress] = useState(() => ({ value: 0 }));
   const choreography = useMemo(() => coupeChoreography(progress), [progress]);
   return (
-    <div data-slot="closing-coupe">
+    /* The night is the scene's own ground, so the scene reads as one block of Fuji Night: on a phone, where the scene
+       is not pinned, the stage's own vertical rhythm no longer shows the page's cream paper as a band above the
+       footer. */
+    <div data-slot="closing-coupe" className="bg-background scheme-dark">
       <ScrollScene choreography={choreography} length={coupeHold()} below="header" minWidth="md">
         <div className="agents-grain relative min-h-svh w-full bg-background scheme-dark">
           <div className="absolute inset-0 grid place-items-center">

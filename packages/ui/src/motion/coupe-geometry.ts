@@ -1,37 +1,45 @@
 /* The closing coupe's timeline, as fractions of the held scene: p is the progress object the scroll drives, from 0
-   to 1. The values are those Maëlys validated in the brainstorm (cta-coupe-traverse-v4, 12 November 2026): the last
-   questions hold on their paper, the SHUNPO shuriken crosses the whole page at a constant speed and leaves, a hairline
-   holds for a beat, then the page gives, the two halves fall apart and the closing rises on the night underneath. */
+   to 1. The gesture is the one Maëlys validated in the brainstorm (cta-coupe-traverse-v4, 12 November 2026): the
+   SHUNPO shuriken crosses the whole page at a constant speed and leaves, a hairline holds for a beat, then the page
+   gives, the two halves fall apart and the closing rises on the night underneath. Each moment is set in screens of
+   scroll since the stage was held, so its pace stays the same whatever the hold. The star is thrown as soon as the
+   stage is held: the questions' paper has just scrolled by, so a held stretch of bare paper first reads as empty. */
 
 /* Screens of scroll the stage is held for: the throw, the beat, the halves falling apart and the reveal. */
-const HOLD_SCREENS = 2.8;
+const HOLD_SCREENS = 2.3;
+
+/* A moment of the hold, in screens since the stage was held, as a fraction of the timeline. */
+function at(screens: number): number {
+  return screens / HOLD_SCREENS;
+}
 
 /* The star crosses between these two points of the timeline, off one edge to off the other. */
-const THROW_START = 0.2;
-const THROW_END = 0.31;
+const THROW_START = at(0.06);
+const THROW_END = at(0.37);
 
 /* Three ghosts trail the star (the Shunpo Shift), each this much further back along the crossing. */
 export const GHOST_COUNT = 3;
 const GHOST_GAP = 0.08;
 
 /* The hairline left behind holds through the beat, then fades over this span. */
-const SLIT_FADE_START = 0.38;
-const SLIT_FADE_END = 0.42;
+const SLIT_FADE_START = at(0.564);
+const SLIT_FADE_END = at(0.676);
 
 /* The upper half slides down along the cut first, then the two halves fall apart. */
-const SLIDE_START = 0.37;
-const SLIDE_END = 0.46;
-const PART_START = 0.44;
-const PART_END = 0.78;
+const SLIDE_START = at(0.536);
+const SLIDE_END = at(0.788);
+const PART_START = at(0.732);
+const PART_END = at(1.684);
 
-/* The impact tremble starts as the page gives and decays within a tenth of the scroll. */
-const KNOCK_AT = 0.37;
-const KNOCK_DECAY = 24;
-const KNOCK_FREQUENCY = 130;
+/* The impact tremble starts as the page gives and decays within about a third of a screen, at a set pace per screen. */
+const KNOCK_AT = SLIDE_START;
+const KNOCK_DECAY = 8.6 * HOLD_SCREENS;
+const KNOCK_FREQUENCY = 46.4 * HOLD_SCREENS;
 
-/* The title rises as the halves part; the button arrives last, the one red once the star has gone. */
-export const TITLE_REVEAL = { start: 0.5, end: 0.82 } as const;
-export const BUTTON_REVEAL = { start: 0.74, end: 0.94 } as const;
+/* The title rises as the halves part; the button arrives last, the one red once the star has gone, a breath before
+   the hold lets go. */
+export const TITLE_REVEAL = { start: at(0.9), end: at(1.796) } as const;
+export const BUTTON_REVEAL = { start: at(1.572), end: at(2.132) } as const;
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, waitFor } from "storybook/test";
+import { expect } from "storybook/test";
 
-import { TestimonialCascade } from "../src/agents/testimonial-cascade.tsx";
+import { TestimonialDrift } from "../src/agents/testimonial-drift.tsx";
 import { Testimonial } from "../src/agents/testimonial.tsx";
 import { inAgents } from "./support/agents-direction.tsx";
 
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Testimonial is a client's words, signed: initials, name and role above, the quote below, an optional source under it, no network badge, on a white card whose top right corner is cut on the bias like the actions. TestimonialCascade shows the cards two by two, stepping from one edge to the other from tablets up, the pairs landing in turn in a loop with a pause control and one dot per pair: the pair shown sinks and fades, then each new card comes down from a step above, tilted, and settles as its flight shadow melts into its own. Reduced motion swaps them at once.",
+          "Testimonial is a client's words, signed: initials, name and role above, the quote below, an optional source under it, no network badge, on a white card whose top right corner is cut on the bias like the actions. TestimonialDrift lays the cards over three columns drifting from lg, the middle one against its neighbours (one row drifting left below it): the labelled group takes a tab stop, so the pointer over a column or keyboard focus holds every column, with no pause button. Reduced motion unfolds each column, every card whole and read once.",
       },
     },
   },
@@ -37,25 +37,55 @@ export const Card: Story = {
   },
 };
 
-export const Cascade: Story = {
+export const Drift: Story = {
   render: (args) => (
-    <TestimonialCascade
-      label="Avis de clients"
-      labels={{ pages: ["Avis 1 et 2", "Avis 3"], pause: "Pause", play: "Lecture" }}
-      every={60_000}
-    >
+    <TestimonialDrift label="Avis de clients">
       {[
         <Testimonial key="a" {...args} />,
-        <Testimonial key="b" {...args} author="Simon Brossard" initials="SB" tone="ink" />,
-        <Testimonial key="c" {...args} author="Corentin Lambert" initials="CL" tone="cobalt" />,
+        <Testimonial
+          key="b"
+          {...args}
+          author="Simon Brossard"
+          position="CTO, Revoltrain"
+          initials="SB"
+          tone="ink"
+        />,
+        <Testimonial
+          key="c"
+          {...args}
+          author="Corentin Lambert"
+          position="Head of Ops, Insideo"
+          initials="CL"
+          tone="cobalt"
+        />,
+        <Testimonial
+          key="d"
+          {...args}
+          author="Nadia Rahmani"
+          position="COO, OpsClean"
+          initials="NR"
+          tone="warm"
+        />,
+        <Testimonial
+          key="e"
+          {...args}
+          author="Paul Vernier"
+          position="CEO, Fushimi"
+          initials="PV"
+          tone="mint"
+        />,
+        <Testimonial
+          key="f"
+          {...args}
+          author="Léa Fontaine"
+          position="CMO, Tenku"
+          initials="LF"
+          tone="ink"
+        />,
       ]}
-    </TestimonialCascade>
+    </TestimonialDrift>
   ),
-  play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole("button", { name: "Avis 3" }));
-    /* The pair lands. */
-    await waitFor(async () => {
-      await expect(canvas.getByText("Corentin Lambert")).toBeVisible();
-    });
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("group", { name: "Avis de clients" })).toBeVisible();
   },
 };

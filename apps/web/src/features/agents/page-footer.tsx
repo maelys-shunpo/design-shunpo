@@ -17,7 +17,7 @@ const links = [
 
 export function PageFooter() {
   return (
-    <Section as="footer" spacing="tight">
+    <Section as="footer" spacing="tight" scheme="dark">
       <PageGrid rows="md" align="center">
         <GridArea columns={{ md: { start: 1, span: 3 }, lg: { start: 1, span: 4 } }}>
           <Wordmark size="lg" />

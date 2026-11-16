@@ -12,7 +12,7 @@ import {
   throwPosition,
   throwVisible,
 } from "../motion/coupe-geometry.ts";
-import { type CoupeCut, type CoupeWorld, SCREEN_HEIGHT } from "./coupe-world.ts";
+import { type CoupeCut, type CoupeWorld, SCREEN_HEIGHT, sheetFraming } from "./coupe-world.ts";
 
 /* The thrown star, a half world-unit across, spinning five turns across the page. */
 const STAR_SIZE = 0.5;
@@ -94,6 +94,16 @@ function poseHalves(world: CoupeWorld, progress: number): void {
   }
 }
 
+/* Lays the sheet and its washi back once over the frame, cover-cropped to the window's aspect, so the held paper never
+   tiles and never stretches whatever the window. */
+function frameSheet(world: CoupeWorld, aspect: number): void {
+  const { repeat, offset } = sheetFraming(aspect, world.sheetAspect);
+  for (const texture of [world.paper, world.washi]) {
+    texture.repeat.copy(repeat);
+    texture.offset.copy(offset);
+  }
+}
+
 /* Poses the whole coupe from the scroll's progress, and trembles the camera at the impact. */
 export function poseCoupe(
   world: CoupeWorld,
@@ -101,6 +111,7 @@ export function poseCoupe(
   options: { aspect: number; progress: number },
 ): void {
   const { aspect, progress } = options;
+  frameSheet(world, aspect);
   const halfWidth = (SCREEN_HEIGHT / 2) * aspect;
   const span: Span = { from: -halfWidth - 1, to: halfWidth + 1 };
   poseFlight(world, span, progress);

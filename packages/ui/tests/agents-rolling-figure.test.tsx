@@ -23,17 +23,36 @@ afterEach(async () => {
   await allowMotion();
 });
 
-function figure(options: { below?: boolean; figure?: string; wall?: boolean }) {
+function figure(options: {
+  below?: boolean;
+  figure?: string;
+  unit?: string;
+  wall?: boolean;
+  roll?: "seen" | "reveal";
+}) {
   const wall = options.wall === true ? { "data-arrival": "arrived" } : {};
   return (
     <Direction name="agents">
       {options.below === false ? null : <div style={{ height: "160vh" }} />}
       <div {...wall}>
-        <RollingFigure figure={options.figure ?? "+1,4"} unit="M" />
+        <RollingFigure
+          figure={options.figure ?? "+1,4"}
+          unit={options.unit ?? "M"}
+          roll={options.roll}
+        />
       </div>
       <div style={{ height: "160vh" }} />
     </Direction>
   );
+}
+
+/* The width of the plain space inside a multi-word unit, in pixels, once carved: the figure-to-unit separator is a
+   non-breaking space, so a plain U+0020 glyph is the unit's own word gap, which must survive. */
+function unitWordGapWidth(container: HTMLElement): number {
+  const gap = [...container.querySelectorAll<HTMLElement>("[data-figure-glyph]")].find(
+    (glyph) => glyph.textContent === " ",
+  );
+  return gap === undefined ? Number.NaN : gap.getBoundingClientRect().width;
 }
 
 /* Scrolls so the figure stands low in the window (three quarters down), past the wall's line and short of the page's
@@ -178,5 +197,32 @@ describe("RollingFigure", () => {
     await pause(SETTLE_MS * 2);
 
     expect(wheelsOf(screen.container)).toHaveLength(0);
+  });
+
+  it("rolls on its own reveal even when already in view", async () => {
+    const screen = await render(figure({ below: false, roll: "reveal" }));
+    releaseIdleCallbacks();
+
+    await expect.poll(() => wheelsOf(screen.container).length, ENTRANCE).toBe(2);
+    await expect.poll(() => allStopped(screen.container), ENTRANCE).toBe(true);
+  });
+
+  it("paints a reveal figure under reduced motion", async () => {
+    await preferReducedMotion();
+    const screen = await render(figure({ below: false, roll: "reveal" }));
+    releaseIdleCallbacks();
+    await pause(SETTLE_MS * 2);
+
+    expect(wheelsOf(screen.container)).toHaveLength(0);
+  });
+
+  it("keeps the space of a multi-word unit once its digits are wheels", async () => {
+    const screen = await render(
+      figure({ below: false, figure: "2", unit: "temps plein", roll: "reveal" }),
+    );
+    releaseIdleCallbacks();
+    await expect.poll(() => allStopped(screen.container), ENTRANCE).toBe(true);
+
+    expect(unitWordGapWidth(screen.container)).toBeGreaterThan(1);
   });
 });

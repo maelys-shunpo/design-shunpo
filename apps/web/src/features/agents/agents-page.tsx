@@ -3,7 +3,6 @@ import { PaperGate } from "@repo/ui/lib/paper-gate";
 import type { ReactNode } from "react";
 
 import { PageBody } from "./page-body";
-import { PageFooter } from "./page-footer";
 import { PageNav } from "./page-nav";
 
 interface AgentsPageProps {
@@ -21,7 +20,6 @@ export function AgentsPage({ hero, opening = "paper" }: AgentsPageProps) {
       <PaperGate />
       <PageNav over={opening} />
       <PageBody hero={hero} opening={opening} />
-      <PageFooter />
     </Direction>
   );
 }

@@ -1,3 +1,5 @@
+import { LiveSurface } from "./live-surface.tsx";
+import { liveAttributes } from "./live.ts";
 import { OsDecisionCard } from "./os-decision.tsx";
 import { decisionsOf, journalOf, type OsDecision, type OsLine, type OsView } from "./os-model.ts";
 
@@ -18,30 +20,36 @@ interface OsViewPaneProps {
   labels: OsPaneLabels;
 }
 
+/* The journal reads as the agent working: the page paints it whole, then at rest its lines write in one by one, oldest
+   first so the newest lands last, and loop (`LiveSurface`), paused off screen, under the pointer and on focus, still
+   under reduced motion. Keyed on its length so an approved line, added live, is woven into the replay. */
 function OsJournal({ lines, title }: { lines: readonly OsLine[]; title: string }) {
   return (
     <section className="flex flex-col gap-1">
       <h3 className="text-xs font-medium text-muted-foreground">{title}</h3>
-      <ol className="flex flex-col">
-        {lines.map((line) => (
-          <li
-            key={`${line.tool.slug}-${line.text}`}
-            className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-agents-line py-2 text-sm last:border-b-0"
-          >
-            <time className="font-mono text-xs text-muted-foreground">{line.at}</time>
-            <svg
-              aria-hidden
-              viewBox="0 0 24 24"
-              className="size-4 shrink-0"
-              fill={`#${line.tool.hex}`}
+      <LiveSurface key={lines.length} hold={8}>
+        <ol className="flex flex-col">
+          {lines.map((line, index) => (
+            <li
+              key={`${line.tool.slug}-${line.text}`}
+              {...liveAttributes({ live: lines.length - index })}
+              className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-agents-line py-2 text-sm last:border-b-0"
             >
-              <path d={line.tool.path} />
-            </svg>
-            <span className="font-medium">{line.tool.title}</span>
-            <span className="text-muted-foreground">{line.text}</span>
-          </li>
-        ))}
-      </ol>
+              <time className="font-mono text-xs text-muted-foreground">{line.at}</time>
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                className="size-4 shrink-0"
+                fill={`#${line.tool.hex}`}
+              >
+                <path d={line.tool.path} />
+              </svg>
+              <span className="font-medium">{line.tool.title}</span>
+              <span className="text-muted-foreground">{line.text}</span>
+            </li>
+          ))}
+        </ol>
+      </LiveSurface>
     </section>
   );
 }

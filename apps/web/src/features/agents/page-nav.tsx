@@ -12,6 +12,8 @@ const allLinks = [
   { href: "#essayer", label: "Essayer" },
   { href: "#references", label: "Références" },
   { href: "#methode", label: "Méthode" },
+  { href: "#avis", label: "Avis" },
+  { href: "#questions", label: "FAQ" },
 ] as const;
 
 const links = allLinks.filter((link) => casesAreShown || link.href !== "#references");

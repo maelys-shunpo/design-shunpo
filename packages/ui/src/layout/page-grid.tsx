@@ -19,8 +19,14 @@ const pageGridVariants = cva("grid-page", {
       end: "items-end",
       stretch: "items-stretch",
     },
+    /* How areas fall into rows. `dense` back-fills gaps, so an area placed in a later column but earlier in the DOM
+       (a title on the right, its cards on the left) still shares the row instead of being pushed below. */
+    flow: {
+      row: "",
+      dense: "grid-flow-row-dense",
+    },
   },
-  defaultVariants: { rows: "md", align: "start" },
+  defaultVariants: { rows: "md", align: "start", flow: "row" },
 });
 
 interface PageGridProps extends HTMLAttributes<HTMLElement>, VariantProps<typeof pageGridVariants> {
@@ -29,11 +35,18 @@ interface PageGridProps extends HTMLAttributes<HTMLElement>, VariantProps<typeof
 
 /* The page grid: 4, 8 or 12 content columns between two margins, at most 100rem wide. Place children with GridArea:
    centred, symmetric, asymmetric or full bleed. */
-export function PageGrid({ rows, align, as: Element = "div", className, ...props }: PageGridProps) {
+export function PageGrid({
+  rows,
+  align,
+  flow,
+  as: Element = "div",
+  className,
+  ...props
+}: PageGridProps) {
   return (
     <Element
       data-slot="page-grid"
-      className={cn(pageGridVariants({ rows, align }), className)}
+      className={cn(pageGridVariants({ rows, align, flow }), className)}
       {...props}
     />
   );

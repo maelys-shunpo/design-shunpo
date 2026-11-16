@@ -53,7 +53,8 @@ describe("The coupe scene", () => {
     const progress = { value: 0 };
     const canvas = await renderScene(progress);
 
-    progress.value = 0.25;
+    /* Mid-throw: the star crosses the page early in the hold, so sample while it is still in flight. */
+    progress.value = 0.1;
 
     await expect
       .poll(async () => countPixels(await canvasPixels(canvas), fushimi), LIVE_TIMEOUT)

@@ -127,6 +127,15 @@
   --ease-shift: cubic-bezier(0.8, 0, 0.1, 1);
   --ease-press: cubic-bezier(0.2, 0.8, 0.2, 1);
 
+  /* Section entrances (`Arrival`). A phrase and call follow their title: a small rise on a delay that spans the title's
+     rise, so they settle as its last line lands. A block (a card, a list) arrives on its own, a touch further, no delay.
+     Small distances, always upward; the long moves are the media's, never the text's. */
+  --agents-settle-rise: 0.75rem;
+  --agents-block-rise: 1rem;
+  --agents-follow-duration: 450ms;
+  --agents-follow-delay: 800ms;
+  --agents-block-duration: 600ms;
+
   --animate-spin: spin 0.9s linear infinite;
 
   @keyframes spin {
@@ -667,6 +676,13 @@
   --agents-cut-press: calc(var(--spacing-1) + var(--spacing-0\.5));
 }
 
+/* Icon-scale cut for a small toggle (`FaqItem`): a shallower corner on a 24 px mark. */
+@utility agents-cut-sm {
+  --agents-cut-rest: calc(var(--spacing-1) + var(--spacing-0\.5));
+  --agents-cut-open: calc(var(--spacing-2) + var(--spacing-0\.5));
+  --agents-cut-press: var(--spacing-1);
+}
+
 /* A second choice: a 1 px frame along the cut instead of a fill. */
 @utility agents-cut-line {
   &::before {
@@ -746,6 +762,48 @@
   background-position: center;
   background-repeat: no-repeat;
   background-blend-mode: hard-light;
+}
+
+/* The questions open and close like a fold (`FaqItem`, the `plie` section): the native disclosure keeps its keyboard,
+   find-in-page and reduced motion, and its answer no longer snaps open. `interpolate-size` lets the height ease to and
+   from `auto`, so the content unfolds on the emphasized curve while the summary's cross turns a quarter into a minus;
+   `content-visibility` carries the discrete hide across the close. Reduced motion keeps the instant native toggle. */
+@utility agents-faq {
+  interpolate-size: allow-keywords;
+
+  &::details-content {
+    height: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      height 320ms var(--ease-emphasized),
+      opacity 240ms var(--ease-emphasized),
+      content-visibility 320ms;
+    transition-behavior: allow-discrete;
+  }
+
+  &[open]::details-content {
+    height: auto;
+    opacity: 1;
+  }
+
+  /* The coupe toggle joins the row: hovering anywhere on the summary opens its cut, pressing closes it,
+     the same gesture as the page's buttons, so the affordance is the whole question, not the 24 px mark. */
+  @media (hover: hover) and (pointer: fine) {
+    & summary:hover [data-faq-cut] {
+      --agents-cut: var(--agents-cut-open);
+    }
+  }
+
+  & summary:active [data-faq-cut] {
+    --agents-cut: var(--agents-cut-press);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::details-content {
+      transition: none;
+    }
+  }
 }
 
 /* Fibrous washi for what clients sign (`Testimonial`, `ReferenceTile material="paper"`): fine fibres and a light
@@ -1051,103 +1109,6 @@
   --agents-sheet-fill: var(--color-agents-paper);
 }
 
-/* A card landing on the page (`TestimonialCascade`), by its `data-state`: current, leaving or waiting. The pair it
-   replaces sinks a touch and is gone in 200 ms, before the new one shows, so two texts never cross. Each new card then
-   comes down from a step above and in front, tilted, opaque within 200 ms, and settles flat on the emphasized ease
-   (800 ms, the slow token), the second a beat after the first. Under it a flight shadow, kept inside the card's box so
-   it never shows an edge, closes in from below and melts into the card's own as it touches down (its outer layer fades
-   in with the card, its inner one fades out on the way down, so it peaks in flight). Waiting cards hold the first state,
-   out of sight. Reduced motion: no travel and no flight shadow, the swap instant (the base layer cuts every transition). */
-@utility agents-landing {
-  --agents-landing-delay: 200ms;
-  --agents-landing-tilt: -1deg;
-  position: relative;
-  isolation: isolate;
-
-  &:nth-child(even) {
-    --agents-landing-delay: 360ms;
-    --agents-landing-tilt: 0.75deg;
-  }
-
-  & > [data-landing="card"] {
-    transition:
-      opacity 200ms var(--ease-standard) var(--agents-landing-delay),
-      translate 800ms var(--ease-emphasized) var(--agents-landing-delay),
-      scale 800ms var(--ease-emphasized) var(--agents-landing-delay),
-      rotate 800ms var(--ease-emphasized) var(--agents-landing-delay);
-  }
-
-  & > [data-landing="shadow"] {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 200ms linear var(--agents-landing-delay);
-  }
-
-  & > [data-landing="shadow"] > * {
-    position: absolute;
-    inset: var(--spacing-4) var(--spacing-6) var(--spacing-12);
-    box-shadow: 0 var(--spacing-12) var(--spacing-12) 0 rgb(30 38 41 / 0.28);
-    opacity: 0;
-    transition:
-      opacity 450ms var(--ease-shift) var(--agents-landing-delay),
-      translate 800ms var(--ease-emphasized) var(--agents-landing-delay),
-      scale 800ms var(--ease-emphasized) var(--agents-landing-delay);
-  }
-
-  &[data-state="current"] > [data-landing="shadow"] {
-    opacity: 1;
-  }
-
-  /* From wherever it is, a card caught in flight included. */
-  &[data-state="leaving"] > [data-landing="card"] {
-    opacity: 0;
-    scale: 0.97;
-    transition:
-      opacity 200ms var(--ease-standard),
-      scale 450ms var(--ease-emphasized),
-      translate 450ms var(--ease-emphasized),
-      rotate 450ms var(--ease-emphasized);
-  }
-
-  &[data-state="waiting"] {
-    visibility: hidden;
-  }
-
-  &[data-state="waiting"] > [data-landing="card"] {
-    opacity: 0;
-    translate: 0 calc(var(--spacing-6) * -1);
-    scale: 1.04;
-    rotate: var(--agents-landing-tilt);
-    transition: none;
-  }
-
-  &[data-state="waiting"] > [data-landing="shadow"] {
-    transition: none;
-  }
-
-  &[data-state="waiting"] > [data-landing="shadow"] > * {
-    opacity: 1;
-    translate: 0 var(--spacing-5);
-    scale: 1.06;
-    transition: none;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &[data-state] > [data-landing="card"] {
-      translate: none;
-      scale: none;
-      rotate: none;
-    }
-
-    & > [data-landing="shadow"] {
-      display: none;
-    }
-  }
-}
-
 /* The frame (SHUNPO signature): two corners, never four, one at the top start and one at the bottom end, 14 px legs,
    1.5 px Fushimi. It designates, never decorates: hidden at rest, it jumps into place on hover (fine pointers), on
    keyboard focus and on the current item (`aria-current`, an open menu), 240 ms on the shift ease, at once under reduced
@@ -1248,6 +1209,80 @@
 /* On a coloured ground (a Fushimi card), the corners take the ground's own ink. */
 @utility agents-frame-ink {
   --agents-frame-color: currentColor;
+}
+
+/* A word held between square brackets « [ » « ] » (a link of the bar): each bracket a full upright with a short leg at
+   its top and foot, 1.5 px Fushimi, just outside the word and a little taller than it. Like the frame it designates,
+   never decorates: hidden at rest, the two close on the word from outside on hover (fine pointers), on keyboard focus
+   and on the current item, 240 ms on the shift ease, at once under reduced motion. */
+@utility agents-bracket {
+  --agents-bracket-stroke: 1.5px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: var(--spacing-0\.5);
+    inline-size: var(--spacing-1);
+    color: var(--color-agents-signal);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 240ms var(--ease-shift),
+      translate 240ms var(--ease-shift);
+  }
+
+  &::before {
+    inset-inline-start: calc(var(--spacing-2) * -1);
+    translate: calc(var(--spacing-1) * -1) 0;
+    background:
+      linear-gradient(currentColor, currentColor) left top / var(--agents-bracket-stroke) 100%
+        no-repeat,
+      linear-gradient(currentColor, currentColor) left top / 100% var(--agents-bracket-stroke)
+        no-repeat,
+      linear-gradient(currentColor, currentColor) left bottom / 100% var(--agents-bracket-stroke)
+        no-repeat;
+  }
+
+  &::after {
+    inset-inline-end: calc(var(--spacing-2) * -1);
+    translate: var(--spacing-1) 0;
+    background:
+      linear-gradient(currentColor, currentColor) right top / var(--agents-bracket-stroke) 100%
+        no-repeat,
+      linear-gradient(currentColor, currentColor) right top / 100% var(--agents-bracket-stroke)
+        no-repeat,
+      linear-gradient(currentColor, currentColor) right bottom / 100% var(--agents-bracket-stroke)
+        no-repeat;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::before,
+  &:focus-visible::after,
+  &[aria-current]:not([aria-current="false"])::before,
+  &[aria-current]:not([aria-current="false"])::after {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover::before,
+    &:hover::after {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before,
+    &::after {
+      transition: none;
+    }
+  }
 }
 
 /* A reference card on the wall: 3:4, wide enough for its key figure on one line. */
@@ -1737,6 +1772,26 @@
 
   & > :nth-child(3n) {
     translate: 0 5%;
+  }
+}
+
+/* A drifting column of cards sized to the window, not to a logo tile: tall enough to show several cards, capped at the
+   window less the floating nav and the section's air (13rem) so the nav and the band above stay in view, and never
+   past 42.5rem on a tall screen. The height is set only when motion is allowed; under reduced motion the column
+   unfolds to its content (see the marquee's `still="unfold"`), so it keeps no fixed height to fight. */
+@utility agents-drift-window {
+  @media (prefers-reduced-motion: no-preference) {
+    height: min(42.5rem, 100svh - 13rem);
+  }
+}
+
+/* A testimonial in the phone drift row: a fixed width so the next card dips in at the edge and shows there is more.
+   Under reduced motion the row unfolds to a stack, so the card takes the full width and nothing is cut. */
+@utility agents-drift-card {
+  width: 18rem;
+
+  @media (prefers-reduced-motion: reduce) {
+    width: 100%;
   }
 }
 
@@ -2231,6 +2286,42 @@
   to {
     opacity: 1;
     translate: 0 0;
+  }
+}
+
+/* A section's phrase and call following its title (`Arrival mode="follow"`). Held under its title while the block waits
+   to be seen (`data-arrival="waiting"`), they rise a little and fade in on a delay once it arrives, so they settle just
+   after the title's last line lands: one entrance in two beats, never a second entrance that competes with the title.
+   Content already in view is painted in place (`arrived` at once); reduced motion paints it too. */
+@utility agents-follow {
+  transition:
+    opacity var(--agents-follow-duration) var(--ease-emphasized) var(--agents-follow-delay),
+    translate var(--agents-follow-duration) var(--ease-emphasized) var(--agents-follow-delay);
+
+  &[data-arrival="waiting"] {
+    opacity: 0;
+    translate: 0 var(--agents-settle-rise);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+/* A whole block arriving once as it comes into view (`Arrival mode="block"`): a card, a list. It is a block, not text
+   under a title, so it rises a touch further and settles on its own, with no delay. */
+@utility agents-arrive-block {
+  transition:
+    opacity var(--agents-block-duration) var(--ease-emphasized),
+    translate var(--agents-block-duration) var(--ease-emphasized);
+
+  &[data-arrival="waiting"] {
+    opacity: 0;
+    translate: 0 var(--agents-block-rise);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 }
 

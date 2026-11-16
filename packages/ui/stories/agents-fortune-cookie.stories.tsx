@@ -53,12 +53,16 @@ export const Crack: Story = {
     await expect(button).toHaveAttribute("aria-expanded", "false");
 
     /* Wait until the motion has loaded and the cookie is laid out and floating, so the gesture is not lost before it
-       is interactive (the open needs the measured layout). */
-    await waitFor(async () => {
-      const float = canvasElement.querySelector<HTMLElement>("[data-cookie-part=float]");
-      const transform = float === null ? "none" : getComputedStyle(float).transform;
-      await expect(transform).not.toBe("none");
-    });
+       is interactive (the open needs the measured layout). The lazy motion module can take a beat to load under the
+       full parallel story run, so give it the same room as the open below. */
+    await waitFor(
+      async () => {
+        const float = canvasElement.querySelector<HTMLElement>("[data-cookie-part=float]");
+        const transform = float === null ? "none" : getComputedStyle(float).transform;
+        await expect(transform).not.toBe("none");
+      },
+      { timeout: 4000 },
+    );
 
     await userEvent.click(button);
 
