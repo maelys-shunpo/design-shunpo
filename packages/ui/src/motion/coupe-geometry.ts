@@ -62,6 +62,26 @@ export function coupeHold(): number {
   return HOLD_SCREENS;
 }
 
+/* The questions' paper has just arrived, so the stage dwells on it before the gesture, giving the visitor time to
+   read the FAQ. These screens of scroll pass with the gesture held at zero. Tuned in motion-review. */
+export const READING_SCREENS = 1;
+
+/* Screens the whole scene stays held for: the reading dwell first, then the gesture's own hold. */
+export function sceneHold(): number {
+  return READING_SCREENS + coupeHold();
+}
+
+/* Where in the held scene the reading dwell ends and the gesture begins, as a fraction of the scene. */
+export function readingFraction(): number {
+  return READING_SCREENS / sceneHold();
+}
+
+/* The gesture's progress from the scene's progress: held at zero across the reading dwell, then the rest of the
+   scroll mapped linearly onto the gesture's full [0, 1]. */
+export function gestureProgress(sceneProgress: number): number {
+  return segment(sceneProgress, readingFraction(), 1);
+}
+
 /* How far the star is along its crossing, unclamped: below 0 before it enters, above 1 once it has left. */
 export function throwRaw(p: number): number {
   return (p - THROW_START) / (THROW_END - THROW_START);

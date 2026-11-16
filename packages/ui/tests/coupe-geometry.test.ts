@@ -3,10 +3,14 @@ import { describe, expect, it } from "vitest";
 import {
   BUTTON_REVEAL,
   coupeHold,
+  gestureProgress,
   GHOST_COUNT,
   ghostRaw,
   ghostVisible,
   partAt,
+  READING_SCREENS,
+  readingFraction,
+  sceneHold,
   shake,
   slideAt,
   slitOpacity,
@@ -114,5 +118,23 @@ describe("the copy reveal windows", () => {
     expect(TITLE_REVEAL.start).toBeLessThan(BUTTON_REVEAL.start);
     expect(BUTTON_REVEAL.end).toBeLessThan(1);
     expect(TITLE_REVEAL.start).toBeGreaterThan(partAt(screens(0.732)));
+  });
+});
+
+describe("the reading dwell before the gesture", () => {
+  it("holds the gesture at zero through the whole reading dwell", () => {
+    expect(gestureProgress(0)).toBe(0);
+    expect(gestureProgress(readingFraction() * 0.5)).toBe(0);
+    expect(gestureProgress(readingFraction())).toBeCloseTo(0);
+  });
+  it("maps the rest of the scroll linearly onto the full gesture", () => {
+    expect(gestureProgress(1)).toBeCloseTo(1);
+    const mid = readingFraction() + (1 - readingFraction()) * 0.5;
+    expect(gestureProgress(mid)).toBeCloseTo(0.5);
+  });
+  it("extends the held scene by the reading dwell without touching the gesture hold", () => {
+    expect(sceneHold()).toBeCloseTo(READING_SCREENS + coupeHold());
+    /* inchangé */
+    expect(coupeHold()).toBeGreaterThanOrEqual(2);
   });
 });
