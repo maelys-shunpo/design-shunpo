@@ -26,6 +26,17 @@ test("an unknown address shows the crumpled-sheet 404 with the way home", async 
   await expect(page).toHaveTitle("Page introuvable · SHUNPO");
 });
 
+test("the sheet unfolds on arrival and the message stays readable", async ({ page }) => {
+  await page.goto(UNKNOWN_URL);
+  /* The message reads within the safety window whether or not the scene ever goes live. */
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible({ timeout: 1500 });
+  /* A first interaction lets a light-tier device load the scene (the stage waits for one). */
+  await page.mouse.wheel(0, 1);
+  /* Once the scene mounts, its canvas sits inside an aria-hidden layer (the game is decorative). */
+  const hiddenCanvas = page.locator("[data-slot='paper-crumple'] [aria-hidden='true'] canvas");
+  await expect(hiddenCanvas).toBeAttached({ timeout: 12_000 });
+});
+
 test.describe("the 404 holds the design system", () => {
   for (const colorScheme of ["light", "dark"] as const) {
     test.describe(`${colorScheme} scheme`, () => {
