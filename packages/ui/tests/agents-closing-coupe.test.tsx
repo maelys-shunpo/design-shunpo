@@ -1,19 +1,40 @@
 import "../src/styles/globals.css";
-import { gsap } from "gsap";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 
 import { ClosingCoupe } from "../src/agents/closing-coupe.tsx";
-import { coupeChoreography } from "../src/agents/coupe-choreography.ts";
+import { CoupeScene } from "../src/agents/coupe-scene.tsx";
+import { readingFraction } from "../src/motion/coupe-geometry.ts";
 import { holdIdleCallbacks } from "./support/idle-callbacks.ts";
 import { allowMotion, preferReducedMotion } from "./support/reduced-motion.ts";
 import { DESKTOP, PHONE } from "./support/viewports.ts";
 
-const copy = (
+/* A FAQ with a focusable control, so a test can open an answer before the cut reveals the closing. */
+const faq = (
+  <div>
+    <h2>Questions fréquentes</h2>
+    <button type="button">Combien de temps ?</button>
+  </div>
+);
+
+const closing = (
   <div>
     <h2>Le dernier logiciel dont vous aurez besoin</h2>
     <a href="#parler">Parlons de votre projet</a>
+  </div>
+);
+
+/* A FAQ far taller than the window, to prove the pinned scene clips it rather than growing a scrollbar. */
+const tallFaq = (
+  <div>
+    <h2>Questions fréquentes</h2>
+    {Array.from({ length: 60 }, (_, index) => (
+      // oxlint-disable-next-line react/no-array-index-key -- a fixed fixture list, never reordered.
+      <p key={index}>
+        {`Une question parmi beaucoup, assez longue pour passer la hauteur de la fenêtre, numéro ${String(index)}.`}
+      </p>
+    ))}
   </div>
 );
 
@@ -29,42 +50,130 @@ afterEach(async () => {
   await allowMotion();
 });
 
-describe("ClosingCoupe", () => {
-  it("shows the closing call on the night the coupe uncovers", async () => {
-    const screen = await render(<ClosingCoupe>{copy}</ClosingCoupe>);
+/* One frame past the reveal: the gesture is complete, the halves have fallen, the night is uncovered. */
+const REVEALED = 1;
+/* Still in the reading dwell: the FAQ is read whole and no part of the gesture has started. */
+const DWELL = readingFraction() / 2;
 
-    await expect.element(screen.getByRole("heading", { level: 2 })).toBeVisible();
+function layer(root: ParentNode, name: string): HTMLElement {
+  const element = root.querySelector<HTMLElement>(`[data-coupe-layer="${name}"]`);
+  if (element === null) {
+    throw new Error(`layer ${name} not found`);
+  }
+  return element;
+}
+
+function focusElement(element: Element): HTMLElement {
+  if (!(element instanceof HTMLElement)) {
+    throw new TypeError("expected an HTML element to focus");
+  }
+  element.focus();
+  return element;
+}
+
+describe("ClosingCoupe", () => {
+  it("shows the FAQ and the closing call the coupe uncovers", async () => {
+    const screen = await render(<ClosingCoupe faq={faq}>{closing}</ClosingCoupe>);
+
+    await expect
+      .element(screen.getByRole("heading", { name: "Le dernier logiciel dont vous aurez besoin" }))
+      .toBeVisible();
     await expect
       .element(screen.getByRole("link", { name: "Parlons de votre projet" }))
       .toBeVisible();
   });
 
-  it("reads the night and its call directly on phones, with no cut to play", async () => {
+  it("reads the FAQ then the closing directly on phones, with no cut and no frozen copy", async () => {
     await page.viewport(PHONE.width, PHONE.height);
-    const screen = await render(<ClosingCoupe>{copy}</ClosingCoupe>);
+    const screen = await render(<ClosingCoupe faq={faq}>{closing}</ClosingCoupe>);
 
-    await expect.element(screen.getByRole("heading", { level: 2 })).toBeVisible();
-    expect(screen.container.querySelector("[data-slot=stage] canvas")).toBeNull();
+    await expect
+      .element(screen.getByRole("heading", { name: "Questions fréquentes" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("heading", { name: "Le dernier logiciel dont vous aurez besoin" }))
+      .toBeVisible();
+    expect(screen.container.querySelector("canvas")).toBeNull();
+    /* The halves layer, the frozen second FAQ, stays hidden off desktop so a reader never meets the FAQ twice. */
+    expect(layer(screen.container, "halves").offsetParent).toBeNull();
   });
 
-  it("shows the whole closing under reduced motion, with no stage", async () => {
+  it("reads the whole FAQ and closing under reduced motion, with no gesture", async () => {
     await preferReducedMotion();
-    const screen = await render(<ClosingCoupe>{copy}</ClosingCoupe>);
+    const screen = await render(<ClosingCoupe faq={faq}>{closing}</ClosingCoupe>);
 
-    await expect.element(screen.getByRole("heading", { level: 2 })).toBeVisible();
-    expect(screen.container.querySelector("[data-slot=stage] canvas")).toBeNull();
+    await expect
+      .element(screen.getByRole("heading", { name: "Questions fréquentes" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("heading", { name: "Le dernier logiciel dont vous aurez besoin" }))
+      .toBeVisible();
+    expect(screen.container.querySelector("canvas")).toBeNull();
+    /* Nothing is held inert under reduced motion: the closing reads in normal flow. */
+    expect(layer(screen.container, "closing").inert).toBe(false);
   });
 
-  it("runs the cut's progress with the scroll", () => {
-    const progress = { value: 0 };
-    const timeline = gsap.timeline({ paused: true });
-    coupeChoreography(progress)(timeline);
+  it("clips a FAQ taller than the window instead of scrolling inside the pinned scene", async () => {
+    const screen = await render(<ClosingCoupe faq={tallFaq}>{closing}</ClosingCoupe>);
 
-    timeline.progress(0.5);
-    expect(progress.value).toBeCloseTo(0.5, 6);
+    const scene = layer(screen.container, "scene");
+    const overflow = getComputedStyle(scene).overflowY;
+    expect(["clip", "hidden"]).toContain(overflow);
+  });
+});
 
-    timeline.progress(1);
-    expect(progress.value).toBe(1);
-    timeline.kill();
+describe("CoupeScene gesture", () => {
+  it("holds the closing inert while the FAQ covers it, then lets it be reached once revealed", async () => {
+    const progress = { value: DWELL };
+    const screen = await render(
+      <CoupeScene faq={faq} progress={progress}>
+        {closing}
+      </CoupeScene>,
+    );
+
+    await vi.waitFor(() => {
+      expect(layer(screen.container, "closing").inert).toBe(true);
+    });
+
+    progress.value = REVEALED;
+    await vi.waitFor(() => {
+      expect(layer(screen.container, "closing").inert).toBe(false);
+    });
+  });
+
+  it("hides the frozen FAQ copies from assistive tech once the closing is revealed", async () => {
+    const progress = { value: DWELL };
+    const screen = await render(
+      <CoupeScene faq={faq} progress={progress}>
+        {closing}
+      </CoupeScene>,
+    );
+
+    progress.value = REVEALED;
+    await vi.waitFor(() => {
+      const halves = layer(screen.container, "halves");
+      expect(halves.inert).toBe(true);
+      expect(halves.getAttribute("aria-hidden")).toBe("true");
+    });
+  });
+
+  it("moves focus out of the FAQ onto the closing when the cut reveals it", async () => {
+    const progress = { value: DWELL };
+    const screen = await render(
+      <CoupeScene faq={faq} progress={progress}>
+        {closing}
+      </CoupeScene>,
+    );
+
+    const button = focusElement(
+      screen.getByRole("button", { name: "Combien de temps ?" }).element(),
+    );
+    expect(document.activeElement).toBe(button);
+
+    progress.value = REVEALED;
+    await vi.waitFor(() => {
+      const closingLayer = layer(screen.container, "closing");
+      expect(closingLayer.contains(document.activeElement)).toBe(true);
+    });
   });
 });
