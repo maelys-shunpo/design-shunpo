@@ -26,7 +26,11 @@ interface CoupeState {
 
 /* The scroll's progress, read each frame into the pose and the a11y state. Off the gesture (phones, reduced motion)
    the loop never runs and the scene rests as the still: nothing held, nothing hidden, nothing frozen. */
-function useCoupeState(progress: { value: number }): CoupeState {
+function useCoupeState(
+  progress: { value: number },
+  faq: RefObject<HTMLDivElement | null>,
+  scene: RefObject<HTMLDivElement | null>,
+): CoupeState {
   const [pose, setPose] = useState(() => poseCoupeDom(0));
   const [gestureActive, setGestureActive] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -42,8 +46,13 @@ function useCoupeState(progress: { value: number }): CoupeState {
       if (value !== last) {
         last = value;
         const next = poseCoupeDom(value);
+        const gesturing = gestureProgress(value) > 0;
+        /* The live FAQ is hidden the moment the gesture starts: park the focus first, while its holder still exists. */
+        if (gesturing) {
+          parkFocusOnScene(faq.current, scene.current);
+        }
         setPose(next);
-        setGestureActive(gestureProgress(value) > 0);
+        setGestureActive(gesturing);
         setRevealed(next.revealed);
       }
       frame = requestAnimationFrame(apply);
@@ -68,33 +77,46 @@ function useCoupeState(progress: { value: number }): CoupeState {
       media.removeEventListener("change", update);
       cancelAnimationFrame(frame);
     };
-  }, [progress]);
+  }, [progress, faq, scene]);
 
   return { pose, gestureActive, revealed, motionActive };
 }
 
-interface FocusRescue {
-  faq: RefObject<HTMLDivElement | null>;
-  halves: RefObject<HTMLDivElement | null>;
+interface FocusHandover {
+  scene: RefObject<HTMLDivElement | null>;
   closing: RefObject<HTMLDivElement | null>;
   motionActive: boolean;
   revealed: boolean;
 }
 
-/* When the cut reveals the closing, the FAQ layer and the frozen halves turn inert; if the focus was still inside
-   them (a reader had opened an answer), hand it to the closing so it never stays trapped in an inert layer. */
-function useFocusRescue({ faq, halves, closing, motionActive, revealed }: FocusRescue) {
+/* Once the closing is revealed and reachable, take the focus parked on the scene (when the live FAQ went away) onto
+   the closing. A reader who had focused nothing keeps their place. */
+function useFocusHandover({ scene, closing, motionActive, revealed }: FocusHandover) {
   useEffect(() => {
     if (!motionActive || !revealed) {
       return;
     }
-    const active = document.activeElement;
-    const trapped =
-      (faq.current?.contains(active) ?? false) || (halves.current?.contains(active) ?? false);
-    if (trapped) {
+    if (document.activeElement === scene.current) {
       closing.current?.focus();
     }
-  }, [faq, halves, closing, motionActive, revealed]);
+  }, [scene, closing, motionActive, revealed]);
+}
+
+/* Focus inside the live FAQ moves to the scene itself (never inert) before the FAQ is hidden, so it is not lost. */
+function parkFocusOnScene(faq: HTMLElement | null, scene: HTMLElement | null) {
+  if (faq?.contains(document.activeElement) ?? false) {
+    scene?.focus();
+  }
+}
+
+/* One paper surface for the live FAQ and the frozen halves, so the swap at the gesture's start shows no jump and the
+   closing behind never shows through. */
+function PaperFaq({ children }: { children: ReactNode }) {
+  return (
+    <div className="grid size-full place-items-center agents-washi bg-background scheme-light">
+      {children}
+    </div>
+  );
 }
 
 interface CoupeSceneProps {
@@ -112,17 +134,20 @@ interface CoupeSceneProps {
    covered), the live FAQ above it during the dwell, then the frozen `CoupeHalves` fall and the `CoupeBlade` crosses
    on top; once the closing is read the frozen FAQ is hidden from assistive tech. */
 export function CoupeScene({ faq, children, progress }: CoupeSceneProps) {
-  const { pose, gestureActive, revealed, motionActive } = useCoupeState(progress);
+  const sceneRef = useRef<HTMLDivElement>(null);
   const faqRef = useRef<HTMLDivElement>(null);
-  const halvesRef = useRef<HTMLDivElement>(null);
   const closingRef = useRef<HTMLDivElement>(null);
-  useFocusRescue({ faq: faqRef, halves: halvesRef, closing: closingRef, motionActive, revealed });
+  const { pose, gestureActive, revealed, motionActive } = useCoupeState(progress, faqRef, sceneRef);
+  useFocusHandover({ scene: sceneRef, closing: closingRef, motionActive, revealed });
+  const paperFaq = <PaperFaq>{faq}</PaperFaq>;
 
   return (
     <div
+      ref={sceneRef}
+      tabIndex={-1}
       data-slot="coupe-scene"
       data-coupe-layer="scene"
-      className="agents-grain relative min-h-svh w-full overflow-clip bg-background scheme-dark"
+      className="agents-grain relative min-h-svh w-full overflow-clip bg-background scheme-dark outline-none"
     >
       <div
         ref={faqRef}
@@ -131,10 +156,10 @@ export function CoupeScene({ faq, children, progress }: CoupeSceneProps) {
           "relative w-full",
           gestureActive
             ? "md:motion-safe:hidden"
-            : "md:motion-safe:absolute md:motion-safe:inset-0 md:motion-safe:z-10 md:motion-safe:grid md:motion-safe:place-items-center md:motion-safe:overflow-clip",
+            : "md:motion-safe:absolute md:motion-safe:inset-0 md:motion-safe:z-10 md:motion-safe:overflow-clip",
         )}
       >
-        {faq}
+        {paperFaq}
       </div>
       <div
         ref={closingRef}
@@ -146,16 +171,15 @@ export function CoupeScene({ faq, children, progress }: CoupeSceneProps) {
         {children}
       </div>
       <div
-        ref={halvesRef}
         data-coupe-layer="halves"
         aria-hidden={revealed ? true : undefined}
-        inert={revealed}
+        inert
         className={cn(
           "hidden md:motion-safe:absolute md:motion-safe:inset-0 md:motion-safe:z-20 md:motion-safe:overflow-clip",
           gestureActive && "md:motion-safe:block",
         )}
       >
-        <CoupeHalves pose={pose}>{faq}</CoupeHalves>
+        <CoupeHalves pose={pose}>{paperFaq}</CoupeHalves>
       </div>
       <div
         data-coupe-layer="blade"

@@ -53,6 +53,8 @@ afterEach(async () => {
 /* One frame past the reveal: the gesture is complete, the halves have fallen, the night is uncovered. */
 const REVEALED = 1;
 /* Still in the reading dwell: the FAQ is read whole and no part of the gesture has started. */
+/* Past the dwell, the cut under way but the halves not yet parted enough to uncover the closing. */
+const MID_GESTURE = readingFraction() + 0.05;
 const DWELL = readingFraction() / 2;
 
 function layer(root: ParentNode, name: string): HTMLElement {
@@ -111,14 +113,18 @@ describe("ClosingCoupe", () => {
     expect(screen.container.querySelector("canvas")).toBeNull();
     /* Nothing is held inert under reduced motion: the closing reads in normal flow. */
     expect(layer(screen.container, "closing").inert).toBe(false);
+    /* The frozen copies and the blade are never painted. */
+    expect(layer(screen.container, "halves").offsetParent).toBeNull();
+    expect(layer(screen.container, "blade").offsetParent).toBeNull();
   });
 
   it("clips a FAQ taller than the window instead of scrolling inside the pinned scene", async () => {
     const screen = await render(<ClosingCoupe faq={tallFaq}>{closing}</ClosingCoupe>);
 
-    const scene = layer(screen.container, "scene");
-    const overflow = getComputedStyle(scene).overflowY;
-    expect(["clip", "hidden"]).toContain(overflow);
+    /* The FAQ layer itself must clip: an `auto` or `scroll` here would give the pinned FAQ its own scrollbar. */
+    const faqLayer = layer(screen.container, "faq");
+    expect(["clip", "hidden"]).toContain(getComputedStyle(faqLayer).overflowY);
+    expect(faqLayer.scrollHeight).toBeGreaterThan(faqLayer.clientHeight);
   });
 });
 
@@ -157,7 +163,7 @@ describe("CoupeScene gesture", () => {
     });
   });
 
-  it("moves focus out of the FAQ onto the closing when the cut reveals it", async () => {
+  it("never strands focus in a hidden or inert layer from the dwell to the reveal", async () => {
     const progress = { value: DWELL };
     const screen = await render(
       <CoupeScene faq={faq} progress={progress}>
@@ -170,9 +176,19 @@ describe("CoupeScene gesture", () => {
     );
     expect(document.activeElement).toBe(button);
 
+    /* Mid-gesture: the live FAQ is hidden, focus has been parked on the scene, not lost to the body. */
+    progress.value = MID_GESTURE;
+    await vi.waitFor(() => {
+      expect(layer(screen.container, "faq").offsetParent).toBeNull();
+      expect(document.activeElement).toBe(layer(screen.container, "scene"));
+    });
+    expect(layer(screen.container, "closing").inert).toBe(true);
+
+    /* Revealed: the closing is reachable and takes the focus. */
     progress.value = REVEALED;
     await vi.waitFor(() => {
       const closingLayer = layer(screen.container, "closing");
+      expect(closingLayer.inert).toBe(false);
       expect(closingLayer.contains(document.activeElement)).toBe(true);
     });
   });
