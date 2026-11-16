@@ -3,8 +3,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 
-import { CodeBlock } from "../src/components/code-block.tsx";
-import { CodeLine } from "../src/components/code-line.tsx";
 import { Container } from "../src/layout/container.tsx";
 import { ScrollScene } from "../src/motion/scroll-scene.tsx";
 import { sceneLength } from "../src/motion/tokens.ts";
@@ -68,15 +66,16 @@ describe("ScrollScene", () => {
     expect(holdOf(screen.container)).toBeCloseTo(sceneLength.medium * window.innerHeight, 0);
   });
 
-  it("keeps content within a phone screen when a code line is long", async () => {
+  it("keeps content within a phone screen when a word is long", async () => {
     await page.viewport(PHONE.width, PHONE.height);
     const choreography = vi.fn<(timeline: gsap.core.Timeline) => void>();
     const screen = await render(
       <ScrollScene choreography={choreography} minWidth="md">
         <Container data-testid="content">
-          <CodeBlock title="Long output">
-            <CodeLine>✓ [desktop] uses only tokens, symmetric paddings and no overlaps</CodeLine>
-          </CodeBlock>
+          <p>
+            Une phrase assez longue pour remplir plusieurs lignes sur un téléphone, sans jamais
+            déborder de l’écran.
+          </p>
         </Container>
       </ScrollScene>,
     );

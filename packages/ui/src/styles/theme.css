@@ -3,8 +3,9 @@
  * `--*: initial` removes Tailwind's defaults: a utility exists only if its token is declared here.
  * `static` emits every variable at runtime so audits and the Figma sync can read them.
  *
- * World: a box of building blocks on a painted, gridded table. Spacing and radii scale from
- * `--module-scale` and `--corner-scale`, which the presets at the end of this file swap at runtime.
+ * SHUNPO keeps four brand colours (Fuji Night, Shiro, Blue Tenku, Fushimi Glow). Three art directions,
+ * one per proposal page, recolour, retype and re-corner the same system: a page names its direction
+ * with `Direction` (`data-direction`), and the whole document takes it through `:root:has(…)`.
  *
  * Colours are declared on `:root` and on scheme islands (`.scheme-light`, `.scheme-dark`): the build
  * polyfills `light-dark()` where a variable is declared, so each island must declare its own values.
@@ -23,6 +24,8 @@
   --container-narrow: 52rem;
   --container-default: 76rem;
   --container-wide: 90rem;
+  /* The page grid's widest content: beyond it, the margins grow and the content stays centred. */
+  --container-page: 100rem;
 
   --spacing-0: 0rem;
   --spacing-px: 1px;
@@ -43,13 +46,27 @@
   --spacing-40: calc(10rem * var(--module-scale));
   --spacing-48: calc(12rem * var(--module-scale));
 
-  --font-sans: var(--font-family-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --font-display: var(--font-family-display), ui-sans-serif, system-ui, sans-serif;
+  /* The page grid's gutter, and the vertical rhythm between sections. A section pads each side with half of its
+     rhythm, so two sections meet at the sum of their halves: regular + regular = 128 px, regular + breath = 160 px. */
+  --spacing-gutter: var(--page-gutter);
+  /* Room for a page's floating header: a scene held under it starts here. */
+  --spacing-header: 5rem;
+  /* The header's room and a step of air under it: a section the height of the window pads this much on each side. */
+  --spacing-header-clear: calc(var(--spacing-header) + var(--spacing-6));
+  --spacing-rhythm-seam: clamp(1rem, 0.5rem + 1.3vw, 2rem);
+  --spacing-rhythm-tight: clamp(2rem, 1.5rem + 1.3vw, 3rem);
+  --spacing-rhythm-regular: clamp(2.5rem, 1.5rem + 2.6vw, 4rem);
+  --spacing-rhythm-breath: clamp(3rem, 1rem + 5.2vw, 6rem);
 
+  --font-sans: var(--font-family-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-family-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: var(--font-family-bricolage), ui-sans-serif, system-ui, sans-serif;
+
+  --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
+  --font-weight-heading: var(--heading-weight);
 
   --text-xs: 0.75rem;
   --text-xs--line-height: 1.125rem;
@@ -77,26 +94,55 @@
   --text-6xl: clamp(3.25rem, 1.6rem + 6.6vw, 6rem);
   --text-6xl--line-height: 0.95;
   --text-6xl--letter-spacing: -0.03em;
+  --text-7xl: clamp(3.75rem, 1.4rem + 9.4vw, 9rem);
+  --text-7xl--line-height: 0.9;
+  --text-7xl--letter-spacing: -0.035em;
+  --text-8xl: clamp(4.5rem, 0.8rem + 14.8vw, 14rem);
+  --text-8xl--line-height: 0.85;
+  --text-8xl--letter-spacing: -0.04em;
+  /* A kanji set as a watermark behind a board (the method wheel): larger than any title. */
+  --text-kanji: clamp(16rem, 2rem + 26vw, 30rem);
 
   --tracking-normal: 0em;
   --tracking-wide: 0.08em;
+  --tracking-wider: 0.16em;
 
   --radius-sm: calc(0.125rem * var(--corner-scale));
   --radius-md: calc(0.25rem * var(--corner-scale));
   --radius-lg: calc(0.375rem * var(--corner-scale));
   --radius-xl: calc(0.5rem * var(--corner-scale));
   --radius-2xl: calc(0.75rem * var(--corner-scale));
-
-  --shadow-xs: 0 1px 2px oklch(0.2 0.05 274 / 0.12);
-  --shadow-sm: 0 1px 2px oklch(0.2 0.05 274 / 0.12), 0 2px 6px oklch(0.2 0.05 274 / 0.1);
-  --shadow-md: 0 2px 4px oklch(0.2 0.05 274 / 0.12), 0 8px 24px oklch(0.2 0.05 274 / 0.18);
-  --shadow-lg: 0 4px 8px oklch(0.2 0.05 274 / 0.12), 0 24px 64px oklch(0.2 0.05 274 / 0.24);
+  --radius-full: 9999px;
+  /* Corners by role, scaled by each direction: controls (buttons, fields), surfaces (cards, windows, tiles),
+     stages (large photographed panels). Chips and statuses are pills (radius-full). */
+  --radius-control: calc(0.25rem * var(--corner-scale));
+  --radius-surface: calc(0.5rem * var(--corner-scale));
+  --radius-stage: calc(0.75rem * var(--corner-scale));
 
   --blur-sm: 0.5rem;
   --blur-md: 1rem;
 
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-shift: cubic-bezier(0.8, 0, 0.1, 1);
+  --ease-press: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Section entrances (`Arrival`). A phrase and call follow their title: a small rise on a delay that spans the title's
+     rise, so they settle as its last line lands. A block (a card, a list) arrives on its own, a touch further, no delay.
+     Small distances, always upward; the long moves are the media's, never the text's. */
+  --agents-settle-rise: 0.75rem;
+  --agents-block-rise: 1rem;
+  --agents-follow-duration: 450ms;
+  --agents-follow-delay: 800ms;
+  --agents-block-duration: 600ms;
+
+  --animate-spin: spin 0.9s linear infinite;
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
   --default-font-family: var(--font-sans);
   --default-mono-font-family: var(--font-mono);
@@ -112,139 +158,2579 @@
   --color-surface: var(--surface);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-hover: var(--accent-hover);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
+  --color-rule: var(--rule);
   --color-ring: var(--ring);
 
-  --shadow-plank: inset 0 calc(var(--spacing-1) * -1) 0 var(--primary-edge);
+  /* Raw brand colours, for previews that must show a direction outside its page (the proposals index). */
+  --color-fuji: var(--brand-fuji);
+  --color-fuji-deep: var(--brand-fuji-deep);
+  --color-shiro: var(--brand-shiro);
+  --color-kome: var(--brand-kome);
+  --color-tenku: var(--brand-tenku);
+  --color-fushimi: var(--brand-fushimi);
+  --color-frost: var(--brand-frost);
+  /* « Agents » in the SHUNPO palette: Kome paper, Fuji Night ink, Fushimi Glow for the one signal, Blue Tenku for
+     information, Kurenai Blush for what waits on a person, Shiro and Hikari Frost for grounds and lines,
+     Ink Shadow for secondary text. Tints are the same colours thinned on Kome. */
+  --color-agents-paper: #f3f0e9;
+  --color-agents-ink: #1e2629;
+  --color-agents-signal: #b94532;
+  /* Statuses inside the mockups: done (Tenku, deepened for small text), waiting on a person (Kurenai), in progress. */
+  --color-agents-ok: #1f637d;
+  --color-agents-ok-tint: #e3ebee;
+  --color-agents-wait: #8e4547;
+  --color-agents-wait-tint: #f3e4e2;
+  --color-agents-info: #2b718c;
+  --color-agents-info-tint: #e7eff2;
+  --color-agents-signal-tint: #f5e4df;
+  --color-agents-line: #e5dfd3;
+  /* The shade of a note's folded corner, darkest at the crease: a white sheet, Kurenai paper (waiting), Tenku paper (done). */
+  --color-agents-fold: #d6ccba;
+  --color-agents-fold-light: #efe9de;
+  --color-agents-fold-wait: #e0c6c2;
+  --color-agents-fold-wait-light: #f0dedb;
+  --color-agents-fold-ok: #c6d6dc;
+  --color-agents-fold-ok-light: #dde7eb;
+  /* Kurenai Blush as the ground of a reference card (#B05F60), Kome on it at 4.5:1. */
+  --color-agents-blush: #b05f60;
+  /* A client's paper tile (`ReferenceTile material="paper"`): white at 60 % on Kome, made opaque so a grain under it
+     never shows through the drifting tiles. */
+  --color-agents-paper-light: #faf9f6;
+  /* The method's kanji: a warm ink thinned so that on flat Kome it is exactly Shiro, and lets the paper's grain through
+     (0.85 Kome + 0.15 ink = #E5DFD3). */
+  --color-agents-kanji: rgb(150 126 86 / 0.15);
+  /* A headline's secondary words: Ink Shadow on light grounds, Hikari Frost on dark ones (set per scheme below). */
+  --color-agents-dim: var(--agents-dim);
+  /* A window resting on a photographed surface: a contact shadow and a long soft one, in Fuji Night. */
+  --shadow-agents-float:
+    0 1px 2px rgb(30 38 41 / 0.06), 0 12px 32px -8px rgb(30 38 41 / 0.16),
+    0 48px 96px -32px rgb(30 38 41 / 0.28);
+  --shadow-agents-card: 0 1px 2px rgb(30 38 41 / 0.06), 0 8px 24px -12px rgb(30 38 41 / 0.18);
+  /* A sheet of paper rising over the held hero film (`CoverSheet`): a soft shadow cast upwards, as on the home page. */
+  --shadow-agents-lift: 0 -24px 48px rgb(30 38 41 / 0.14);
+  --color-origami-ivory: #f2efe9;
+
+  /* Each direction's display face, for the same previews. */
+  --font-mincho: var(--font-family-mincho), "Hiragino Mincho ProN", "Yu Mincho", ui-serif, serif;
+  --font-archivo: var(--font-family-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-bricolage: var(--font-family-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-bodoni: var(--font-family-bodoni), ui-serif, Georgia, serif;
+}
+
+/* The four brand colours and their few derived shades. Semantic roles below read them; scenes resolve them
+   (resolveColor) for their uniforms. */
+/* The page grid: 4 columns on phones, 8 on tablets, 12 from 64rem; margins of 20, 32 and 56 px (at 1440), gutters
+   of 12, 20 and 24 px. Read by the `grid-page` utility and the `gap-gutter` spacing. */
+:root {
+  --grid-columns: 4;
+  --page-margin: 1.25rem;
+  --page-gutter: 0.75rem;
+}
+
+@media (width >= 48rem) {
+  :root {
+    --grid-columns: 8;
+    --page-margin: 2rem;
+    --page-gutter: 1.25rem;
+  }
+}
+
+@media (width >= 64rem) {
+  :root {
+    --grid-columns: 12;
+    --page-margin: clamp(2.5rem, 3.9vw, 4.5rem);
+    --page-gutter: 1.5rem;
+  }
+}
+
+/* Two margin tracks around the content columns: an element can sit on the columns, run to the page's edges
+   (full bleed) or start in a margin, all on one grid. The content never grows past --container-page. */
+@utility grid-page {
+  --page-edge: max(
+    calc(var(--page-margin) - var(--page-gutter)),
+    calc((100% - var(--container-page)) / 2 - var(--page-gutter))
+  );
+  display: grid;
+  column-gap: var(--page-gutter);
+  grid-template-columns:
+    [full-start] var(--page-edge) [content-start] repeat(var(--grid-columns), minmax(0, 1fr))
+    [content-end] var(--page-edge) [full-end];
+}
+
+/* The page's side margin as padding, for a piece that sits outside the grid (`PanScene`). */
+@utility px-page {
+  padding-inline: var(--page-margin);
+}
+
+/* Every content column, whatever their count; and from page edge to page edge, through the margins. */
+@utility col-content {
+  grid-column: content;
+}
+
+@utility col-bleed {
+  grid-column: full;
 }
 
 :root {
   --module-scale: 1;
   --corner-scale: 1;
+  --heading-weight: 600;
+
+  --brand-fuji: #1e2629;
+  --brand-fuji-deep: #141a1c;
+  --brand-fuji-raised: #273236;
+  --brand-shiro: #e5dfd3;
+  --brand-kome: #f3f0e9;
+  --brand-paper: #dcd5c7;
+  --brand-tenku: #2b718c;
+  --brand-tenku-ink: #1f637d;
+  --brand-tenku-light: #7ab6cc;
+  --brand-fushimi: #b94532;
+  --brand-frost: #bdc8cc;
+  --brand-ink-muted: #545c60;
 }
 
-/* Day: ultramarine painted table. Night: ink table. Pieces are maple and lacquer. */
+/* Neutral ground of the proposals index: off-white by day, near black by night, outside every direction. */
 :root,
 .scheme-light,
 .scheme-dark {
-  --background: light-dark(oklch(0.439 0.221 268.1), oklch(0.198 0.059 274));
-  --foreground: light-dark(oklch(0.977 0.013 86.8), oklch(0.953 0.013 86.8));
-  --muted: light-dark(oklch(0.381 0.191 268.1), oklch(0.171 0.047 274.7));
-  --muted-foreground: light-dark(oklch(0.879 0.06 277.8), oklch(0.778 0.074 276.8));
-  --surface: light-dark(oklch(0.204 0.052 274.3), oklch(0.256 0.078 273.5));
-  --primary: light-dark(oklch(0.873 0.071 83.5), oklch(0.831 0.08 81.5));
-  --primary-foreground: oklch(0.204 0.052 274.3);
-  --primary-edge: light-dark(oklch(0.665 0.099 73.7), oklch(0.604 0.089 76.3));
-  --secondary: light-dark(oklch(0.506 0.22 270.1), oklch(0.308 0.089 273.2));
-  --secondary-foreground: var(--foreground);
-  --accent: oklch(0.845 0.157 89.3);
-  --accent-foreground: oklch(0.204 0.052 274.3);
-  --destructive: oklch(0.757 0.147 32.3);
-  --destructive-foreground: oklch(0.204 0.052 274.3);
-  --border: light-dark(oklch(0.529 0.206 271.3), oklch(0.331 0.104 273.6));
-  --ring: var(--accent);
-
-  /* Materials of the pieces: they keep their look on any ground, including the sheet. */
-  --maple: var(--primary);
-  --lacquer: var(--accent);
-  --paper: oklch(0.977 0.013 86.8);
-  --ink: light-dark(oklch(0.204 0.052 274.3), oklch(0.32 0.07 273));
-  --signal: var(--destructive);
+  --background: light-dark(#f4f3ef, #101011);
+  --foreground: light-dark(#111112, #f4f3ef);
+  --muted: light-dark(#e9e7e1, #1b1b1d);
+  --muted-foreground: light-dark(#5e5d59, #a9a8a3);
+  --surface: light-dark(#ffffff, #1b1b1d);
+  --primary: light-dark(#111112, #f4f3ef);
+  --primary-foreground: light-dark(#ffffff, #111112);
+  --primary-hover: light-dark(#2c2c2e, #ffffff);
+  --secondary: light-dark(#2f3bff, #9aa1ff);
+  --secondary-foreground: light-dark(#ffffff, #111112);
+  --accent: light-dark(#111112, #f4f3ef);
+  --accent-foreground: light-dark(#ffffff, #111112);
+  --destructive: light-dark(#b42318, #f97066);
+  --destructive-foreground: light-dark(#ffffff, #111112);
+  --accent-ink: light-dark(#b42318, #f97066);
+  --border: light-dark(rgb(17 17 18 / 0.1), rgb(244 243 239 / 0.12));
+  --rule: light-dark(rgb(17 17 18 / 0.45), rgb(244 243 239 / 0.45));
+  --ring: light-dark(#2f3bff, #9aa1ff);
 }
 
-/* The instruction sheet: paper printed in ink and ultramarine, lit the same by day and night. */
-@utility surface-sheet {
-  color-scheme: light;
-  --background: oklch(0.977 0.013 86.8);
-  --foreground: oklch(0.204 0.052 274.3);
-  --muted: oklch(0.938 0.021 85.9);
-  --muted-foreground: oklch(0.436 0.052 277);
-  --surface: oklch(1 0 0);
-  --secondary: oklch(0.914 0.031 88.4);
-  --secondary-foreground: oklch(0.204 0.052 274.3);
-  --accent: oklch(0.439 0.221 268.1);
-  --accent-foreground: oklch(0.977 0.013 86.8);
-  --destructive: oklch(0.537 0.18 31.5);
-  --destructive-foreground: oklch(0.977 0.013 86.8);
-  --border: oklch(0.857 0.03 85.6);
-  --ring: oklch(0.439 0.221 268.1);
-}
-
-/* Presets: the pieces a visitor can swap with TokenTray (ADR-0020). Listed in src/theme/presets.ts. */
-[data-paint="yellow"],
-[data-paint="yellow"] .scheme-light,
-[data-paint="yellow"] .scheme-dark {
-  --accent: oklch(0.845 0.157 89.3);
-}
-
-[data-paint="green"],
-[data-paint="green"] .scheme-light,
-[data-paint="green"] .scheme-dark {
-  --accent: oklch(0.771 0.153 156.2);
-}
-
-[data-paint="orange"],
-[data-paint="orange"] .scheme-light,
-[data-paint="orange"] .scheme-dark {
-  --accent: oklch(0.776 0.159 59.2);
-}
-
-[data-paint="sky"],
-[data-paint="sky"] .scheme-light,
-[data-paint="sky"] .scheme-dark {
-  --accent: oklch(0.83 0.103 232.7);
-}
-
-[data-face="geometric"] {
-  --font-display: var(--font-family-display), ui-sans-serif, system-ui, sans-serif;
-}
-
-[data-face="grotesque"] {
-  --font-display: var(--font-family-grotesque), ui-sans-serif, system-ui, sans-serif;
-}
-
-[data-face="slab"] {
-  --font-display: var(--font-family-slab), ui-serif, serif;
-}
-
-[data-module="standard"] {
-  --module-scale: 1;
-}
-
-[data-module="compact"] {
-  --module-scale: 0.875;
-}
-
-[data-module="roomy"] {
-  --module-scale: 1.125;
-}
-
-[data-corners="soft"] {
-  --corner-scale: 1;
-}
-
-[data-corners="sharp"] {
-  --corner-scale: 0;
-}
-
-[data-corners="round"] {
-  --corner-scale: 3;
-}
-
-[data-table="auto"] {
-  color-scheme: light dark;
-}
-
-[data-table="day"] {
-  color-scheme: light;
-}
-
-[data-table="night"] {
+/* A field of Blue Tenku: Kome type on the blue, Fuji for actions. */
+@utility scheme-field {
   color-scheme: dark;
+  --background: #2b718c;
+  --foreground: #f3f0e9;
+  --muted: #26667e;
+  --muted-foreground: #eeeae2;
+  --surface: #1f637d;
+  --primary: #f3f0e9;
+  --primary-foreground: #1e2629;
+  --secondary: #1e2629;
+  --secondary-foreground: #f3f0e9;
+  --accent: #f3f0e9;
+  --accent-foreground: #1e2629;
+  --border: rgb(243 240 233 / 0.24);
+  --rule: rgb(243 240 233 / 0.6);
+  --ring: #f3f0e9;
+}
+
+/* ── Direction « Instant » (瞬): Japanese print, Shiro paper, Fuji ink, one Fushimi seal. ── */
+:root:has([data-direction="instant"]) {
+  color-scheme: light;
+  --corner-scale: 0;
+  --heading-weight: 500;
+  --font-display: var(--font-family-mincho), "Hiragino Mincho ProN", "Yu Mincho", ui-serif, serif;
+  --font-sans: var(--font-family-zen), "Hiragino Sans", ui-sans-serif, system-ui, sans-serif;
+  --text-8xl--letter-spacing: -0.03em;
+  --text-7xl--letter-spacing: -0.025em;
+}
+
+:root:has([data-direction="instant"]),
+:root:has([data-direction="instant"]) .scheme-light,
+:root:has([data-direction="instant"]) .scheme-dark {
+  --background: light-dark(#e5dfd3, #1e2629);
+  --foreground: light-dark(#1e2629, #e5dfd3);
+  --muted: light-dark(#dcd5c7, #273236);
+  --muted-foreground: light-dark(#545c60, #bdc8cc);
+  --surface: light-dark(#f3f0e9, #273236);
+  --primary: light-dark(#1e2629, #e5dfd3);
+  --primary-foreground: light-dark(#f3f0e9, #1e2629);
+  --secondary: light-dark(#1f637d, #7ab6cc);
+  --secondary-foreground: light-dark(#f3f0e9, #141a1c);
+  --accent: #b94532;
+  --accent-foreground: #f3f0e9;
+  --border: light-dark(rgb(30 38 41 / 0.14), rgb(229 223 211 / 0.14));
+  --rule: light-dark(rgb(30 38 41 / 0.6), rgb(229 223 211 / 0.55));
+  --ring: light-dark(#b94532, #e5dfd3);
+}
+
+/* Instant: kanji set top to bottom, as on a printed scroll (VerticalText). */
+@utility writing-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+/* ── Direction « Mécanique »: night horology, engineering drawing, Tenku light, one Fushimi jewel. ── */
+:root:has([data-direction="mecanique"]) {
+  color-scheme: dark;
+  --corner-scale: 0;
+  --heading-weight: 700;
+  --font-display: var(--font-family-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-family-geist), ui-sans-serif, system-ui, sans-serif;
+  /* Archivo set wide, like the engraving on a movement; the other faces have no width axis and ignore it. */
+  font-stretch: 116%;
+  --text-5xl--letter-spacing: -0.035em;
+  --text-6xl--letter-spacing: -0.04em;
+  --text-4xl--letter-spacing: -0.03em;
+}
+
+:root:has([data-direction="mecanique"]),
+:root:has([data-direction="mecanique"]) .scheme-light,
+:root:has([data-direction="mecanique"]) .scheme-dark {
+  --background: light-dark(#e5dfd3, #141a1c);
+  --foreground: light-dark(#1e2629, #e5dfd3);
+  --muted: light-dark(#dcd5c7, #1e2629);
+  --muted-foreground: light-dark(#545c60, #a9b6bb);
+  --surface: light-dark(#f3f0e9, #1e2629);
+  --primary: light-dark(#1e2629, #e5dfd3);
+  --primary-foreground: light-dark(#f3f0e9, #141a1c);
+  --secondary: light-dark(#1f637d, #7ab6cc);
+  --secondary-foreground: light-dark(#f3f0e9, #141a1c);
+  --accent: #b94532;
+  --accent-foreground: #f3f0e9;
+  --border: light-dark(rgb(30 38 41 / 0.16), rgb(189 200 204 / 0.14));
+  --rule: light-dark(rgb(30 38 41 / 0.55), rgb(189 200 204 / 0.45));
+  --ring: light-dark(#1f637d, #7ab6cc);
+}
+
+/* ── Direction « Le fil »: colour fields, braided threads, a red thread through the page. ── */
+:root:has([data-direction="fil"]) {
+  color-scheme: light;
+  --corner-scale: 4;
+  --heading-weight: 700;
+  --font-display: var(--font-family-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-family-hanken), ui-sans-serif, system-ui, sans-serif;
+  /* Bricolage condensed reads tight already: the largest sizes keep a little more air between letters. */
+  --text-8xl--letter-spacing: -0.03em;
+  --text-7xl--letter-spacing: -0.022em;
+  --text-6xl--letter-spacing: -0.02em;
+}
+
+:root:has([data-direction="fil"]),
+:root:has([data-direction="fil"]) .scheme-light,
+:root:has([data-direction="fil"]) .scheme-dark {
+  --background: light-dark(#f3f0e9, #1e2629);
+  --foreground: light-dark(#1e2629, #f3f0e9);
+  --muted: light-dark(#e5dfd3, #273236);
+  --muted-foreground: light-dark(#545c60, #bdc8cc);
+  --surface: light-dark(#ffffff, #273236);
+  --primary: light-dark(#1e2629, #f3f0e9);
+  --primary-foreground: light-dark(#f3f0e9, #1e2629);
+  --secondary: light-dark(#2b718c, #7ab6cc);
+  --secondary-foreground: light-dark(#f3f0e9, #141a1c);
+  --accent: #b94532;
+  --accent-foreground: #f3f0e9;
+  --border: light-dark(rgb(30 38 41 / 0.14), rgb(243 240 233 / 0.16));
+  --rule: light-dark(rgb(30 38 41 / 0.55), rgb(243 240 233 / 0.55));
+  --ring: light-dark(#b94532, #f3f0e9);
+}
+
+/* ── Direction « Agents »: a product site for AI agents, in the SHUNPO palette. Kome paper, Fuji Night ink,
+   live interfaces in white, one Fushimi signal, Blue Tenku for information. ── */
+:root:has([data-direction="agents"]) {
+  color-scheme: light;
+  /* Every corner is square: the cut (`agents-sheet`) is the one corner language, circles aside (`rounded-full`). */
+  --corner-scale: 0;
+  --heading-weight: 500;
+  /* Newsreader Medium for every title, Instrument Sans for text and interfaces, Geist Mono for labels and data. */
+  --font-display: var(--font-family-newsreader), ui-serif, Georgia, serif;
+  --font-sans: var(--font-family-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* The title scale: a poster size and four steps below it, set tight and large, with room around them. */
+  --text-8xl: clamp(4.25rem, 0.6rem + 12.4vw, 13.5rem);
+  --text-8xl--line-height: 0.9;
+  --text-8xl--letter-spacing: -0.04em;
+  --text-7xl: clamp(3.5rem, 0.6rem + 10.2vw, 11rem);
+  --text-7xl--line-height: 0.92;
+  --text-7xl--letter-spacing: -0.035em;
+  --text-6xl: clamp(3rem, 0.9rem + 7.2vw, 8.5rem);
+  --text-6xl--line-height: 0.95;
+  --text-6xl--letter-spacing: -0.03em;
+  --text-5xl: clamp(2.5rem, 1.1rem + 4.4vw, 5.5rem);
+  --text-5xl--line-height: 1;
+  --text-5xl--letter-spacing: -0.025em;
+  --text-4xl: clamp(2rem, 1.3rem + 2.4vw, 3.5rem);
+  --text-4xl--line-height: 1.05;
+  --text-4xl--letter-spacing: -0.02em;
+  --text-3xl: clamp(1.625rem, 1.3rem + 1.1vw, 2.25rem);
+  --text-3xl--line-height: 1.15;
+  --text-3xl--letter-spacing: -0.015em;
+}
+
+:root:has([data-direction="agents"]),
+:root:has([data-direction="agents"]) .scheme-light,
+:root:has([data-direction="agents"]) .scheme-dark {
+  --background: light-dark(#f3f0e9, #1e2629);
+  --foreground: light-dark(#1e2629, #f3f0e9);
+  --muted: light-dark(#e5dfd3, #263034);
+  --muted-foreground: light-dark(#474747, #bdc8cc);
+  /* Titles keep one colour: secondary words read in the same ink. */
+  --agents-dim: var(--foreground);
+  --surface: light-dark(#ffffff, #263034);
+  --primary: light-dark(#1e2629, #f3f0e9);
+  --primary-foreground: light-dark(#f3f0e9, #1e2629);
+  /* Fuji Night lifted a step on hover; Kome turns to white on a dark island. */
+  --primary-hover: light-dark(#323e43, #ffffff);
+  --secondary: light-dark(#2b718c, #bdc8cc);
+  --secondary-foreground: light-dark(#f3f0e9, #1e2629);
+  --accent: #b94532;
+  --accent-foreground: #f3f0e9;
+  --accent-hover: #a33b2a;
+  --accent-ink: light-dark(#b94532, #e5dfd3);
+  --border: light-dark(rgb(30 38 41 / 0.12), rgb(243 240 233 / 0.14));
+  --rule: light-dark(rgb(30 38 41 / 0.4), rgb(243 240 233 / 0.4));
+  --ring: light-dark(#2b718c, #bdc8cc);
+}
+
+/* ── Direction « Origami »: paper folded in a bright studio. The palette of « Agents »: warm paper, ink, grey,
+   pure white, one signal orange (a fold, the action) and a cobalt. Bodoni Moda in roman for titles. ── */
+:root:has([data-direction="origami"]) {
+  color-scheme: light;
+  --corner-scale: 0;
+  --heading-weight: 400;
+  --font-display: var(--font-family-bodoni), ui-serif, Georgia, serif;
+  --font-sans: var(--font-family-geist), ui-sans-serif, system-ui, sans-serif;
+  --text-8xl--letter-spacing: -0.03em;
+  --text-7xl--letter-spacing: -0.025em;
+  /* The papers the scene folds, read on its canvas (resolveColor). */
+  --origami-paper: #ffffff;
+  --origami-ivory: #e4dccb;
+  --origami-signal: #ff4f1a;
+  --origami-cobalt: #2f3bff;
+  --origami-ink: #0e0e0c;
+}
+
+:root:has([data-direction="origami"]),
+:root:has([data-direction="origami"]) .scheme-light,
+:root:has([data-direction="origami"]) .scheme-dark {
+  --background: light-dark(#f6f5f1, #0e0e0c);
+  --foreground: light-dark(#0e0e0c, #f6f5f1);
+  --muted: light-dark(#edebe5, #1a1a17);
+  --muted-foreground: light-dark(#66655f, #a3a29b);
+  --surface: light-dark(#ffffff, #1a1a17);
+  --primary: light-dark(#0e0e0c, #f6f5f1);
+  --primary-foreground: light-dark(#ffffff, #0e0e0c);
+  --secondary: light-dark(#2f3bff, #9aa1ff);
+  --secondary-foreground: light-dark(#ffffff, #0e0e0c);
+  --accent: #ff4f1a;
+  --accent-foreground: #0e0e0c;
+  --accent-ink: light-dark(#c2360a, #ff8a63);
+  --border: light-dark(rgb(14 14 12 / 0.1), rgb(246 245 241 / 0.12));
+  --rule: light-dark(rgb(14 14 12 / 0.4), rgb(246 245 241 / 0.4));
+  --ring: light-dark(#2f3bff, #9aa1ff);
+}
+
+@layer base {
+  [data-direction="agents"] #methode {
+    scroll-margin-block-start: var(--spacing-12);
+  }
+}
+
+/* A held scene under the floating header fills the rest of the small viewport. */
+@utility scene-below-header {
+  height: calc(100svh - var(--spacing-header));
+}
+
+/* An application window on its stage keeps the proportions of a real one: 3:2 beside the height a held stage leaves it
+   (the window's height less the header, the stage's air and padding), at most the default container. */
+@utility max-w-window {
+  max-width: min(var(--container-default), calc((100svh - 14rem) * 1.5));
+}
+
+/* A view of the owner's screen in a held stage from tablets up: it scrolls inside the window rather than growing it.
+   The stage is the window's height less the header; its air, the stage's padding and the window's own chrome (title
+   bar, question bar) take the 26rem. */
+@utility os-pane-fit {
+  @media (min-width: 48rem) {
+    max-height: max(11rem, calc(100svh - 26rem));
+    overflow-y: auto;
+  }
+}
+
+/* The cut (« La coupe », as on the home page): an action's top right corner cut on the bias. The fill (`before:bg-*`)
+   or the hairline frame (`agents-cut-line`) is drawn by `::before` through the cut, the focus halo by `::after` around
+   it, the press highlight inside it (`[data-press-clip]`). The cut opens on hover and closes on press. Offset by d, a
+   45° cut's legs grow by (2 − √2)·d: the halo (4 px out, 3 px thick) and the frame (1 px in) follow it. */
+@property --agents-cut {
+  syntax: "<length>";
+  inherits: true;
+  /* In px: an initial value must not depend on the font, or the browser drops the registration and the cut jumps. */
+  initial-value: 8px;
+}
+
+@utility agents-cut {
+  --agents-cut-rest: var(--spacing-2);
+  --agents-cut-open: calc(var(--spacing-3) + var(--spacing-0\.5));
+  --agents-cut-press: calc(var(--spacing-1) + var(--spacing-px));
+  --agents-cut: var(--agents-cut-rest);
+
+  &::before,
+  & > [data-press-clip] {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut)) 0,
+      100% var(--agents-cut),
+      100% 100%,
+      0 100%
+    );
+  }
+
+  &::before {
+    z-index: -2;
+  }
+
+  & > [data-press-clip] {
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  &::before,
+  &::after,
+  & > [data-press-clip] {
+    transition:
+      --agents-cut 240ms var(--ease-shift),
+      background-color 200ms var(--ease-press);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--spacing-1));
+    pointer-events: none;
+    background: var(--color-ring);
+    opacity: 0;
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut) - 2.34px) 0,
+      100% calc(var(--agents-cut) + 2.34px),
+      100% 100%,
+      0 100%,
+      0 0,
+      3px 3px,
+      3px calc(100% - 3px),
+      calc(100% - 3px) calc(100% - 3px),
+      calc(100% - 3px) calc(3px + var(--agents-cut) + 0.59px),
+      calc(100% - 3px - var(--agents-cut) - 0.59px) 3px,
+      3px 3px
+    );
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::after {
+    opacity: 0.45;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --agents-cut: var(--agents-cut-open);
+    }
+  }
+
+  &:active {
+    --agents-cut: var(--agents-cut-press);
+  }
+
+  &[aria-disabled="true"] {
+    --agents-cut: var(--agents-cut-rest);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before,
+    &::after,
+    & > [data-press-clip] {
+      transition: none;
+    }
+  }
+}
+
+/* Larger calls cut deeper. */
+@utility agents-cut-lg {
+  --agents-cut-rest: calc(var(--spacing-2) + var(--spacing-0\.5));
+  --agents-cut-open: calc(var(--spacing-4) + var(--spacing-0\.5));
+  --agents-cut-press: calc(var(--spacing-1) + var(--spacing-0\.5));
+}
+
+/* Icon-scale cut for a small toggle (`FaqItem`): a shallower corner on a 24 px mark. */
+@utility agents-cut-sm {
+  --agents-cut-rest: calc(var(--spacing-1) + var(--spacing-0\.5));
+  --agents-cut-open: calc(var(--spacing-2) + var(--spacing-0\.5));
+  --agents-cut-press: var(--spacing-1);
+}
+
+/* A second choice: a 1 px frame along the cut instead of a fill. */
+@utility agents-cut-line {
+  &::before {
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut)) 0,
+      100% var(--agents-cut),
+      100% 100%,
+      0 100%,
+      0 0,
+      1px 1px,
+      1px calc(100% - 1px),
+      calc(100% - 1px) calc(100% - 1px),
+      calc(100% - 1px) calc(1px + var(--agents-cut) - 0.59px),
+      calc(100% - 1px - var(--agents-cut) + 0.59px) 1px,
+      1px 1px
+    );
+  }
+}
+
+/* Washi (`Section paper="washi"`, `CoverSheet paper="washi"`): a crumpled washi photographed, reduced to the light and
+   shade of its folds (a grey around the middle, seamless, 1920 px for a 60rem tile) and laid over the paper's own colour
+   in hard light, so the folds darken and catch the light while the mean stays the ground's colour within half a grey
+   level, on Kome as on Shiro. A section takes it on its own ground; a sheet takes it with its Shiro sections. Dark
+   islands, cards, windows and pictures on it stay smooth.
+   A held method wheel covers its stage with its own paper in the same grain (`data-wheel-paper`, placed by the wheel's
+   course): it moves only as the ink rises, and fades in under the floating nav, where the sheet scrolls on. */
+@utility agents-washi {
+  background-image: url("./agents-washi.webp");
+  background-size: 60rem 33.625rem;
+  background-blend-mode: hard-light;
+
+  & [data-slot="section"].bg-muted {
+    background-image: url("./agents-washi.webp");
+    background-size: 60rem 33.625rem;
+    background-blend-mode: hard-light;
+  }
+
+  & [data-wheel-paper] {
+    background-color: var(--color-background);
+    background-image: url("./agents-washi.webp");
+    background-size: 60rem 33.625rem;
+    background-position: var(--wheel-paper-x, 0) var(--wheel-paper-y, 0);
+    background-blend-mode: hard-light;
+    mask-image: linear-gradient(to bottom, transparent, black var(--spacing-8));
+  }
+}
+
+/* The light the tax credit's cookie rests in (`FortuneCookie`): paper light fading into the ground, no edge, so the
+   section reads as a pause between two papers. Behind the photographs, whose white multiplies into it. */
+@utility agents-cookie-halo {
+  background-image: radial-gradient(closest-side, var(--color-agents-paper-light), transparent);
+}
+
+/* The other papers of the direction, rendered once from the open paper.design paper shader (Apache-2.0,
+   assets/source/agents/paper-shader) into grey reliefs and laid over the ground like the washi: hard light around mid
+   grey, so each ground keeps its own colour within half a grey level. One texture per role (DESIGN.md,
+   « Une texture par rôle »). */
+
+/* Crumpled paper (`Section paper="froisse"`): a fine grain and large soft crumples, on the composer's Shiro. One sheet
+   laid over the whole section, never tiled, so no seam or repeated crumple shows on wide screens. */
+@utility agents-froisse {
+  background-image: url("./agents-froisse.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: hard-light;
+}
+
+/* One large sheet unfolded (`Section paper="plie"`): soft folds on the page's Kome, behind the questions, turned on the
+   diagonal so none runs along a line of text or a hairline. Laid once over the whole section, never tiled. It paints
+   the page's own ground, which the folds need under their blend. */
+@utility agents-plie {
+  background-color: var(--color-background);
+  background-image: url("./agents-plie.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: hard-light;
+}
+
+/* The questions read as a hairline list and open with a line of ink (`FaqItem`, the `plie` section): the native
+   disclosure keeps its keyboard, find-in-page and reduced motion. The whole row is the affordance — the lien signature,
+   « le trait », applied to the disclosure: hovering a row draws an ink rule across it from the left (`summary::after`,
+   the arrow curve) and steps the question forward, and opening a row holds that rule drawn as a divider under the
+   question while the answer rises bare beneath it, set flush left, no frame and no rule around it. The toggle is a bare
+   1 px notation, never a framed box: the plus's vertical arm retracts to a minus (`[data-faq-mark]`). `interpolate-size`
+   eases the height to and from `auto` on the emphasized curve; `content-visibility` carries the discrete hide across the
+   close. Reduced motion keeps the instant native toggle. */
+@utility agents-faq {
+  interpolate-size: allow-keywords;
+
+  /* The trait: an ink rule the width of the row, drawn from the left on hover and held while open. */
+  & summary {
+    position: relative;
+  }
+
+  & summary::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: 1px;
+    background: var(--color-foreground);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 380ms var(--ease-shift);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    & summary:hover::after {
+      transform: scaleX(1);
+    }
+  }
+
+  &[open] summary::after {
+    transform: scaleX(1);
+  }
+
+  &::details-content {
+    height: 0;
+    overflow: clip;
+    transition:
+      height 320ms var(--ease-emphasized),
+      content-visibility 320ms;
+    transition-behavior: allow-discrete;
+  }
+
+  &[open]::details-content {
+    height: auto;
+  }
+
+  /* The answer rises bare as the row opens, never on opacity alone. */
+  & [data-faq-answer] {
+    opacity: 0;
+    translate: 0 var(--spacing-2);
+    transition:
+      opacity 240ms var(--ease-emphasized),
+      translate 320ms var(--ease-emphasized);
+  }
+
+  &[open] [data-faq-answer] {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* The notation: the plus's vertical arm retracts to a minus as the row opens. */
+  & [data-faq-mark] [data-faq-bar] {
+    transform-origin: center;
+    transition: scale 280ms var(--ease-shift);
+  }
+
+  &[open] [data-faq-mark] [data-faq-bar] {
+    scale: 1 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & summary::after,
+    &::details-content,
+    & [data-faq-answer],
+    & [data-faq-mark] [data-faq-bar] {
+      transition: none;
+    }
+
+    & [data-faq-answer] {
+      translate: 0 0;
+    }
+  }
+}
+
+/* Fibrous washi for what clients sign (`Testimonial`, `ReferenceTile material="paper"`): fine fibres and a light
+   crumple on the sheet's own paper-light, rich up close, quiet from afar. */
+@utility agents-paper-fibres {
+  background-image: url("./agents-fibres.webp");
+  background-size: 41.25rem 41.25rem;
+  background-blend-mode: hard-light;
+}
+
+/* A card whose cut sheet is a leaf of that washi (`Testimonial`): the fibres ride the sheet `agents-sheet` draws
+   (`::after`), its Shiro hairline and bias cut unchanged. Declared after `agents-sheet`, whose shorthand it refines. */
+@utility agents-card-paper {
+  &::after {
+    background-color: var(--color-agents-paper-light);
+    background-image: url("./agents-fibres.webp");
+    background-size: 41.25rem 41.25rem;
+    background-blend-mode: hard-light;
+  }
+}
+
+/* Film grain on a dark island (`Section paper="grain"`, the problem's night): a lossless mid-grey noise tile laid over
+   the night in overlay, under the content, one CSS pixel a grain, on a tile large enough (16rem) that no lattice
+   shows when it holds still. With motion it flickers at a film's pace, stepping a layer half a tile larger than the
+   island on every side through eight offsets (a transform, clipped by the island); under reduced motion it holds still,
+   a quiet texture. Decorative: it carries no information and never covers the type's own ground. */
+@utility agents-grain {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -8rem;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("./agents-grain.webp");
+    background-size: 16rem 16rem;
+    image-rendering: pixelated;
+    mix-blend-mode: overlay;
+    opacity: 0.3;
+    animation: agents-grain 800ms step-end infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
+  }
+}
+
+/* The papers stay closed until the page has painted and gone idle: a section keeps its own flat colour and its webp
+   never weighs on the first paint, then `PaperGate` (src/lib/paper-gate.tsx) marks the document and every section
+   paper opens at once (`html[data-papers]`), the way motion waits for `AfterIdle`. A section carries its paper as its
+   own class; the papers a cover sheet or the method wheel lay inside their own grounds are left as they are. */
+:root:not([data-papers]) [data-slot="section"].agents-washi,
+:root:not([data-papers]) [data-slot="section"].agents-froisse,
+:root:not([data-papers]) [data-slot="section"].agents-plie {
+  background-image: none;
+}
+
+:root:not([data-papers]) [data-slot="section"].agents-grain::before {
+  background-image: none;
+}
+
+@keyframes agents-grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  12.5% {
+    transform: translate(2.5rem, -4.5rem);
+  }
+  25% {
+    transform: translate(-3.5rem, 1.5rem);
+  }
+  37.5% {
+    transform: translate(5.5rem, 3.5rem);
+  }
+  50% {
+    transform: translate(-1.5rem, -2.5rem);
+  }
+  62.5% {
+    transform: translate(4.5rem, -6.5rem);
+  }
+  75% {
+    transform: translate(-5.5rem, 5.5rem);
+  }
+  87.5% {
+    transform: translate(1.5rem, 6.5rem);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* The sheet every top-level object of the Agents direction is cut from: its top right corner cut on the bias, `--agents-cut`
+   deep. Its Shiro hairline (`::before`) and its sheet 1 px inside it (`::after`, legs longer by (2 − √2)·1) are drawn
+   through the same polygon, behind the content. Modifiers: `-md` (14 px), `-lift` and `-clip`. */
+@utility agents-sheet {
+  --agents-cut: var(--spacing-5);
+  --agents-sheet-line: var(--color-agents-line);
+  --agents-sheet-fill: var(--color-surface);
+  --agents-sheet-fold: var(--color-agents-fold);
+  --agents-sheet-fold-light: var(--color-agents-fold-light);
+  position: relative;
+  isolation: isolate;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  &::before {
+    inset: 0;
+    background: var(--agents-sheet-line);
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut)) 0,
+      100% var(--agents-cut),
+      100% 100%,
+      0 100%
+    );
+  }
+
+  &::after {
+    inset: 1px;
+    background-color: var(--agents-sheet-fill);
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut) + 0.59px) 0,
+      100% calc(var(--agents-cut) - 0.59px),
+      100% 100%,
+      0 100%
+    );
+  }
+}
+
+/* Cut 14 px deep: the paper reference tile. */
+@utility agents-sheet-md {
+  --agents-cut: calc(var(--spacing-3) + var(--spacing-0\.5));
+}
+
+/* A drop shadow that follows the cut, where a box shadow would be clipped away. */
+@utility agents-sheet-lift {
+  filter: drop-shadow(0 1px 1px rgb(30 38 41 / 0.06)) drop-shadow(0 10px 12px rgb(30 38 41 / 0.07));
+}
+
+/* The cuts of the scale, built from the spacing steps: 8 px (10 px from tablets) for a tile, 10 px for a bubble, 12 px
+   for a node or a toast, 16 px for a note or a record, 32 px for a stage. 14 px (`-md`) is the nav and the paper tile,
+   20 px the base. */
+@utility agents-sheet-2xs {
+  --agents-cut: var(--spacing-2);
+
+  @media (min-width: 48rem) {
+    --agents-cut: calc(var(--spacing-2) + var(--spacing-0\.5));
+  }
+}
+
+@utility agents-sheet-xs {
+  --agents-cut: calc(var(--spacing-2) + var(--spacing-0\.5));
+}
+
+@utility agents-sheet-sm {
+  --agents-cut: var(--spacing-3);
+}
+
+@utility agents-sheet-lg {
+  --agents-cut: var(--spacing-4);
+}
+
+@utility agents-sheet-xl {
+  --agents-cut: var(--spacing-8);
+}
+
+/* No visible hairline: a photograph, a dark bubble, a printed page. */
+@utility agents-sheet-bare {
+  --agents-sheet-line: var(--agents-sheet-fill);
+}
+
+/* Kurenai paper, a decision that waits. */
+@utility agents-sheet-wait {
+  --agents-sheet-fill: var(--color-agents-wait-tint);
+  --agents-sheet-line: color-mix(
+    in srgb,
+    var(--color-agents-wait) 25%,
+    var(--color-agents-wait-tint)
+  );
+  --agents-sheet-fold: var(--color-agents-fold-wait);
+  --agents-sheet-fold-light: var(--color-agents-fold-wait-light);
+}
+
+/* Tenku paper, a decision made. */
+@utility agents-sheet-ok {
+  --agents-sheet-fill: var(--color-agents-ok-tint);
+  --agents-sheet-line: color-mix(in srgb, var(--color-agents-ok) 25%, var(--color-agents-ok-tint));
+  --agents-sheet-fold: var(--color-agents-fold-ok);
+  --agents-sheet-fold-light: var(--color-agents-fold-ok-light);
+}
+
+/* Ai, a bubble from the team. */
+@utility agents-sheet-info {
+  --agents-sheet-fill: var(--color-agents-info-tint);
+  --agents-sheet-line: var(--color-agents-info-tint);
+}
+
+/* A Fushimi hairline: the piece the agent itself runs. */
+@utility agents-sheet-signal {
+  --agents-sheet-line: var(--color-agents-signal);
+}
+
+/* Fuji Night, a dark bubble. */
+@utility agents-sheet-night {
+  --agents-sheet-fill: var(--color-agents-ink);
+  --agents-sheet-line: var(--color-agents-ink);
+}
+
+/* The cut triangle folded inwards, like the corner of a sheet of washi: its reflection across the cut line, a shade
+   darker than the paper. Its long edge is the cut, already drawn by the hairline. It never moves: only actions move
+   their cut. */
+@utility agents-sheet-fold {
+  &::after {
+    background-image: linear-gradient(
+      225deg,
+      transparent 50%,
+      var(--agents-sheet-fold) 50%,
+      var(--agents-sheet-fold-light)
+    );
+    background-position: top right;
+    background-repeat: no-repeat;
+    background-size: var(--agents-cut) var(--agents-cut);
+  }
+}
+
+/* The cut at the top left, on the side of the speaker who sits on the left. */
+@utility agents-sheet-left {
+  &::before {
+    clip-path: polygon(var(--agents-cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--agents-cut));
+  }
+
+  &::after {
+    clip-path: polygon(
+      calc(var(--agents-cut) - 0.59px) 0,
+      100% 0,
+      100% 100%,
+      0 100%,
+      0 calc(var(--agents-cut) - 0.59px)
+    );
+  }
+}
+
+/* A floating note's shadow, as drop shadows that follow the cut: a contact shadow and a long soft one. */
+@utility agents-sheet-float {
+  filter: drop-shadow(0 1px 1px rgb(30 38 41 / 0.06)) drop-shadow(0 8px 12px rgb(30 38 41 / 0.1))
+    drop-shadow(0 24px 32px rgb(30 38 41 / 0.12));
+}
+
+/* The hairline drawn over the content, as a ring 1 px in (legs shorter by (2 − √2)·1), for a sheet whose title bar or
+   rows paint their own background up to its edges: the bars sit on the sheet, the ring stays on top of them. The
+   element is not clipped, so its focus rings and its shadow stay whole. */
+@utility agents-sheet-ring {
+  &::before {
+    z-index: auto;
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--agents-cut)) 0,
+      100% var(--agents-cut),
+      100% 100%,
+      0 100%,
+      0 0,
+      1px 1px,
+      1px calc(100% - 1px),
+      calc(100% - 1px) calc(100% - 1px),
+      calc(100% - 1px) calc(1px + var(--agents-cut) - 0.59px),
+      calc(100% - 1px - var(--agents-cut) + 0.59px) 1px,
+      1px 1px
+    );
+  }
+}
+
+/* With `-ring`: the element itself is clipped along the cut, its own background and children included (a sheet whose
+   paper is the element's background, a photograph). `::after` then draws nothing. Its shadow, if any, goes on a
+   parent. */
+@utility agents-sheet-clip {
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--agents-cut)) 0,
+    100% var(--agents-cut),
+    100% 100%,
+    0 100%
+  );
+
+  &::after {
+    content: none;
+  }
+}
+
+/* The sheet in the page's paper, a shade warmer than white: a window's title bar. */
+@utility agents-sheet-paper {
+  --agents-sheet-fill: var(--color-agents-paper);
+}
+
+/* The frame (SHUNPO signature): two corners, never four, one at the top start and one at the bottom end, 14 px legs,
+   1.5 px Fushimi. It designates, never decorates: hidden at rest, it jumps into place on hover (fine pointers), on
+   keyboard focus and on the current item (`aria-current`, an open menu), 240 ms on the shift ease, at once under reduced
+   motion. `agents-frame` sets the corners on the element's edges, `agents-frame-out` a step outside (a link in a line
+   of text), `agents-frame-inset` a step inside (a card that clips its content); `agents-frame-ink` draws them in the
+   element's own ink, for a coloured ground. */
+@utility agents-frame {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inline-size: calc(var(--spacing-3) + var(--spacing-0\.5));
+    block-size: calc(var(--spacing-3) + var(--spacing-0\.5));
+    border: 0 solid var(--agents-frame-color, var(--color-agents-signal));
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 240ms var(--ease-shift),
+      translate 240ms var(--ease-shift);
+  }
+
+  &::before {
+    inset-block-start: var(--agents-frame-inset-block, 0px);
+    inset-inline-start: var(--agents-frame-inset-inline, 0px);
+    border-block-start-width: 1.5px;
+    border-inline-start-width: 1.5px;
+    translate: calc(var(--spacing-1) * -1) calc(var(--spacing-1) * -1);
+  }
+
+  &::after {
+    inset-block-end: var(--agents-frame-inset-block, 0px);
+    inset-inline-end: var(--agents-frame-inset-inline, 0px);
+    border-block-end-width: 1.5px;
+    border-inline-end-width: 1.5px;
+    translate: var(--spacing-1) var(--spacing-1);
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::before,
+  &:focus-visible::after,
+  &[aria-current]:not([aria-current="false"])::before,
+  &[aria-current]:not([aria-current="false"])::after,
+  &[data-popup-open]::before,
+  &[data-popup-open]::after {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover::before,
+    &:hover::after {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before,
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+/* A frame that shows on keyboard focus only: the pointer's hover leaves its corners hidden (a card whose corner folds
+   under the pointer already answers it). */
+@utility agents-frame-focus {
+  --agents-frame-color: var(--color-agents-paper);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:focus-visible)::before {
+      opacity: 0;
+      translate: calc(var(--spacing-1) * -1) calc(var(--spacing-1) * -1);
+    }
+
+    &:hover:not(:focus-visible)::after {
+      opacity: 0;
+      translate: var(--spacing-1) var(--spacing-1);
+    }
+  }
+}
+
+@utility agents-frame-out {
+  --agents-frame-inset-block: calc(var(--spacing-1) * -1);
+  --agents-frame-inset-inline: calc(var(--spacing-2) * -1);
+}
+
+@utility agents-frame-inset {
+  --agents-frame-inset-block: var(--spacing-3);
+  --agents-frame-inset-inline: var(--spacing-3);
+}
+
+/* On a coloured ground (a Fushimi card), the corners take the ground's own ink. */
+@utility agents-frame-ink {
+  --agents-frame-color: currentColor;
+}
+
+/* A word held between square brackets « [ » « ] » (a link of the bar): each bracket a full upright with a short leg at
+   its top and foot, 1.5 px Fushimi, just outside the word and a little taller than it. Like the frame it designates,
+   never decorates: hidden at rest, the two close on the word from outside on hover (fine pointers), on keyboard focus
+   and on the current item, 240 ms on the shift ease, at once under reduced motion. */
+@utility agents-bracket {
+  --agents-bracket-stroke: 1.5px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: var(--spacing-0\.5);
+    inline-size: var(--spacing-1);
+    color: var(--color-agents-signal);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 240ms var(--ease-shift),
+      translate 240ms var(--ease-shift);
+  }
+
+  &::before {
+    inset-inline-start: calc(var(--spacing-2) * -1);
+    translate: calc(var(--spacing-1) * -1) 0;
+    background:
+      linear-gradient(currentColor, currentColor) left top / var(--agents-bracket-stroke) 100%
+        no-repeat,
+      linear-gradient(currentColor, currentColor) left top / 100% var(--agents-bracket-stroke)
+        no-repeat,
+      linear-gradient(currentColor, currentColor) left bottom / 100% var(--agents-bracket-stroke)
+        no-repeat;
+  }
+
+  &::after {
+    inset-inline-end: calc(var(--spacing-2) * -1);
+    translate: var(--spacing-1) 0;
+    background:
+      linear-gradient(currentColor, currentColor) right top / var(--agents-bracket-stroke) 100%
+        no-repeat,
+      linear-gradient(currentColor, currentColor) right top / 100% var(--agents-bracket-stroke)
+        no-repeat,
+      linear-gradient(currentColor, currentColor) right bottom / 100% var(--agents-bracket-stroke)
+        no-repeat;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::before,
+  &:focus-visible::after,
+  &[aria-current]:not([aria-current="false"])::before,
+  &[aria-current]:not([aria-current="false"])::after {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover::before,
+    &:hover::after {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before,
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+/* A reference card on the wall: 3:4, wide enough for its key figure on one line. */
+@utility agents-wall-card {
+  inline-size: clamp(14rem, 24vw, 22rem);
+}
+
+/* A slot of the references wall: from tablets up, with motion, the cards stand on an arc (the print in the middle
+   one step higher, `--spacing-6`). While the wall waits to be seen (`data-arrival="waiting"`) they stand on a
+   curve, turned towards the visitor, and settle onto the arc in 1.3 s once it is in view, the ones at the sides a
+   beat after the middle: a curve that settles, read flat. */
+@utility agents-wall-slot {
+  @media (min-width: 48rem) {
+    transition: transform 1300ms var(--ease-emphasized);
+
+    &:nth-child(2) {
+      transform: translateY(calc(var(--spacing-6) * -1));
+    }
+
+    &:nth-child(odd) {
+      transition-delay: 90ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      [data-arrival="waiting"] > &:nth-child(1) {
+        transform: perspective(62.5rem) rotateY(18deg);
+      }
+
+      [data-arrival="waiting"] > &:nth-child(2) {
+        transform: perspective(62.5rem) translateY(0);
+      }
+
+      [data-arrival="waiting"] > &:nth-child(3) {
+        transform: perspective(62.5rem) rotateY(-18deg);
+      }
+    }
+  }
+}
+
+/* The three tints of a reference card, one per client: Kurenai Blush, Blue Tenku and Shiro. The words take Kome on
+   the first two, ink on Shiro (the logo follows). */
+@utility agents-case-kurenai {
+  --agents-case-foot: color-mix(in srgb, var(--agents-case-tint) 78%, black);
+  --agents-case-tint: var(--color-agents-blush);
+  --agents-case-logo-invert: 1;
+  color: var(--color-agents-paper);
+}
+
+@utility agents-case-tenku {
+  --agents-case-foot: color-mix(in srgb, var(--agents-case-tint) 78%, black);
+  --agents-case-tint: var(--color-agents-info);
+  --agents-case-logo-invert: 1;
+  color: var(--color-agents-paper);
+}
+
+@utility agents-case-shiro {
+  --agents-case-foot: var(--agents-case-tint);
+  --agents-case-tint: var(--color-agents-line);
+  --agents-case-logo-invert: 0;
+  color: var(--color-agents-ink);
+}
+
+/* The folded sheet of a reference card, in its tint. */
+@utility agents-case-sheet {
+  background: var(--agents-case-tint);
+}
+
+/* The client's logo in one ink: Kome on the dark tints, ink on Shiro. */
+@utility agents-case-logo {
+  & img {
+    filter: brightness(0) invert(var(--agents-case-logo-invert, 1));
+  }
+}
+
+/* The delivered product as the card's ground: grey, soft, laid in luminosity under the tint so only its light and
+   shapes show, never its small print. It comes slowly closer under the pointer and on keyboard focus. */
+@utility agents-case-ground {
+  position: absolute;
+  inset: 0;
+
+  & img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: saturate(0) blur(1px);
+    mix-blend-mode: luminosity;
+    opacity: 0.55;
+    transition:
+      scale 1100ms var(--ease-emphasized),
+      opacity 600ms var(--ease-emphasized);
+  }
+
+  [data-slot="case-card"]:focus-visible & img {
+    scale: 1.07;
+    opacity: 0.55;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-slot="case-card"]:hover & img {
+      scale: 1.07;
+      opacity: 0.55;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & img {
+      transition: none;
+    }
+  }
+}
+
+/* The tint, thick under the logo and at the foot where the words stand, thinning in between to let the product show;
+   under the pointer and on focus it climbs, so the mission has a plain ground. */
+@utility agents-case-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, var(--agents-case-tint) 0%, transparent 32%),
+    linear-gradient(
+      to top,
+      var(--agents-case-foot, var(--agents-case-tint)) 0%,
+      var(--agents-case-foot, var(--agents-case-tint)) 22%,
+      var(--agents-case-tint) 46%,
+      transparent 60%
+    );
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: linear-gradient(
+      to top,
+      var(--agents-case-foot, var(--agents-case-tint)) 0%,
+      var(--agents-case-foot, var(--agents-case-tint)) 24%,
+      var(--agents-case-tint) 46%,
+      transparent 78%
+    );
+    transition: opacity 600ms var(--ease-emphasized);
+  }
+
+  [data-slot="case-card"]:focus-visible &::after {
+    opacity: 1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-slot="case-card"]:hover &::after {
+      opacity: 1;
+    }
+  }
+}
+
+/* What stands at the card's foot at rest: the key figure and what it measures. Under the pointer and on focus they
+   rise out of the way, blurring, to leave the mission (`agents-case-word`). */
+@utility agents-case-stat {
+  transition:
+    opacity 450ms var(--ease-emphasized) 120ms,
+    translate 700ms var(--ease-emphasized) 120ms,
+    filter 450ms var(--ease-emphasized) 120ms;
+
+  [data-slot="case-card"]:focus-visible & {
+    opacity: 0;
+    translate: 0 calc(var(--spacing-2) * -1);
+    filter: blur(3px);
+    transition-duration: 280ms, 400ms, 280ms;
+    transition-delay: 0s;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-slot="case-card"]:hover & {
+      opacity: 0;
+      translate: 0 calc(var(--spacing-2) * -1);
+      filter: blur(3px);
+      transition-duration: 280ms, 400ms, 280ms;
+      transition-delay: 0s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 150ms linear;
+
+    [data-slot="case-card"]:focus-visible & {
+      translate: none;
+      filter: none;
+    }
+  }
+}
+
+/* What a figure measures: two lines tall on every card, so the figures of cards whose labels run one line and two
+   stand on the same baseline. */
+@utility agents-case-label {
+  min-block-size: 2lh;
+}
+
+/* One word of the mission, set by `--agents-word` (its rank): waiting below its line, blurred, it rises and comes
+   into focus under the pointer or on focus, 22 ms after the word before. Touch screens, with no hover, keep the
+   figure. */
+@utility agents-case-word {
+  display: inline-block;
+  opacity: 0;
+  translate: 0 0.55em;
+  filter: blur(5px);
+  transition:
+    opacity 250ms linear,
+    translate 300ms linear,
+    filter 250ms linear;
+
+  [data-slot="case-card"]:focus-visible & {
+    opacity: 1;
+    translate: none;
+    filter: none;
+    transition:
+      opacity 550ms var(--ease-emphasized),
+      translate 750ms var(--ease-emphasized),
+      filter 550ms var(--ease-emphasized);
+    transition-delay: calc(100ms + var(--agents-word, 0) * 22ms);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-slot="case-card"]:hover & {
+      opacity: 1;
+      translate: none;
+      filter: none;
+      transition:
+        opacity 550ms var(--ease-emphasized),
+        translate 750ms var(--ease-emphasized),
+        filter 550ms var(--ease-emphasized);
+      transition-delay: calc(100ms + var(--agents-word, 0) * 22ms);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    translate: none;
+    filter: none;
+    transition: opacity 150ms linear;
+    transition-delay: 0s;
+
+    [data-slot="case-card"]:focus-visible &,
+    [data-slot="case-card"]:hover & {
+      transition-delay: 0s;
+    }
+  }
+}
+
+/* The folded corner (« Le pli »): a card's top right corner folded down onto its face, the back of the paper
+   showing (`agents-fold-flap`, in a lighter tone of the card's tint, its shadow on the card) where the corner is gone
+   (`agents-fold-paper`). A small fold at rest (`--spacing-4`); under the pointer and on keyboard focus it opens to
+   `--spacing-10` in 700 ms while the arrow (`agents-fold-arrow`) comes into the open corner. */
+@property --agents-fold {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@utility agents-fold {
+  --agents-fold: var(--spacing-4);
+  transition: --agents-fold 700ms var(--ease-emphasized);
+
+  &:focus-visible {
+    --agents-fold: var(--spacing-10);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --agents-fold: var(--spacing-10);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: --agents-fold 150ms linear;
+  }
+}
+
+@utility agents-fold-paper {
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--agents-fold)) 0,
+    100% var(--agents-fold),
+    100% 100%,
+    0 100%
+  );
+}
+
+@utility agents-fold-flap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  inline-size: var(--agents-fold);
+  block-size: var(--agents-fold);
+  pointer-events: none;
+  filter: drop-shadow(-2px 3px 3px rgb(0 0 0 / 0.38));
+
+  & > * {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 0, 0 100%, 100% 100%);
+    background: linear-gradient(
+      to bottom left,
+      transparent 49%,
+      color-mix(in srgb, var(--agents-case-tint, var(--color-agents-line)) 30%, white) 50%,
+      color-mix(in srgb, var(--agents-case-tint, var(--color-agents-line)) 60%, white) 100%
+    );
+  }
+}
+
+@utility agents-fold-arrow {
+  position: absolute;
+  top: var(--spacing-1);
+  right: var(--spacing-1);
+  inline-size: var(--spacing-4);
+  block-size: var(--spacing-4);
+  color: var(--color-agents-paper);
+  pointer-events: none;
+  opacity: 0;
+  translate: calc(var(--spacing-1) * -1) var(--spacing-1);
+  transition:
+    opacity 400ms var(--ease-emphasized),
+    translate 600ms var(--ease-emphasized);
+
+  :focus-visible > & {
+    opacity: 1;
+    translate: none;
+    transition-delay: 150ms;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :hover > & {
+      opacity: 1;
+      translate: none;
+      transition-delay: 150ms;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    translate: none;
+    transition: opacity 150ms linear;
+  }
+}
+
+/* A product screenshot printed on the paper (DA « image imprimée »): a touch less contrast and colour, so the print
+   sits in the gallery rather than glowing like a screen. */
+@utility agents-print {
+  & img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: contrast(0.94) saturate(0.85);
+  }
+}
+
+/* The word a headline is about (`InkWord`), held between square brackets « [ » « ] » in Fushimi: room on either
+   side for the brackets. Its box is one em tall around the letters, so the brackets hold the word, not the line. */
+@utility agents-ink-word {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 1;
+
+  /* Room for the brackets on each side, in proportion to the type. Held by two empty boxes rather than a padding:
+     0.3em lands off the spacing scale, and the room belongs to the type, not to the layout. */
+  &::before,
+  &::after {
+    content: "";
+    display: inline-block;
+    inline-size: 0.3em;
+  }
+}
+
+/* One bracket: a 3 px Fushimi stroke whatever the word's size, its legs a quarter of an em, a little above the
+   capitals and a little below the baseline. */
+@utility agents-ink-bracket {
+  --ink-stroke: 3px;
+  position: absolute;
+  inset-block: -0.02em 0.04em;
+  inline-size: 0.26em;
+  color: var(--color-agents-signal);
+
+  &[data-side="start"] {
+    inset-inline-start: 0;
+    background:
+      linear-gradient(currentColor, currentColor) left top / var(--ink-stroke) 100% no-repeat,
+      linear-gradient(currentColor, currentColor) left top / 100% var(--ink-stroke) no-repeat,
+      linear-gradient(currentColor, currentColor) left bottom / 100% var(--ink-stroke) no-repeat;
+  }
+
+  &[data-side="end"] {
+    inset-inline-end: 0;
+    background:
+      linear-gradient(currentColor, currentColor) right top / var(--ink-stroke) 100% no-repeat,
+      linear-gradient(currentColor, currentColor) right top / 100% var(--ink-stroke) no-repeat,
+      linear-gradient(currentColor, currentColor) right bottom / 100% var(--ink-stroke) no-repeat;
+  }
+}
+
+/* One frame that travels (the question scene's), the same two corners placed by the scene on what it designates
+   (`translate`, `width`, `height` set from script), jumping there in 240 ms on the shift curve. Hidden until shown
+   (`data-shown`); `data-instant` places it without the jump. Fushimi on paper, Kome on the night
+   (`data-tone="night"`). */
+@utility agents-frame-travel {
+  --agents-frame-leg: calc(var(--spacing-3) + var(--spacing-0\.5));
+  --agents-frame-stroke: 1.5px;
+  --agents-frame-upright: var(--agents-frame-leg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  pointer-events: none;
+  color: var(--color-agents-signal);
+  opacity: 0;
+  background:
+    linear-gradient(currentColor, currentColor) top left / var(--agents-frame-leg)
+      var(--agents-frame-stroke) no-repeat,
+    linear-gradient(currentColor, currentColor) top left / var(--agents-frame-stroke)
+      var(--agents-frame-upright) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / var(--agents-frame-leg)
+      var(--agents-frame-stroke) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / var(--agents-frame-stroke)
+      var(--agents-frame-upright) no-repeat;
+  transition:
+    translate 240ms var(--ease-shift),
+    width 240ms var(--ease-shift),
+    height 240ms var(--ease-shift),
+    opacity 120ms linear;
+
+  &[data-shown] {
+    opacity: 1;
+  }
+
+  &[data-instant] {
+    transition: none;
+  }
+
+  &[data-tone="night"] {
+    color: var(--color-agents-paper);
+  }
+
+  /* Under reduced motion the frame appears on its target without the jump (DA: no ghost, no slide). */
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 120ms linear;
+  }
+}
+
+/* A ghost the travelling frame leaves where it was: its corners at their own opacity (`--ghost`), gone in 200 ms. */
+@utility agents-frame-ghost {
+  --agents-frame-leg: calc(var(--spacing-3) + var(--spacing-0\.5));
+  --agents-frame-stroke: 1.5px;
+  --agents-frame-upright: var(--agents-frame-leg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  pointer-events: none;
+  color: var(--color-agents-signal);
+  background:
+    linear-gradient(currentColor, currentColor) top left / var(--agents-frame-leg)
+      var(--agents-frame-stroke) no-repeat,
+    linear-gradient(currentColor, currentColor) top left / var(--agents-frame-stroke)
+      var(--agents-frame-upright) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / var(--agents-frame-leg)
+      var(--agents-frame-stroke) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / var(--agents-frame-stroke)
+      var(--agents-frame-upright) no-repeat;
+  animation: agents-frame-ghost 200ms ease-out both;
+
+  &[data-tone="night"] {
+    color: var(--color-agents-paper);
+  }
+}
+
+@keyframes agents-frame-ghost {
+  from {
+    opacity: var(--ghost, 0.3);
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* The page's own cursor (DA « Immobile, puis instantané »): a full-screen layer above everything (over the z-40 nav),
+   drawn only once its motion module is live, so a dropped chunk leaves the system cursor. It holds the ink point and
+   the two-corner travelling frame. The point is the cut square of the direction; `data-mode` says what it does over the
+   element under it, `data-tone="night"` takes it to Kome on a dark island. It is never red: the frame carries the
+   Fushimi signal, the point stays ink or paper. */
+@utility agents-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  color: var(--color-agents-ink);
+
+  &[data-tone="night"] {
+    color: var(--color-agents-paper);
+  }
+
+  /* The point sits in a weightless box centred on the pointer (its transform set from script), so changing the mark's
+     size never shifts it off the pointer. The box draws nothing; its mark is `::before`. */
+  & [data-slot="agents-cursor-dot"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  /* The mark: a 6 px square cut at the top right like the actions, on the pointer with no trail. */
+  & [data-slot="agents-cursor-dot"]::before {
+    content: "";
+    inline-size: 6px;
+    block-size: 6px;
+    background: currentColor;
+    clip-path: polygon(0 0, calc(100% - 2px) 0, 100% 2px, 100% 100%, 0 100%);
+    opacity: 0;
+    transition:
+      opacity 120ms linear,
+      scale 120ms var(--ease-shift),
+      inline-size 240ms var(--ease-shift),
+      block-size 240ms var(--ease-shift);
+  }
+
+  /* Over open ground the point shows; before a ruled link it shrinks, the line taking over; over a control that answers
+     the pointer itself, and where the system cursor reads or types, it is gone. */
+  &[data-mode="point"] [data-slot="agents-cursor-dot"]::before,
+  &[data-mode="shrink"] [data-slot="agents-cursor-dot"]::before {
+    opacity: 1;
+  }
+
+  &[data-mode="shrink"] [data-slot="agents-cursor-dot"]::before {
+    scale: 0.5;
+  }
+
+  /* Over a held scene the point stands as a short upright line that fills with how far the scene has been read
+     (`--scrub`), so the wheel reads as travel without a word. */
+  &[data-mode="scrub"] [data-slot="agents-cursor-dot"]::before {
+    opacity: 1;
+    inline-size: 2px;
+    block-size: 18px;
+    clip-path: none;
+    background: linear-gradient(
+      to top,
+      currentColor var(--scrub, 0%),
+      color-mix(in oklab, currentColor 22%, transparent) var(--scrub, 0%)
+    );
+  }
+
+  /* The satin ring: a weightless box centred on the pointer (its transform set from script, trailing the dot), drawing
+     a thin round outline. Off in the coupe form, it carries the Framer-smooth reading in satin. */
+  & [data-cursor-ring] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  & [data-cursor-ring]::before {
+    content: "";
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border: 1px solid currentColor;
+    border-radius: 9999px;
+    opacity: 0;
+    transition:
+      opacity 200ms linear,
+      scale 240ms var(--ease-shift);
+  }
+
+  /* Satin: the point is a round dot, not a cut square, and the ring stands behind it over open ground, widens over a
+     control that answers the pointer, and clears for a held scene or a field. */
+  &[data-form="satin"] [data-slot="agents-cursor-dot"]::before {
+    inline-size: 5px;
+    block-size: 5px;
+    clip-path: none;
+    border-radius: 9999px;
+  }
+
+  &[data-form="satin"][data-mode="point"] [data-cursor-ring]::before,
+  &[data-form="satin"][data-mode="shrink"] [data-cursor-ring]::before {
+    opacity: 0.4;
+  }
+
+  &[data-form="satin"][data-mode="hide"] [data-cursor-ring]::before {
+    opacity: 0.9;
+    scale: 1.3;
+  }
+
+  /* Carré: the point is a small solid square that trails the pointer, grows over a control, and clears for a field or a
+     held scene. No ring. */
+  &[data-form="carre"] [data-slot="agents-cursor-dot"]::before {
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    background: currentColor;
+    clip-path: none;
+  }
+
+  &[data-form="carre"][data-mode="hide"] [data-slot="agents-cursor-dot"]::before {
+    opacity: 1;
+    scale: 1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & [data-slot="agents-cursor-dot"]::before,
+    & [data-cursor-ring]::before {
+      transition: opacity 120ms linear;
+    }
+  }
+}
+
+/* The satin and carré forms' designation: the two-corner frame gives way to a thin outline that keeps the object's own
+   coupe and glides onto it, ink on paper and Kome on the night, the Framer box-highlight in the direction's corner
+   language. */
+.agents-frame-travel[data-form="satin"],
+.agents-frame-travel[data-form="carre"] {
+  --agents-frame-cut: calc(var(--spacing-2) + var(--spacing-0\.5));
+  color: var(--color-agents-ink);
+  background: none;
+  border: 1px solid currentColor;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--agents-frame-cut)) 0,
+    100% var(--agents-frame-cut),
+    100% 100%,
+    0 100%
+  );
+
+  &[data-tone="night"] {
+    color: var(--color-agents-paper);
+  }
+}
+
+/* A wall of logos whose columns stand at different heights (`ToolColumns lean="staggered"`): the middle one lower, the
+   last a little lower, so the wall is not quite straight while every box stays upright and apart. The pose is still:
+   only the columns drift inside it, so reduced motion keeps it. */
+@utility agents-wall-stagger {
+  & > :nth-child(3n + 2) {
+    translate: 0 12%;
+  }
+
+  & > :nth-child(3n) {
+    translate: 0 5%;
+  }
+}
+
+/* A drifting column of cards sized to the window, not to a logo tile: tall enough to show several cards, capped at the
+   window less the floating nav and the section's air (13rem) so the nav and the band above stay in view, and never
+   past 42.5rem on a tall screen. The height is set only when motion is allowed; under reduced motion the column
+   unfolds to its content (see the marquee's `still="unfold"`), so it keeps no fixed height to fight. */
+@utility agents-drift-window {
+  @media (prefers-reduced-motion: no-preference) {
+    height: min(42.5rem, 100svh - 13rem);
+  }
+}
+
+/* A testimonial in the phone drift row: a fixed width so the next card dips in at the edge and shows there is more.
+   Under reduced motion the row unfolds to a stack, so the card takes the full width and nothing is cut. */
+@utility agents-drift-card {
+  width: 18rem;
+
+  @media (prefers-reduced-motion: reduce) {
+    width: 100%;
+  }
+}
+
+/* The tool hub's stage (`ToolHub` root): the copy, then the hub, down a column as tall as the window leaves under the
+   floating nav, so the whole section holds one screen and the hub shrinks to the room left under the title instead of
+   spilling past the fold. */
+@utility agents-hub-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: var(--spacing-6);
+  height: max(32rem, calc(100svh - 2 * var(--spacing-header)));
+
+  @media (min-width: 48rem) {
+    row-gap: var(--spacing-8);
+    height: max(34rem, calc(100svh - 2 * var(--spacing-header-clear)));
+  }
+}
+
+/* The tool hub (`ToolHub`), « Nous connectons tous vos outils » (DESIGN.md « Vos outils
+   reliés au sceau »): the SHUNPO seal in an octagon, the tools cut from the sheet down two symmetric arcs, and a beam
+   of 45°-chamfered wires running each tool into the ring. One box that scales: a size container, so the tiles, logos
+   and names — set as shares of its width — follow it. It is fitted (`contain`) inside the stage: driven by the room
+   left under the title (`block-size: 100%`), its width following its ratio, and both dimensions capped in step
+   (`max-block-size` = `max-inline-size` ÷ ratio) so the ratio always holds — a short laptop shrinks it whole rather
+   than clip it or squash it. The phone box below `lg`, the wide box from it. */
+@utility agents-hub {
+  container-type: size;
+  position: relative;
+  margin-inline: auto;
+  block-size: 100%;
+  inline-size: auto;
+  aspect-ratio: 390 / 440;
+  max-inline-size: 28rem;
+  max-block-size: calc(28rem * 440 / 390);
+
+  /* Tablets still show the four-a-side layout, but it fills the wide, screen-high field instead of floating small. */
+  @media (min-width: 48rem) {
+    max-inline-size: 36rem;
+    max-block-size: calc(36rem * 440 / 390);
+  }
+
+  @media (min-width: 64rem) {
+    aspect-ratio: 1180 / 540;
+    max-inline-size: 72rem;
+    max-block-size: calc(72rem * 540 / 1180);
+  }
+}
+
+/* The faint octagon at rest, the charter's 14 % hairline. */
+@utility agents-hub-ring {
+  fill: none;
+  stroke: var(--color-agents-ink);
+  stroke-opacity: 0.2;
+  stroke-width: 1;
+  stroke-linejoin: miter;
+}
+
+/* A wire from a tool to the ring, the same hairline. */
+@utility agents-hub-wire {
+  fill: none;
+  stroke: var(--color-agents-ink);
+  stroke-opacity: 0.2;
+  stroke-width: 1;
+  stroke-linejoin: miter;
+
+  /* With no flows to carry the link, the live wires themselves read it: they darken so the hub stays connected. */
+  @media (prefers-reduced-motion: reduce) {
+    stroke-opacity: 0.5;
+  }
+}
+
+/* The owner's own software is wired in dashes, a touch darker, until a connector is built. */
+@utility agents-hub-wire-pending {
+  stroke-opacity: 0.3;
+  stroke-dasharray: 2 4;
+
+  /* Still not connected, so it keeps its faint dashes even when the live wires darken for reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    stroke-opacity: 0.3;
+  }
+}
+
+/* A continuous flow of ink along a wire: a short head and a paler trail, moving at one speed whatever the wire's
+   length (a 110 px dash cycle). Still off screen, when stopped and under reduced motion. */
+@utility agents-hub-flow-head {
+  fill: none;
+  stroke: var(--color-agents-ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 6 104;
+  animation: agents-hub-flow var(--hub-flow-dur, 1.7s) linear infinite;
+  animation-delay: var(--hub-flow-delay, 0s);
+
+  @media (prefers-reduced-motion: reduce) {
+    display: none;
+  }
+}
+
+@utility agents-hub-flow-tail {
+  fill: none;
+  stroke: var(--color-agents-ink);
+  stroke-opacity: 0.3;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 40 70;
+  animation: agents-hub-flow-tail var(--hub-flow-dur, 1.7s) linear infinite;
+  animation-delay: var(--hub-flow-delay, 0s);
+
+  @media (prefers-reduced-motion: reduce) {
+    display: none;
+  }
+}
+
+@keyframes agents-hub-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -110;
+  }
+}
+
+@keyframes agents-hub-flow-tail {
+  from {
+    stroke-dashoffset: 34;
+  }
+
+  to {
+    stroke-dashoffset: -76;
+  }
+}
+
+/* The octagon drawn on in ink from the left edge's middle, then wiped off in the same sweep, slowly. */
+@utility agents-hub-draw {
+  fill: none;
+  stroke: var(--color-agents-ink);
+  stroke-opacity: 0.45;
+  stroke-width: 1.6;
+  stroke-linejoin: miter;
+  animation: agents-hub-draw 6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    display: none;
+  }
+}
+
+@keyframes agents-hub-draw {
+  0% {
+    stroke-dashoffset: var(--hub-draw, 0);
+  }
+
+  50% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: calc(var(--hub-draw, 0) * -1);
+  }
+}
+
+/* The seal over the centre, its own box ratio kept, with a soft drop shadow that follows its shape. */
+@utility agents-hub-seal {
+  position: absolute;
+  translate: -50% -50%;
+  width: var(--hub-seal, 10cqw);
+  aspect-ratio: 154.38 / 165.59;
+  filter: drop-shadow(0 1px 1px rgb(30 38 41 / 0.1)) drop-shadow(0 6px 12px rgb(30 38 41 / 0.08));
+}
+
+/* The seal's label, just under the ring. */
+@utility agents-hub-seal-label {
+  position: absolute;
+  translate: -50% 0;
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-agents-ink);
+  /* Held to the seal's width, so a long name (« Votre second cerveau ») breaks under the octagon on phones instead of
+     running into the tool names beside it; one line on the wide layout. */
+  width: max-content;
+  max-width: var(--hub-seal);
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* A tool placed by its centre, its tile and name scaling with the box. The name sits under the tile on phones and
+   beside it on the wide layout, outside toward the edge, read at all times. */
+@utility agents-hub-tool {
+  position: absolute;
+  left: var(--hub-x);
+  top: var(--hub-y);
+  translate: -50% -50%;
+  width: var(--hub-tile, 6cqw);
+
+  & .agents-hub-name {
+    top: calc(100% + 0.375rem);
+  }
+
+  &[data-side="left"] .agents-hub-name {
+    left: 0;
+  }
+
+  &[data-side="right"] .agents-hub-name {
+    right: 0;
+    text-align: right;
+  }
+
+  @media (min-width: 64rem) {
+    & .agents-hub-name {
+      top: 50%;
+      translate: 0 -50%;
+    }
+
+    &[data-side="left"] .agents-hub-name {
+      right: calc(100% + 0.75rem);
+      left: auto;
+    }
+
+    &[data-side="right"] .agents-hub-name {
+      left: calc(100% + 0.75rem);
+      right: auto;
+      text-align: left;
+    }
+  }
+}
+
+/* The few-pixel float, each tool out of step; still when stopped and under reduced motion. */
+@utility agents-hub-float {
+  position: relative;
+  animation: agents-hub-float 9s ease-in-out infinite;
+  animation-delay: var(--hub-float-delay, 0s);
+  will-change: transform;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes agents-hub-float {
+  50% {
+    translate: 0 -3px;
+  }
+}
+
+/* The tile, cut from the sheet (the logo sharp in its own colour); the owner's own is an empty dashed square slot. */
+@utility agents-hub-tile {
+  display: grid;
+  place-items: center;
+  width: var(--hub-tile, 6cqw);
+  height: var(--hub-tile, 6cqw);
+}
+
+@utility agents-hub-slot {
+  border: 1px dashed color-mix(in srgb, var(--color-agents-ink) 34%, transparent);
+  background: color-mix(in srgb, var(--color-agents-paper-light) 45%, transparent);
+}
+
+@utility agents-hub-logo {
+  width: var(--hub-logo, 2.4cqw);
+  height: auto;
+}
+
+/* The name beside or under its tile (placed by `agents-hub-tool`), Ink Shadow secondary text. */
+@utility agents-hub-name {
+  position: absolute;
+  font-size: var(--hub-name, 0.875rem);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-muted-foreground);
+  white-space: nowrap;
+}
+
+/* Off screen: the flows, the draw and the float hold where they are, the composition whole. */
+@utility agents-hub-still {
+  & .agents-hub-flow-head,
+  & .agents-hub-flow-tail,
+  & .agents-hub-draw,
+  & .agents-hub-float {
+    animation-play-state: paused;
+  }
+}
+
+/* Hero « Convergence »: tool windows scattered around the promise, each placed by its own centre (`--converge-x`,
+   `--converge-y` on tablets, `-wide` from 80rem, shares of the stage), turned and set back by its depth; the scroll then flies them into one
+   workspace. The card inside carries the turn, so the scene's transforms start from it. */
+@utility agents-converge-place {
+  position: absolute;
+  left: var(--converge-x);
+  top: var(--converge-y);
+  width: clamp(12rem, 16vw, 17rem);
+  translate: -50% -50%;
+
+  @media (min-width: 80rem) {
+    left: var(--converge-x-wide);
+    top: var(--converge-y-wide);
+  }
+}
+
+@utility agents-converge-card {
+  transform: rotate(var(--converge-turn)) scale(var(--converge-depth));
+}
+
+/* Hero « Vue éclatée » (`HeroCouches`), from tablets up with motion: the camera's depth, the painted poster's
+   drop, tilt and scale (the choreography's own values: `--couches-y`, `--couches-y-wide` and `--couches-scale` on
+   wide screens, `--couches-tilt`), the pulse and the threads on a column (`--couches-x`), square to the planes. */
+@utility agents-couches-camera {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    perspective: 2400px;
+    perspective-origin: 50% 30%;
+  }
+}
+
+@utility agents-couches-poster {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    transform: translateY(var(--couches-y)) rotateX(var(--couches-tilt));
+  }
+
+  @media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+    transform: translateY(var(--couches-y-wide)) rotateX(var(--couches-tilt))
+      scale(var(--couches-scale));
+  }
+}
+
+/* The pulse and the threads land on the second tool of a column: half the column's gap and half a tile below the
+   middle of the plane. */
+@utility agents-couches-pulse {
+  left: var(--couches-x);
+  top: calc(50% + var(--spacing-10));
+}
+
+@utility agents-couches-thread {
+  left: var(--couches-x);
+  top: calc(50% + var(--spacing-10));
+  transform: rotateX(90deg);
+  transform-origin: top;
+}
+
+/* A layer's label beside the exploded stack on wide screens, centred on its height (`--couches-label-y`). */
+@utility agents-couches-label {
+  @media (min-width: 64rem) {
+    position: absolute;
+    top: var(--couches-label-y);
+    translate: 0 -50%;
+  }
+}
+
+/* Hero « La semaine rendue » (`HeroSemaine`): a working week on one grid, a time gutter then five days, a row of
+   day names then eighteen half-hours (09:00 to 18:00). Tasks, freed slots, hour rules and day columns are placed by
+   their own coordinates (`--week-day`, `--week-start`, `--week-end`); the agent's sweep spans the five days' hours.
+   On phones and under reduced motion the half-hours keep a readable height; held, the week fills the stage. */
+@utility agents-week-grid {
+  display: grid;
+  grid-template-columns: var(--spacing-10) repeat(5, minmax(0, 1fr));
+  grid-template-rows: auto repeat(18, var(--spacing-5));
+
+  @media (min-width: 48rem) {
+    grid-template-columns: var(--spacing-12) repeat(5, minmax(0, 1fr));
+    grid-template-rows: auto repeat(18, minmax(var(--spacing-3), 1fr));
+  }
+
+  @media (min-width: 48rem) and (prefers-reduced-motion: reduce) {
+    grid-template-rows: auto repeat(18, var(--spacing-6));
+  }
+}
+
+@utility agents-week-place {
+  grid-column: calc(var(--week-day) + 2);
+  grid-row: calc(var(--week-start) + 2) / calc(var(--week-end) + 2);
+}
+
+@utility agents-week-days {
+  grid-column: 2 / -1;
+  grid-row: 2 / -1;
+}
+
+/* The agent's journal beside the week, from tablets up: wide enough for a line and its time. */
+@utility agents-week-journal {
+  @media (min-width: 48rem) {
+    width: clamp(18rem, 24vw, 22rem);
+  }
+}
+
+/* Hero « Le signe plié » (`HeroShuriken`): the square stage beside the promise, as wide as its columns and never
+   taller than the held window under the floating header, with room for its caption. */
+@utility agents-shuriken-frame {
+  width: min(100%, calc(100svh - var(--spacing-header) - var(--spacing-24)));
+  aspect-ratio: 1;
+}
+
+/* Hero film (`HeroFilm`, the home page's sunrise): a screen of its scroll is the window's height, or 62.5 % of its width
+   when narrower, so a phone runs the course of the approved 1,440 × 900 frame in proportion. */
+/* Screens at least as tall as the approved 900 px frame, where the film's promise sits above centre. */
+@custom-variant tall (@media (min-height: 56.25rem));
+
+@utility agents-film-hold {
+  height: min(100svh, 62.5vw);
+}
+
+/* The body's rise over a held hero film (`CoverSheet`), driven by `CoverSheetMotion`: as the sheet climbs, a thin lit
+   lip on its leading edge catches the light (the paper rising), while the landscape behind recedes and sets into a
+   Fuji Night dusk (`agents-cover-dusk`). The lip is static; the dusk and the hero's recede are scrubbed in JS, so none
+   of the hero's own motion is touched. Reduced motion: no sheet climb, so neither plays. */
+@utility agents-cover-sheet {
+  &::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(255 250 240 / 0.7) 25%,
+      rgb(255 250 240 / 0.7) 75%,
+      transparent
+    );
+    pointer-events: none;
+  }
+}
+
+/* The dusk veil the sheet's motion lifts over the held hero: fixed to the window, behind the rising sheet and above
+   the hero, so the whole landscape darkens evenly as the page lifts off it. Its opacity is scrubbed in JS. */
+@utility agents-cover-dusk {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  background: var(--color-fuji);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hero film, the promise's arrival (temps 1, « l'aube écrit la promesse »): after a still night each word rises from
+   behind its edge, a soft focus clearing as it lands, 40 ms apart; the action follows once the last word is up. In CSS,
+   so the title is painted whole for the LCP and never waits on the motion module (a GSAP entrance would flash). The word
+   is the mask; its clip margin lets a lit letter's halo breathe past the edge later. Reduced motion paints it still. */
+@utility agents-hero-word {
+  display: inline-block;
+  overflow: clip;
+  overflow-clip-margin: 0.6em;
+}
+
+/* Each word rises 40 ms after the one before, from a still night of 400 ms (`--i`, its rank). */
+@utility agents-hero-rise {
+  display: inline-block;
+  animation: agents-rise 900ms var(--ease-emphasized) both;
+  animation-delay: calc(0.4s + var(--i, 0) * 0.04s);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* The action follows once the last word is up (`--word-count`, the promise's words). */
+@utility agents-hero-action-rise {
+  animation: agents-rise-action 700ms var(--ease-emphasized) both;
+  animation-delay: calc(0.4s + var(--word-count, 0) * 0.04s + 0.3s);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes agents-rise {
+  from {
+    opacity: 0;
+    translate: 0 1.1em;
+    filter: blur(6px);
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+  }
+}
+
+@keyframes agents-rise-action {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* A section's phrase and call following its title (`Arrival mode="follow"`). Held under its title while the block waits
+   to be seen (`data-arrival="waiting"`), they rise a little and fade in on a delay once it arrives, so they settle just
+   after the title's last line lands: one entrance in two beats, never a second entrance that competes with the title.
+   Content already in view is painted in place (`arrived` at once); reduced motion paints it too. */
+@utility agents-follow {
+  transition:
+    opacity var(--agents-follow-duration) var(--ease-emphasized) var(--agents-follow-delay),
+    translate var(--agents-follow-duration) var(--ease-emphasized) var(--agents-follow-delay);
+
+  &[data-arrival="waiting"] {
+    opacity: 0;
+    translate: 0 var(--agents-settle-rise);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+/* A whole block arriving once as it comes into view (`Arrival mode="block"`): a card, a list. It is a block, not text
+   under a title, so it rises a touch further and settles on its own, with no delay. */
+@utility agents-arrive-block {
+  transition:
+    opacity var(--agents-block-duration) var(--ease-emphasized),
+    translate var(--agents-block-duration) var(--ease-emphasized);
+
+  &[data-arrival="waiting"] {
+    opacity: 0;
+    translate: 0 var(--agents-block-rise);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+/* A soft light that follows the pointer across a paper surface (`PaperSheen`), a beat behind, clipped to the sheet's
+   bias cut (`--agents-cut`, inherited from the surface). It lights the paper under the content, never scales or tilts
+   it; the matter answers the hand. Shown only while the pointer is over (`--sheen-on`, faded by the runtime), and gone
+   under reduced motion. */
+@utility agents-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--agents-cut, 0px)) 0,
+    100% var(--agents-cut, 0px),
+    100% 100%,
+    0 100%
+  );
+  background: radial-gradient(
+    18rem 18rem at var(--sheen-x, 50%) var(--sheen-y, 50%),
+    oklch(0.68 0.03 70 / 0.1),
+    transparent 62%
+  );
+  opacity: var(--sheen-on, 0);
+  transition: opacity 400ms var(--ease-standard);
+
+  @media (prefers-reduced-motion: reduce) {
+    display: none;
+  }
+}
+
+/* A decision settling done (`OsDecisionCard`): approved, the done card arrives instead of snapping in. It settles up,
+   and a beat later its check draws, on the emphasized curve with no bounce. Reduced motion paints it done at once. */
+@utility agents-decided {
+  animation: agents-settle-in 400ms var(--ease-emphasized) both;
+
+  & [data-decided-check] {
+    animation: agents-check-in 320ms var(--ease-emphasized) 120ms both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+
+    & [data-decided-check] {
+      animation: none;
+    }
+  }
+}
+
+/* The done card stays readable as it settles (a state confirmation), so it moves without fading; the fade is the
+   check's. */
+@keyframes agents-settle-in {
+  from {
+    translate: 0 6px;
+  }
+
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes agents-check-in {
+  from {
+    opacity: 0;
+    scale: 0.5;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* A letter of the promise, lit then overexposed by the sunrise (temps 2 and 3, piste A, sortie « surexposition »). The
+   dawn climbs it letter by letter from the horizon (`--lit`, 0 to 1: Kome in the night to Fuji ink once the sky is
+   light, a warm rim where the light just touched); then the risen sun overexposes it from below (`--heat`, 0 to 1: to
+   white, its halo opening, lifting a little as it is given back to the sky). Both are set by the film's course; still
+   and lit under reduced motion. The colour is not transitioned: the scroll sets it every frame. */
+@utility agents-hero-letter {
+  display: inline-block;
+  --agents-lit-rim: calc(sin(var(--lit, 0) * 180deg));
+  color: color-mix(
+    in oklab,
+    color-mix(in oklab, var(--color-kome), var(--color-fuji) calc(var(--lit, 0) * 100%)),
+    #ffffff calc(var(--heat, 0) * 100%)
+  );
+  translate: 0 calc(var(--heat, 0) * -0.18em);
+  opacity: calc(1 - var(--heat, 0));
+  text-shadow:
+    0 0 calc(0.12em * var(--agents-lit-rim)) rgb(233 162 92 / calc(0.55 * var(--agents-lit-rim))),
+    0 0 calc(0.55em * var(--heat, 0)) rgb(255 255 255 / calc(0.9 * var(--heat, 0)));
+
+  @media (prefers-reduced-motion: reduce) {
+    text-shadow: none;
+  }
+}
+
+/* The method wheel (`MethodWheel`), held under the floating nav from tablets up with motion: the question alone, then an
+   ink stroke down a wide arc and on down the page, the ink and the phases rising with the scroll (the home page's wheel). Every rule below
+   applies only while held; phones and reduced motion read the phases one under the other, complete. */
+@utility agents-wheel-title {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    opacity: var(--wheel-title-opacity, 1);
+    translate: 0 var(--wheel-title-rise, 0px);
+  }
+}
+
+/* A phase's copy, held: as tall as the tallest phase's (measured by the wheel), its text from the top, so the label and
+   the title stay on the same line from phase to phase. */
+@utility agents-wheel-copy {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    min-height: var(--wheel-copy-block, auto);
+  }
+}
+
+/* A phase's copy and kanji, held: they slide like a page with the ink (`--wheel-shift`) and fade away from their rest
+   (`--wheel-presence`), set by the wheel's course; the kanji at its own pace (`--wheel-parallax`). */
+@utility agents-wheel-slide {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    opacity: var(--wheel-slide-opacity, var(--wheel-presence, 0));
+    transform: translateY(calc(var(--wheel-shift, 0px) * var(--wheel-parallax, 1)));
+  }
+}
+
+/* A phase's kanji, pale and large behind its still: it stands at the still's top start corner and shows on the paper
+   beside and above it; held, it moves with its phase (`agents-wheel-slide`). */
+@utility agents-wheel-kanji {
+  /* Behind its copy, it slides slower (six tenths of the page's pace) and fades faster (the cube of its copy's
+     presence), so two kanji never stack into one glyph mid-way. */
+  --wheel-parallax: 0.6;
+  --wheel-slide-opacity: calc(
+    var(--wheel-presence, 0) * var(--wheel-presence, 0) * var(--wheel-presence, 0)
+  );
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  font-size: var(--text-kanji);
+  line-height: 1;
+  /* Over the still's start edge, never over the copy: inside the still's columns on tablets, a third out on desktops,
+     where the gutter is wide enough. */
+  translate: -12% -24%;
+
+  @media (min-width: 64rem) {
+    translate: -30% -24%;
+  }
+}
+
+/* A phase's call under its deliverables: held, the phases stack in one cell, so only the named one's action answers
+   the pointer; the faded ones let the click through to it. Phones and reduced motion read every phase in flow, each
+   action live. */
+@utility agents-wheel-action {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    pointer-events: none;
+
+    [data-wheel-active] & {
+      pointer-events: auto;
+    }
+  }
+}
+
+/* A phase's still: the coming one fades in over the leaving one, which holds until it is covered. Stills sit above
+   every kanji, the current one on top. Once the wheel's film draws, it takes their place. */
+@utility agents-wheel-panel {
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 300ms var(--ease-standard) 300ms,
+      visibility 0s linear 600ms;
+
+    [data-wheel-active] & {
+      z-index: 20;
+      opacity: 1;
+      visibility: visible;
+      transition:
+        opacity 300ms var(--ease-standard),
+        visibility 0s;
+    }
+
+    /* Under the film, kept until its 300 ms fade has covered it: the paper never shows empty. */
+    [data-film-ready] & {
+      visibility: hidden;
+      transition: visibility 0s linear 300ms;
+    }
+  }
+}
+
+/* The wheel's paper film, over the stills: shown once its frame is drawn and a phase is named, so it comes in with the
+   first phase and leaves the question alone on the paper. */
+@utility agents-wheel-film {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 300ms var(--ease-standard),
+    visibility 0s linear 300ms;
+
+  [data-film-ready]:has([data-wheel-active]) & {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 300ms var(--ease-standard),
+      visibility 0s;
+  }
+
+  & > canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
 }

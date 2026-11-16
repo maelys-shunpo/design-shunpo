@@ -36,10 +36,14 @@ type EffectCleanup = (() => void) | undefined;
 
 type PrepareScene = () => Promise<unknown>;
 
-const fadeVariants = cva("transition-opacity duration-500", {
+const fadeVariants = cva("", {
   variants: {
     shown: { true: "opacity-100", false: "opacity-0" },
+    /* fade crossfades the poster and the scene; cut hands over at once, for a scene that may go live mid-scroll,
+       already moved on from the first frame the poster shows. */
+    exit: { fade: "transition-opacity duration-500", cut: "" },
   },
+  defaultVariants: { exit: "fade" },
 });
 
 /* Read once, when the page first goes idle. */
@@ -199,6 +203,8 @@ interface StageProps {
   playLabel?: string;
   /* Sizing the stage sizes its poster layer too, so a poster can cover it; an unsized stage takes the size of its poster. */
   className?: string;
+  /* How the poster gives way once the scene is live: a crossfade, or a cut for a scene the scroll drives. */
+  posterExit?: "fade" | "cut";
 }
 
 export function Stage({
@@ -209,6 +215,7 @@ export function Stage({
   pauseLabel = "Pause animation",
   playLabel = "Play animation",
   className,
+  posterExit,
 }: StageProps): ReactElement {
   const [root, setRoot] = useState<HTMLDivElement | null>(null);
   const [ready, setReady] = useState(false);
@@ -228,10 +235,15 @@ export function Stage({
       data-ambient={ambient ? "" : undefined}
       className={cn("relative", className)}
     >
-      <div className={cn("size-full", fadeVariants({ shown: !live }))}>{poster}</div>
+      <div className={cn("size-full", fadeVariants({ shown: !live, exit: posterExit }))}>
+        {poster}
+      </div>
       {tier === null ? null : (
         <StagePlayback controllable={ambient && live} pauseLabel={pauseLabel} playLabel={playLabel}>
-          <div aria-hidden className={cn("absolute inset-0", fadeVariants({ shown: live }))}>
+          <div
+            aria-hidden
+            className={cn("absolute inset-0", fadeVariants({ shown: live, exit: posterExit }))}
+          >
             <SilentBoundary onError={fallBack}>
               <Suspense fallback={null}>{renderScene({ tier, onReady })}</Suspense>
             </SilentBoundary>

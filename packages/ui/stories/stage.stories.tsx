@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
-import { IsoBlocks } from "../src/components/iso-blocks.tsx";
 import { Stage } from "../src/motion/stage.tsx";
 import { LIVE_TIMEOUT } from "./support/live-timeout.ts";
-import { plainBox, plainScene } from "./support/plain-scene.tsx";
+import { plainPoster, plainScene } from "./support/plain-scene.tsx";
 
 const meta = {
   title: "Motion/Stage",
@@ -18,7 +17,7 @@ const meta = {
     },
   },
   args: {
-    poster: <IsoBlocks blocks={plainBox} label="A plain box" />,
+    poster: plainPoster("A plain box"),
     renderScene: plainScene,
     className: "max-w-xl",
   },

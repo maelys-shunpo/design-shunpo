@@ -10,7 +10,7 @@ interface MediaProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
 export function Media({ image, caption, className, ...props }: MediaProps) {
   return (
     <figure data-slot="media" className={cn("flex flex-col gap-3", className)} {...props}>
-      <div className="overflow-clip rounded-xl border border-border bg-surface shadow-md [&_img]:block [&_img]:h-auto [&_img]:w-full">
+      <div className="overflow-clip rounded-xl border border-border bg-surface [&_img]:block [&_img]:h-auto [&_img]:w-full">
         {image}
       </div>
       {caption === undefined ? null : (

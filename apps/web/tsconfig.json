@@ -6,6 +6,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "src", "e2e", "tests", "*.ts", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "src", "e2e", "tests", "scripts", "*.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -27,11 +27,15 @@ const scrubbing = {
 
 export type SceneScrub = keyof typeof scrubbing;
 
+/* Scrolls the page to a point of the scene, from 0 (held) to 1 (released). */
+export type SceneSeek = (progress: number) => void;
+
 interface ScrollSceneTimelineProps {
   track: RefObject<HTMLDivElement | null>;
   choreography: (timeline: gsap.core.Timeline) => void;
   minWidth: SceneBreakpoint;
   scrub: SceneScrub;
+  onSeek?: ((seek: SceneSeek | null) => void) | undefined;
 }
 
 /* One timeline scrubbed across the track, from the breakpoint up and only when motion is allowed. */
@@ -40,21 +44,34 @@ export function ScrollSceneTimeline({
   choreography,
   minWidth,
   scrub: scrubbingMode,
+  onSeek,
 }: ScrollSceneTimelineProps): null {
   useGSAP(
     () => {
       gsap.matchMedia().add(breakpointQuery[minWidth], () => {
-        choreography(
-          gsap.timeline({
-            defaults: { ease: ease.standard },
-            scrollTrigger: {
-              trigger: track.current,
-              start: "top top",
-              end: "bottom bottom",
-              scrub: scrubbing[scrubbingMode],
-            },
-          }),
-        );
+        const timeline = gsap.timeline({
+          defaults: { ease: ease.standard },
+          scrollTrigger: {
+            trigger: track.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: scrubbing[scrubbingMode],
+          },
+        });
+        choreography(timeline);
+        onSeek?.((progress: number) => {
+          const trigger = timeline.scrollTrigger;
+          if (trigger === undefined) {
+            return;
+          }
+          window.scrollTo({
+            top: trigger.start + (trigger.end - trigger.start) * progress,
+            behavior: "smooth",
+          });
+        });
+        return () => {
+          onSeek?.(null);
+        };
       });
     },
     { scope: track },

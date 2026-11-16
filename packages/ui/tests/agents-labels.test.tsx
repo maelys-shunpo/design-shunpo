@@ -1,0 +1,101 @@
+import "../src/styles/globals.css";
+import { describe, expect, it } from "vitest";
+import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
+
+import { CaseCard } from "../src/agents/case-card.tsx";
+import { Eyebrow } from "../src/agents/eyebrow.tsx";
+import { NavAnchor } from "../src/agents/nav-anchor.tsx";
+import { NightPlate } from "../src/agents/night-plate.tsx";
+
+/* The corner a frame draws, read on the pseudo-element: shown or not, and which two sides it strokes. */
+function corner(element: Element, pseudo: "::before" | "::after") {
+  const style = getComputedStyle(element, pseudo);
+  return {
+    opacity: style.opacity,
+    top: style.borderTopWidth !== "0px",
+    bottom: style.borderBottomWidth !== "0px",
+    left: style.borderLeftWidth !== "0px",
+    right: style.borderRightWidth !== "0px",
+  };
+}
+
+/* A bracket a link draws, read on the pseudo-element: shown or not, and whether it is a glyph (strokes painted as
+   background gradients) rather than a border. */
+function bracket(element: Element, pseudo: "::before" | "::after") {
+  const style = getComputedStyle(element, pseudo);
+  return {
+    opacity: style.opacity,
+    glyph: style.backgroundImage.includes("gradient"),
+  };
+}
+
+describe("Section labels", () => {
+  it("label a section in plain words: no symbol, no capitals, no monospace", async () => {
+    const screen = await render(<Eyebrow>Agents IA sur mesure</Eyebrow>);
+    const label = screen.getByText("Agents IA sur mesure").element();
+    const style = getComputedStyle(label);
+
+    expect(label.querySelector("svg")).toBeNull();
+    expect(style.textTransform).toBe("none");
+    expect(style.fontFamily.toLowerCase()).not.toContain("mono");
+  });
+
+  it("name a pain on its plate without a number", async () => {
+    const screen = await render(
+      <NightPlate icon="time" title="Vous perdez du temps" text="Un devis, une facture." />,
+    );
+
+    await expect
+      .element(screen.getByRole("heading", { name: "Vous perdez du temps" }))
+      .toBeVisible();
+    expect(screen.container.textContent).not.toMatch(/\d/u);
+  });
+
+  it("stays out of sight until a link is designated", async () => {
+    const screen = await render(<NavAnchor href="#methode">Méthode</NavAnchor>);
+    const link = screen.getByRole("link", { name: "Méthode" }).element();
+
+    expect(bracket(link, "::before").opacity).toBe("0");
+    expect(bracket(link, "::after").opacity).toBe("0");
+  });
+
+  it("takes a focused link between square brackets, not a corner frame", async () => {
+    const screen = await render(<NavAnchor href="#methode">Méthode</NavAnchor>);
+    const link = screen.getByRole("link", { name: "Méthode" }).element();
+
+    await userEvent.tab();
+
+    await expect.poll(() => bracket(link, "::before").opacity).toBe("1");
+    expect(bracket(link, "::before")).toMatchObject({ opacity: "1", glyph: true });
+    expect(bracket(link, "::after")).toMatchObject({ opacity: "1", glyph: true });
+    expect(corner(link, "::before")).toMatchObject({
+      top: false,
+      left: false,
+      bottom: false,
+      right: false,
+    });
+  });
+
+  it("designates a focused case card the same way", async () => {
+    const screen = await render(
+      <CaseCard
+        href="#tf1"
+        client="TF1"
+        tint="tenku"
+        mission="Une application de jeu."
+        figure="+1,4"
+        unit="M"
+        figureLabel="de téléspectateurs ont joué"
+        image={<img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />}
+        action="Lire le cas client"
+      />,
+    );
+    const card = screen.getByRole("link").element();
+
+    await userEvent.tab();
+
+    await expect.poll(() => corner(card, "::before").opacity).toBe("1");
+    expect(corner(card, "::after").opacity).toBe("1");
+  });
+});

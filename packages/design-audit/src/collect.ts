@@ -40,7 +40,9 @@ export function collectTokenScales(): TokenScales {
   }
 
   return {
-    spacing: resolve("--spacing-", "width"),
+    /* Measured as a padding, the property the audit compares: a width snaps to layout units (61.4375 px), so a
+       fluid token such as the page rhythm would never match the padding it sets (61.44 px). */
+    spacing: resolve("--spacing-", "padding-top"),
     fontSize: resolve("--text-", "font-size"),
     radius: ["0px", ...resolve("--radius-", "border-radius")],
   };

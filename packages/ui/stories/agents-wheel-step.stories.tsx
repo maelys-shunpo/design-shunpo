@@ -1,0 +1,77 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
+
+import { AgentsAction } from "../src/agents/action.tsx";
+import { WheelStep } from "../src/agents/wheel-step.tsx";
+import { inAgents } from "./support/agents-direction.tsx";
+
+const meta = {
+  title: "Agents/WheelStep",
+  component: WheelStep,
+  decorators: [inAgents],
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "One phase of the method wheel, internal to `MethodWheel`: its label, title and text, its deliverables (ticked here, as phones and reduced motion read them; held, the wheel ticks them one by one), its still cut out on the paper and, from tablets up, its kanji pale behind it.",
+      },
+    },
+  },
+  args: {
+    phase: {
+      id: "immersion",
+      label: "5 jours auprès de vos équipes",
+      title: "Immersion",
+      text: "On suit votre équipe pour comprendre où le travail ralentit et choisir avec vous le premier flux à automatiser.",
+      deliverables: [
+        "Carte des processus",
+        "Heures perdues estimées",
+        "Feuille de route priorisée",
+      ],
+      kanji: "見",
+      panel: <p>Carte du flux</p>,
+    },
+  },
+  render: (args) => (
+    <ol>
+      <WheelStep {...args} />
+    </ol>
+  ),
+} satisfies Meta<typeof WheelStep>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Step: Story = {
+  play: async ({ canvas, canvasElement }) => {
+    /* Standalone, show the phase at its rest the way MethodWheel reveals it when held (`--wheel-presence`); phones and
+       reduced motion read it complete without this. */
+    const step = canvasElement.querySelector<HTMLElement>("[data-slot=wheel-step]");
+    step?.style.setProperty("--wheel-presence", "1");
+
+    await expect(canvas.getByRole("heading", { level: 3, name: "Immersion" })).toBeVisible();
+    await expect(canvas.getByText("Feuille de route priorisée")).toBeVisible();
+  },
+};
+
+/* The Immersion phase carries a call under its deliverables. */
+export const WithAction: Story = {
+  args: {
+    phase: {
+      ...meta.args.phase,
+      action: (
+        <AgentsAction href="#reserver" size="lg" variant="signal" arrow>
+          Réserver une Immersion
+        </AgentsAction>
+      ),
+    },
+  },
+  play: async ({ canvas, canvasElement }) => {
+    const step = canvasElement.querySelector<HTMLElement>("[data-slot=wheel-step]");
+    step?.style.setProperty("--wheel-presence", "1");
+
+    await expect(canvas.getByRole("link", { name: "Réserver une Immersion" })).toBeVisible();
+  },
+};

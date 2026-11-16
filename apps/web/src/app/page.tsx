@@ -1,29 +1,21 @@
-import { ClosingSection } from "@/features/home/closing-section";
-import { FigmaSection } from "@/features/home/figma-section";
-import { GenerateSection } from "@/features/home/generate-section";
-import { Guardrails } from "@/features/home/guardrails";
-import { HeroSection } from "@/features/home/hero-section";
-import { InstructionsSection } from "@/features/home/instructions-section";
-import { ObjectionsSection } from "@/features/home/objections-section";
-import { SiteFooter } from "@/features/home/site-footer";
-import { SiteHeader } from "@/features/home/site-header";
-import { ToolboxSection } from "@/features/home/toolbox-section";
+import { firstSeries, proposals } from "@/features/proposals/proposals";
+import { ProposalsFirstSeries } from "@/features/proposals/proposals-first-series";
+import { ProposalsFooter } from "@/features/proposals/proposals-footer";
+import { ProposalsGrid } from "@/features/proposals/proposals-grid";
+import { ProposalsHeader } from "@/features/proposals/proposals-header";
+import { ProposalsIntro } from "@/features/proposals/proposals-intro";
 
 export default function HomePage() {
   return (
     <>
-      <SiteHeader />
+      <ProposalsHeader />
       <main>
-        <HeroSection />
-        <ToolboxSection />
-        <FigmaSection />
-        <GenerateSection />
-        <Guardrails />
-        <InstructionsSection />
-        <ObjectionsSection />
-        <ClosingSection />
+        <ProposalsIntro />
+        <ProposalsGrid items={proposals} columns="2" />
+        <ProposalsFirstSeries />
+        <ProposalsGrid items={firstSeries} columns="3" />
       </main>
-      <SiteFooter />
+      <ProposalsFooter />
     </>
   );
 }

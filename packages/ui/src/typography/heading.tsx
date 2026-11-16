@@ -3,9 +3,11 @@ import type { HTMLAttributes } from "react";
 
 import { cn } from "../lib/cn.ts";
 
-const headingVariants = cva("font-display font-semibold", {
+const headingVariants = cva("font-display font-heading", {
   variants: {
     size: {
+      mega: "text-8xl",
+      hero: "text-7xl",
       "display-xl": "text-6xl",
       display: "text-5xl",
       "title-lg": "text-4xl",
@@ -48,6 +50,9 @@ export function Heading({ level, size, tone, align, className, ...props }: Headi
   return (
     <Element
       data-slot="heading"
+      /* The page cursor goes away over a title, so a large display line reads clean (ignored where no cursor renders);
+         a caller can override with its own `data-cursor`. */
+      data-cursor="away"
       className={cn(
         headingVariants({ size: size ?? defaultSizeByLevel[level], tone, align }),
         className,

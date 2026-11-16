@@ -14,7 +14,7 @@ const textVariants = cva("", {
     tone: {
       default: "text-foreground",
       muted: "text-muted-foreground",
-      accent: "text-accent",
+      accent: "text-accent-ink",
       destructive: "text-destructive",
     },
     weight: {
