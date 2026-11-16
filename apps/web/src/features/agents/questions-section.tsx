@@ -1,33 +1,12 @@
-import { Arrival } from "@repo/ui/agents/arrival";
-import { FaqItem } from "@repo/ui/agents/faq-item";
-import { Headline } from "@repo/ui/agents/headline";
-import { GridArea } from "@repo/ui/layout/grid-area";
-import { PageGrid } from "@repo/ui/layout/page-grid";
+import { FaqList } from "@repo/ui/agents/faq-list";
 import { Section } from "@repo/ui/layout/section";
-import { Stack } from "@repo/ui/layout/stack";
 
 import { objections } from "../shunpo/content";
 
-/* Asymmetric: the title on five columns, the answers from the seventh, one empty column between. */
 export function QuestionsSection() {
   return (
     <Section id="questions" spacing="regular" paper="plie">
-      <PageGrid rows="lg">
-        <GridArea columns={{ lg: { start: 1, span: 5 } }}>
-          <Stack gap="lg">
-            <Headline level={2} size="heading" entrance="lines">
-              Les questions qu’on nous pose le plus.
-            </Headline>
-          </Stack>
-        </GridArea>
-        <GridArea columns={{ lg: { start: 7, span: 6 } }}>
-          <Arrival mode="block">
-            {objections.map((objection) => (
-              <FaqItem key={objection.id} question={objection.question} answer={objection.answer} />
-            ))}
-          </Arrival>
-        </GridArea>
-      </PageGrid>
+      <FaqList title="Les questions qu’on nous pose le plus." items={objections} />
     </Section>
   );
 }
