@@ -764,44 +764,91 @@
   background-blend-mode: hard-light;
 }
 
-/* The questions open and close like a fold (`FaqItem`, the `plie` section): the native disclosure keeps its keyboard,
-   find-in-page and reduced motion, and its answer no longer snaps open. `interpolate-size` lets the height ease to and
-   from `auto`, so the content unfolds on the emphasized curve while the summary's cross turns a quarter into a minus;
-   `content-visibility` carries the discrete hide across the close. Reduced motion keeps the instant native toggle. */
+/* The questions read as a hairline list and open with a line of ink (`FaqItem`, the `plie` section): the native
+   disclosure keeps its keyboard, find-in-page and reduced motion. The whole row is the affordance — the lien signature,
+   « le trait », applied to the disclosure: hovering a row draws an ink rule across it from the left (`summary::after`,
+   the arrow curve) and steps the question forward, and opening a row holds that rule drawn as a divider under the
+   question while the answer rises bare beneath it, set flush left, no frame and no rule around it. The toggle is a bare
+   1 px notation, never a framed box: the plus's vertical arm retracts to a minus (`[data-faq-mark]`). `interpolate-size`
+   eases the height to and from `auto` on the emphasized curve; `content-visibility` carries the discrete hide across the
+   close. Reduced motion keeps the instant native toggle. */
 @utility agents-faq {
   interpolate-size: allow-keywords;
+
+  /* The trait: an ink rule the width of the row, drawn from the left on hover and held while open. */
+  & summary {
+    position: relative;
+  }
+
+  & summary::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: 1px;
+    background: var(--color-foreground);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 380ms var(--ease-shift);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    & summary:hover::after {
+      transform: scaleX(1);
+    }
+  }
+
+  &[open] summary::after {
+    transform: scaleX(1);
+  }
 
   &::details-content {
     height: 0;
     overflow: clip;
-    opacity: 0;
     transition:
       height 320ms var(--ease-emphasized),
-      opacity 240ms var(--ease-emphasized),
       content-visibility 320ms;
     transition-behavior: allow-discrete;
   }
 
   &[open]::details-content {
     height: auto;
+  }
+
+  /* The answer rises bare as the row opens, never on opacity alone. */
+  & [data-faq-answer] {
+    opacity: 0;
+    translate: 0 var(--spacing-2);
+    transition:
+      opacity 240ms var(--ease-emphasized),
+      translate 320ms var(--ease-emphasized);
+  }
+
+  &[open] [data-faq-answer] {
     opacity: 1;
+    translate: 0 0;
   }
 
-  /* The coupe toggle joins the row: hovering anywhere on the summary opens its cut, pressing closes it,
-     the same gesture as the page's buttons, so the affordance is the whole question, not the 24 px mark. */
-  @media (hover: hover) and (pointer: fine) {
-    & summary:hover [data-faq-cut] {
-      --agents-cut: var(--agents-cut-open);
-    }
+  /* The notation: the plus's vertical arm retracts to a minus as the row opens. */
+  & [data-faq-mark] [data-faq-bar] {
+    transform-origin: center;
+    transition: scale 280ms var(--ease-shift);
   }
 
-  & summary:active [data-faq-cut] {
-    --agents-cut: var(--agents-cut-press);
+  &[open] [data-faq-mark] [data-faq-bar] {
+    scale: 1 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    &::details-content {
+    & summary::after,
+    &::details-content,
+    & [data-faq-answer],
+    & [data-faq-mark] [data-faq-bar] {
       transition: none;
+    }
+
+    & [data-faq-answer] {
+      translate: 0 0;
     }
   }
 }
